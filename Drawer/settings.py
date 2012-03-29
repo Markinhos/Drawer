@@ -1,4 +1,4 @@
-# Django settings for drawer project.
+# Django settings for Drawer project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -81,7 +81,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'j4c3omx7dk*pk&amp;!y8n*qx9o_2+)2&amp;#jj3*h=s1vc#ynaer0rwv'
+SECRET_KEY = 'sbd_jbcdeath-@a!n@tu8f%fpcgo3+nvp1@$gq)$xn^ariqdj$'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -100,10 +100,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'drawer.urls'
+ROOT_URLCONF = 'Drawer.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'drawer.wsgi.application'
+WSGI_APPLICATION = 'Drawer.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'drawerApp',
 )
 
 # A sample logging configuration. The only tangible logging
