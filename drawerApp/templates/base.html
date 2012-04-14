@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Nuevo proyecto con Bootstrap 2.0{% endblock %}</title>
+    <meta name="description" content="Artículo en GenbetaDev sobre Bootstrap 2.0">
+    <meta name="author" content="Ricardo Borillo">
+    <!—[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]—>
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 60px; }
+    </style>
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+</head>
+<body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">Genbeta Dev</a>
+            <div class="nav-collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">Bio</a></li>
+                    <li><a href="#contact">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <h1>Bienvenido a mi aplicacion</h1>
+    <p>Lista de tareas</p>
+    <div class="hero-unit">
+        <h1>Bienvenidos a nuestra página!</h1>
+        <p>
+            Texto principal de bienvenida a nuestra página. Prueba a redimiensinar el
+            navegador y comprobará como se adapta el diseño al nuevo tamaño.
+        </p>
+        <p><a class="btn btn-danger btn-large"><i class="icon-shopping-cart"></i>Más información</a></p>
+    </div>
+    {% block content %}
+    {% endblock %}
+    <div class="row-fluid">
+        <div class="span4">
+            <h2>Producto</h2>
+            <p>
+                Descripción del producto presentado. Descripción del producto presentado.
+                Descripción del producto presentado.
+            </p>
+            <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="span4">
+            <h2>Producto</h2>
+            <p>
+                Descripción del producto presentado. Descripción del producto presentado.
+                Descripción del producto presentado.
+            </p>
+            <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+        <div class="span4">
+            <h2>Producto</h2>
+            <p>
+                Descripción del producto presentado. Descripción del producto presentado.
+                Descripción del producto presentado.
+            </p>
+            <p><a class="btn" href="#">View details &raquo;</a></p>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; Company 2012</p>
+    </footer>
+</div> <!— /container —>
+</body>
+</html>
