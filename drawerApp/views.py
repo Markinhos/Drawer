@@ -1,5 +1,5 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from drawerApp.models import Task, TaskForm
+from django.http import HttpResponseRedirect
+from drawerApp.models import Task
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
