@@ -1,6 +1,4 @@
-from django.conf.urls import patterns, include, url
-from django.views.generic import DetailView, ListView, CreateView
-from drawerApp.models import Task
+from django.conf.urls.defaults import patterns, include, url
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
