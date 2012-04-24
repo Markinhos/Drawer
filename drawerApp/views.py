@@ -20,4 +20,4 @@ def create(request):
     return HttpResponseRedirect(reverse('TaskIndex'))
 def detail(request, task_id):
     t = Task.objects.get(pk=task_id)
-    return render_to_response('tasks/detail.html', { 'task' : t})
+    return render_to_response('tasks/detail.html', { 'task' : t}, context_instance = RequestContext(request))
