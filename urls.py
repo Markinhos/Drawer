@@ -1,4 +1,5 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns, url
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
@@ -20,5 +21,7 @@ urlpatterns = patterns('',
     url(r'^tasks/add$', 'drawerApp.views.add'
     ),
     url(r'^tasks/create', 'drawerApp.views.create'),
-    url(r'^tasks/detail/(?P<task_id>\d+)', 'drawerApp.views.detail' ),
+    url(r'^tasks/detail/(?P<task_id>.+)', 'drawerApp.views.detail' ),
 )
+
+urlpatterns += staticfiles_urlpatterns()
