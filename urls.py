@@ -23,5 +23,4 @@ urlpatterns = patterns('',
     url(r'^tasks/create', 'drawerApp.views.create'),
     url(r'^tasks/detail/(?P<task_id>.+)', 'drawerApp.views.detail' ),
 )
-
 urlpatterns += staticfiles_urlpatterns()
