@@ -1,0 +1,6 @@
+git+https://github.com/django-nonrel/django-nonrel@master
+distribute==0.6.24
+django-mongodb-engine==0.4.0
+djangotoolbox==0.9.2
+pymongo==2.1.1
+wsgiref==0.1.2
