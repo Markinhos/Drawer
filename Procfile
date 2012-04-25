@@ -1,1 +1,1 @@
-web: python manage.py runserver
+web: gunicorn_django --workers=2
