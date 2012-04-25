@@ -14,13 +14,17 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', 'drawerApp.views.index', name="TaskIndex"
+    url(r'^tasks/$', 'drawerApp.views.task.index', name="TaskIndex"
     ),
-    url(r'^tasks/$', 'drawerApp.views.index', name="TaskIndex"
+    url(r'^tasks/add$', 'drawerApp.views.task.add'
     ),
-    url(r'^tasks/add$', 'drawerApp.views.add'
+    url(r'^tasks/create', 'drawerApp.views.task.create'),
+    url(r'^tasks/detail/(?P<task_id>.+)', 'drawerApp.views.task.detail' ),
+
+    url(r'^$', 'drawerApp.views.project.index', name="Home"
     ),
-    url(r'^tasks/create', 'drawerApp.views.create'),
-    url(r'^tasks/detail/(?P<task_id>.+)', 'drawerApp.views.detail' ),
+    url(r'^project/create', 'drawerApp.views.project.create'),
+    url(r'^project/add', 'drawerApp.views.project.add'),
+    url(r'^project/detail/(?P<project_id>.+)', 'drawerApp.views.project.detail' ),
 )
 urlpatterns += staticfiles_urlpatterns()

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Add a new task!</h1>
+<form action="/project/create" method="POST">
+    {% csrf_token %}
+    <p>Name of the task:<input type="text" name="title" id="title" /></p>
+    <input type="submit" value="Add"/>
+</form>
+{% endblock %}
