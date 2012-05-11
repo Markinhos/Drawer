@@ -1,8 +1,11 @@
-from django.conf.urls.defaults import patterns, url
+from django.conf.urls.defaults import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from drawerApp.api import TaskResource
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
+
+task_resource = TaskResource()
 
 urlpatterns = patterns('',
     # Examples:
@@ -26,5 +29,6 @@ urlpatterns = patterns('',
     url(r'^project/create', 'drawerApp.views.project.create'),
     url(r'^project/add', 'drawerApp.views.project.add'),
     url(r'^project/detail/(?P<project_id>.+)', 'drawerApp.views.project.detail' ),
+    url(r'^api/', include(task_resource.urls)),
 )
 urlpatterns += staticfiles_urlpatterns()
