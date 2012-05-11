@@ -37,7 +37,7 @@ TIME_ZONE = 'Europe/Madrid'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
-SITE_ID = 1
+SITE_ID = u'4facf6561d41c81134000000'
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -123,9 +123,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'gunicorn',
     # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
+    'django.contrib.admin',
+    'djangotoolbox',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'django_mongodb_engine',
     'drawerApp',
     'tastypie'
     )
