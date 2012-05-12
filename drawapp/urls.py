@@ -15,8 +15,8 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/', 'django.contrib.auth.views.login', name="Login"),
     url(r'^tasks/$', 'drawerApp.views.task.index', name="TaskIndex"
     ),
     url(r'^tasks/add$', 'drawerApp.views.task.add'

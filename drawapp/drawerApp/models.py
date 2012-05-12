@@ -10,6 +10,3 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
     pub_date = models.DateTimeField('Creation date')
-
-class User(models.Model):
-    nick = models.CharField(max_length=200)

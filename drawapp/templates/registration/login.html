@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Login motherfucker</title>
+    <meta name="description" content="Login">
+    <meta name="author" content="Marcos Arranz Mateo">
+    <!—[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]—>
+    <style>
+        body { padding-top: 60px; }
+    </style>
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style>
+        body { padding-top: 60px; }
+    </style>
+    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+</head>
+<body>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+    {% load url from future %}
+    <div class="login" style="width: 400px; margin-left: auto; margin-right: auto">
+        <form class="well" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+            {% csrf_token %}
+            <h1>Login motherfucker</h1>
+            <p>Do you login?</p>
+            <label>Username:</label>
+            {{ form.username }}
+            <label>Password:</label>
+            {{ form.password }}
+            <input type="submit" value="login" />
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+    </div>
+</body>
+</html>
