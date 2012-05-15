@@ -9,8 +9,7 @@ from datetime import datetime
 @login_required()
 def index(request):
     task_collection = Task.objects.all().order_by('-created_date')
-    output = ', '.join([p.title for p in task_collection])
-    return render_to_response('tasks/task_list.html', { 'task_collection' : task_collection}, context_instance = RequestContext(request))
+    return render_to_response('tasks/task_list.html', { 'task_collection' : task_collection }, context_instance = RequestContext(request))
 
 @login_required()
 def add(request):

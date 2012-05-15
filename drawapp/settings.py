@@ -131,7 +131,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'django_mongodb_engine',
     'drawerApp',
-    'tastypie'
+    'tastypie',
+    'django_extensions'
     )
 
 # A sample logging configuration. The only tangible logging
