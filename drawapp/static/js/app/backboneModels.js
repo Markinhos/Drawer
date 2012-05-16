@@ -1,10 +1,10 @@
 (function() {
     window.Task = Backbone.Model.extend({
-        urlRoot: TASK_API
+        urlRoot: APP_GLOBAL.TASK_API
     });
 
     window.TaskList = Backbone.Collection.extend({
-        urlRoot: TASK_API,
+        urlRoot: APP_GLOBAL.TASK_API,
         model: Task,
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.
@@ -43,11 +43,11 @@
         }
     });
     window.Project = Backbone.Model.extend({
-        urlRoot: PROJECT_API
+        urlRoot: APP_GLOBAL.PROJECT_API
     });
 
     window.ProjectList = Backbone.Collection.extend({
-        urlRoot: PROJECT_API,
+        urlRoot: APP_GLOBAL.PROJECT_API,
         model: Project,
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.

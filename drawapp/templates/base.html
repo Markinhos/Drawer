@@ -29,8 +29,9 @@
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
 
 <script>
-    TASK_API = "{% url api_dispatch_list api_name="v1" resource_name="task" %}"
-    PROJECT_API = "{% url api_dispatch_list api_name="v1" resource_name="project" %}"
+    var APP_GLOBAL = {};
+    APP_GLOBAL.TASK_API = "{% url api_dispatch_list api_name="v1" resource_name="task" %}"
+    APP_GLOBAL.PROJECT_API = "{% url api_dispatch_list api_name="v1" resource_name="project" %}"
 </script>
 <script id="taskTemplate" type="text/html">
     {% straight_include "taskTemplate.mustache" %}

@@ -1,6 +1,7 @@
 (function () {
 
     window.TaskView = Backbone.View.extend({
+        tagname: 'li',
         render: function(){
             $(this.el).html(ich.taskTemplate(this.model.toJSON()));
             return this;
@@ -8,6 +9,7 @@
     });
 
     window.ProjectView = Backbone.View.extend({
+        tagname: 'li',
         render: function(){
             $(this.el).html(ich.projectTemplate(this.model.toJSON()));
             return this;
@@ -45,6 +47,7 @@
 
 
     window.ListProjectView = Backbone.View.extend({
+        el: "#projects",
         initialize: function(){
             _.bindAll(this, 'addOne', 'addAll');
 
@@ -62,7 +65,7 @@
             var view = new ProjectView({
                 model: thisModel
             });
-            $(this.el).prepend(view.render().el);
+            $(this.el).append(view.render().el);
             this.views.push(view);
             view.bind('all', this.rethrow, this);
         },
@@ -123,8 +126,7 @@
         render: function(){
             $(this.el).html(ich.sidebarApp({}));
             var list = new ListProjectView({
-                collection: this.collection,
-                el: this.$('#projects')
+                collection: this.collection
             });
             list.addAll();
             list.bind('all', this.rethrow, this);
