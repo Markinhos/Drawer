@@ -61,13 +61,29 @@
                 <span class="icon-bar"></span>
             </a>
             <a class="brand" href="#">Draw</a>
-            <div class="nav-collapse">
+            <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li class="active"><a href="/">Home</a></li>
                     <li><a href="#about">Bio</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </div>
+            <ul class="nav pull-right">
+                {% if user.is_authenticated %}
+                    <ul class="nav nav-pills">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{ user }}<b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <a href="{% url logout %}">Logout</a>
+                            </ul>
+                        </li>
+
+                    </ul>
+                {% else %}
+                    <a class="btn btn-inverse" href="#">Log in</a>
+                    <a class="btn btn-primary" href="#">Sign up</a>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </div>

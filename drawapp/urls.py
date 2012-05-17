@@ -20,13 +20,8 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/', 'django.contrib.auth.views.login', name="Login"),
-    url(r'^tasks/$', 'drawerApp.views.task.index', name="TaskIndex"
-    ),
-    url(r'^tasks/add$', 'drawerApp.views.task.add'
-    ),
-    url(r'^tasks/create', 'drawerApp.views.task.create'),
-    url(r'^tasks/detail/(?P<task_id>.+)', 'drawerApp.views.task.detail' ),
+    url(r'^login/', 'django.contrib.auth.views.login', name="login"),
+    url(r'^logout/', 'django.contrib.auth.views.logout_then_login', name="logout"),
 
     url(r'^$', 'drawerApp.views.project.index', name="Home"
     ),
