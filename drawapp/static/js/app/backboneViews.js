@@ -1,7 +1,7 @@
 (function () {
 
     window.TaskView = Backbone.View.extend({
-        tagname: 'li',
+        tagName: 'li',
         render: function(){
             $(this.el).html(ich.taskTemplate(this.model.toJSON()));
             return this;
@@ -9,7 +9,7 @@
     });
 
     window.ProjectView = Backbone.View.extend({
-        tagname: 'li',
+        tagName: 'li',
         render: function(){
             $(this.el).html(ich.projectTemplate(this.model.toJSON()));
             return this;
@@ -30,7 +30,7 @@
             this.collection.each(this.addOne);
         },
 
-        addOne: function(thisModel){
+        addOne: function (thisModel) {
             var view = new TaskView({
                 model: thisModel
             });
@@ -48,7 +48,7 @@
 
     window.ListProjectView = Backbone.View.extend({
         el: "#projects",
-        initialize: function(){
+        initialize: function () {
             _.bindAll(this, 'addOne', 'addAll');
 
             this.collection.bind('add', this.addOne);
@@ -56,21 +56,21 @@
             this.views = [];
         },
 
-        addAll: function(){
+        addAll: function () {
             this.views = [];
             this.collection.each(this.addOne);
         },
 
-        addOne: function(thisModel){
+        addOne: function (thisModel) {
             var view = new ProjectView({
                 model: thisModel
             });
-            $(this.el).append(view.render().el);
+            $(this.el).children().first().after(view.render().el);
             this.views.push(view);
             view.bind('all', this.rethrow, this);
         },
 
-        rethrow: function(){
+        rethrow: function () {
             this.trigger.apply(this, arguments);
         }
 
@@ -98,17 +98,17 @@
             'keypress #title': 'createOnEnter'
         },
 
-        createOnEnter: function(e){
-            if((e.keyCode || e.which) == 13){
+        createOnEnter: function (e) {
+            if ((e.keyCode || e.which) === 13) {
                 this.createTask();
                 e.preventDefault();
             }
 
         },
 
-        createTask: function(){
+        createTask: function () {
             var title = this.$('#title').val();
-            if(title){
+            if (title) {
                 this.collection.create({
                     title: title
                 });
@@ -118,9 +118,35 @@
 
     });
 
+    window.InputProjectView = Backbone.View.extend({
+        events: {
+            'click .projectInput': 'createProject',
+            'keypress #projectTitle': 'createOnEnterProject'
+        },
+
+        createOnEnterProject: function (e) {
+            if ((e.keyCode || e.which) === 13) {
+                this.createProject();
+                e.preventDefault();
+            }
+
+        },
+
+        createProject: function () {
+            var title = this.$('#projectTitle').val();
+            if (title) {
+                this.collection.create({
+                    title: title
+                });
+                this.$('#projectTitle').val('');
+            }
+        }
+
+    });
+
     window.SidebarApp = Backbone.View.extend({
         el: "#sidebar",
-        rethrow: function(){
+        rethrow: function () {
             this.trigger.apply(this, arguments);
         },
         render: function(){
@@ -130,6 +156,10 @@
             });
             list.addAll();
             list.bind('all', this.rethrow, this);
+            new InputProjectView({
+                collection: this.collection,
+                el: this.$('#projectModal')
+            });
         }
     });
 

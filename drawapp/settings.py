@@ -107,7 +107,11 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'drawapp.urls'
 
-LOGIN_URL = '/login'
+LOGIN_URL = '/'
+
+LOGIN_REDIRECT_URL = '/'
+
+AUTH_PROFILE_MODULE = 'drawapp.UserProfile'
 
 TEMPLATE_DIRS = (
 # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".

@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/', 'django.contrib.auth.views.login', name="login"),
+    url(r'^login/', 'django.contrib.auth.views.login', { 'template_name': 'registration/loginTemplate.html'}, name="login"),
     url(r'^logout/', 'django.contrib.auth.views.logout_then_login', name="logout"),
 
     url(r'^$', 'drawerApp.views.project.index', name="Home"

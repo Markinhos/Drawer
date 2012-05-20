@@ -1,0 +1,9 @@
+{% csrf_token %}
+{% if form.errors %}
+    <p>Your username and password didn't match. Please try again, motherfucker.</p>
+{% endif %}
+<label>Username:</label>
+{{ form.username }}
+<label>Password:</label>
+{{ form.password }}
+<input type="hidden" name="next" value="{{ next }}" />

@@ -11,7 +11,6 @@ class UserResource(ModelResource):
         resource_name = 'user'
 
 class ProjectResource(ModelResource):
-    user = fields.ForeignKey(UserResource, 'user_id')
     class Meta:
         queryset = Project.objects.all()
         resource_name = 'project'

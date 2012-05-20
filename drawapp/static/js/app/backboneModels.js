@@ -1,4 +1,5 @@
 (function() {
+
     window.Task = Backbone.Model.extend({
         urlRoot: APP_GLOBAL.TASK_API
     });
