@@ -136,7 +136,8 @@
             var title = this.$('#projectTitle').val();
             if (title) {
                 this.collection.create({
-                    title: title
+                    title: title,
+                    user: '/api/v1/user/' + APP_GLOBAL.USER + '/'
                 });
                 this.$('#projectTitle').val('');
             }
