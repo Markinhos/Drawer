@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from drawerApp.api import TaskResource, ProjectResource, UserResource, ProjectCollectionResource
+from drawerApp.api import TaskResource, ProjectResource, UserResource, ProjectListResource
 from tastypie.api import Api
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -10,7 +10,7 @@ admin.autodiscover()
 v1 = Api(api_name="v1")
 v1.register(TaskResource())
 v1.register(ProjectResource())
-v1.register(ProjectCollectionResource())
+v1.register(ProjectListResource())
 v1.register(UserResource())
 
 urlpatterns = patterns('',

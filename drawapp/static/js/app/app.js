@@ -1,13 +1,18 @@
-(function(){
+(function () {
 
     window.AppRouter = Backbone.Router.extend({
         routes: {
             '': 'list',
-            'task/:id/': 'detail'
+            'task/:id/': 'detail',
+            'project/:id/': 'project_detail'
         },
-        navigate_to: function(model){
+        navigate_to: function (model) {
             var path = (model && model.get('id') + '/') || '';
             this.navigate(path, true);
+        },
+
+        project_detail: function (id) {
+
         },
 
         detail: function(){},

@@ -5,7 +5,7 @@
     });
 
     window.TaskList = Backbone.Collection.extend({
-        urlRoot: APP_GLOBAL.TASK_API,
+        urlRoot: '/api/v1/project/4fc3c6151d41c866b3000000/',
         model: Task,
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.

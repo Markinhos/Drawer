@@ -11,7 +11,7 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth.models import User
 from django.conf.urls.defaults import url
-from tastypie_nonrel.resources import MongoResource, MongoListResource
+from drawapp.tastypie_nonrel.resources import MongoResource, MongoListResource
 from drawapp.tastypie_nonrel.fields import (ListField,
                             DictField,
                             EmbeddedModelField,
@@ -27,8 +27,9 @@ class UserResource(MongoResource):
 
 
 class TaskResource(MongoResource):
+    task_list = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'task_list', null=True, blank=True, full=True)
     class Meta:
-        queryset = Task.objects.all()
+        queryset = Project.objects.all()
         resource_name = 'task'
         authorization = Authorization()
 
@@ -39,23 +40,23 @@ class TaskCollectionResource(MongoListResource):
         resource_name = 'task'
         authorization = Authorization()
 
-class ProjectResource(MongoResource):
-    user = fields.ForeignKey(UserResource, 'user', full=True)
-    task_list = EmbeddedListField(of = 'drawapp.drawerApp.api.TaskResource', attribute = 'task_list', null=True, blank=True, full=True)
+class ProjectListResource(MongoResource):
+    user = fields.ForeignKey(UserResource, 'user')
     class Meta:
         queryset = Project.objects.all()
-        resource_name = 'project'
+        resource_name = 'projectList'
         authorization = Authorization()
+        excludes = ['task_list']
         filtering = {
             "title": ('exact', 'startswith'),
         }
 
-class ProjectCollectionResource(MongoResource):
+class ProjectResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user', full=True)
-    task_list = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'task_list', null=True, blank=True, full=True)
+    task_list = EmbeddedCollection(of = TaskCollectionResource, attribute = 'task_list', null=True, blank=True, full=True)
     class Meta:
         queryset = Project.objects.all()
-        resource_name = 'projectCollection'
+        resource_name = 'project'
         authorization = Authorization()
         filtering = {
             "title": ('exact', 'startswith'),

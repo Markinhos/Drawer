@@ -9,10 +9,17 @@
     });
 
     window.ProjectView = Backbone.View.extend({
+        events: {
+            'click .projectDetail': 'project_detail'
+        },
         tagName: 'li',
         render: function(){
             $(this.el).html(ich.projectTemplate(this.model.toJSON()));
             return this;
+        },
+        project_detail: function(){
+            app.detail.model = this.model;
+            app.detail.render();
         }
     });
 
@@ -87,6 +94,7 @@
         },
 
         render: function(){
+            this.model.fetch();
             $(this.el).html(ich.detailApp(this.model.toJSON()));
             return this;
         }

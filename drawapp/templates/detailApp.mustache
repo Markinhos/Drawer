@@ -1,8 +1,15 @@
 <h2>
-    <a class="home" href="/">Home</a>
+    <a class="home" href="/">Project</a>
 </h2>
-<ul id="tasks">
-    <li class="task">
-    {{taskTemplate}}
-    </li>
-</ul>
+<p>Title: {{ title }}</p>
+<p>Description: {{ descrption }}</p>
+<div class="task-list">
+<p>Tasks</p>
+    <ul class="nav nav-tabs nav-stacked" >
+        {{# task_list }}
+        <li>
+            <a href="#">{{ title }}</a>
+        </li>
+        {{/ task_list }}
+    </ul>
+</div>
