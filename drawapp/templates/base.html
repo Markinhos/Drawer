@@ -25,6 +25,7 @@
 <script src="{{ STATIC_URL }}js/lib/Underscore.js"></script>
 <script src="{{ STATIC_URL }}js/lib/Backbone.js"></script>
 <script src="{{ STATIC_URL }}js/lib/backbone-tastypie.js"></script>
+<script src="{{ STATIC_URL }}js/lib/backbone-relational.js"></script>
 <script src="{{ STATIC_URL }}js/lib/ICanHaz.js"></script>
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
 
@@ -33,14 +34,14 @@
     APP_GLOBAL.TASK_API = "{% url api_dispatch_list api_name="v1" resource_name="task" %}"
     APP_GLOBAL.PROJECT_API = "{% url api_dispatch_list api_name="v1" resource_name="project" %}"
 </script>
-<script id="taskTemplate" type="text/html">
-    {% straight_include "taskTemplate.mustache" %}
+<script id="taskListView" type="text/html">
+    {% straight_include "taskListView.mustache" %}
 </script>
-<script id="taskApp" type="text/html">
-    {% straight_include "taskApp.mustache" %}
+<script id="taskDetailView" type="text/html">
+    {% straight_include "taskDetailView.mustache" %}
 </script>
-<script id="detailApp" type="text/html">
-    {% straight_include "detailApp.mustache" %}
+<script id="projectDetailView" type="text/html">
+    {% straight_include "projectDetailView.mustache" %}
 </script>
 <script id="sidebarApp" type="text/html">
     {% straight_include "sidebarApp.mustache" %}

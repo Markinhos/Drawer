@@ -1,10 +1,15 @@
 (function () {
 
     window.TaskView = Backbone.View.extend({
-        tagName: 'li',
+        events: {
+            'click .icon-trash': 'deleteTask'
+        },
         render: function(){
-            $(this.el).html(ich.taskTemplate(this.model.toJSON()));
+            $(this.el).html(ich.taskDetailView(this.model.toJSON()));
             return this;
+        },
+        deleteTask: function(){
+            this.options.parentView.deleteOne(this.model.get('id'));
         }
     });
 
@@ -18,12 +23,16 @@
             return this;
         },
         project_detail: function(){
-            app.detail.model = this.model;
+            var project = this.model;
+            app.detail = new DetailApp({
+                project: this.model,
+                el: $("#app")
+            });
             app.detail.render();
         }
     });
 
-    window.ListView = Backbone.View.extend({
+    window.TaskListView = Backbone.View.extend({
         initialize: function(){
             _.bindAll(this, 'addOne', 'addAll');
 
@@ -32,24 +41,35 @@
             this.views = [];
         },
 
+        changeEvent: function(){
+            alert('sync');
+        },
+
         addAll: function(){
             this.views = [];
             this.collection.each(this.addOne);
         },
 
-        addOne: function (thisModel) {
-            var view = new TaskView({
-                model: thisModel
+        addOne: function(task){            
+            var view = new TaskView({                
+                parentView: this,
+                model: task
             });
             $(this.el).prepend(view.render().el);
             this.views.push(view);
             view.bind('all', this.rethrow, this);
         },
 
+        deleteOne: function(id){
+            var t = this.collection.find(function(task){ return task.get('id') == id});
+            var v = this.views.filter(function(view) { return view.model == t })[0];
+            t.destroy();
+            v.remove();           
+        },
+
         rethrow: function(){
             this.trigger.apply(this, arguments);
         }
-
     });
 
 
@@ -70,6 +90,7 @@
 
         addOne: function (thisModel) {
             var view = new ProjectView({
+                id: thisModel.id,
                 model: thisModel
             });
             $(this.el).children().first().after(view.render().el);
@@ -81,23 +102,6 @@
             this.trigger.apply(this, arguments);
         }
 
-    });
-
-    window.DetailApp = Backbone.View.extend({
-        events: {
-            'click .home': 'home'
-        },
-
-        home: function(e){
-            this.trigger('home');
-            e.preventDefault();
-        },
-
-        render: function(){
-            this.model.fetch();
-            $(this.el).html(ich.detailApp(this.model.toJSON()));
-            return this;
-        }
     });
 
     window.InputView = Backbone.View.extend({
@@ -117,9 +121,13 @@
         createTask: function () {
             var title = this.$('#title').val();
             if (title) {
-                this.collection.create({
+                var task = new Task({
                     title: title
                 });
+                this.model.get('task_list').add(task);
+                this.model.save();
+                this.options.parentView.render();
+                //this.model.get('task_list').create(task);
                 this.$('#title').val('');
             }
         }
@@ -137,7 +145,6 @@
                 this.createProject();
                 e.preventDefault();
             }
-
         },
 
         createProject: function () {
@@ -151,6 +158,52 @@
             }
         }
 
+    });
+
+    window.ProjectDetailView = Backbone.View.extend({        
+
+        render: function(){
+            this.model.fetch();
+            $(this.el).html(ich.projectDetailView(this.model.toJSON()));
+            this.taskListView = new TaskListView({
+                collection: this.model.get('task_list'),
+                el: this.$("#task-list")
+            });
+            this.taskListView.render();            
+            return this;
+        }
+    })
+    
+
+    window.DetailApp = Backbone.View.extend({        
+
+        events: {
+            'click .home': 'home'
+        },
+
+        home: function(e){
+            this.trigger('home');
+            e.preventDefault();
+        },
+
+        initialize: function(arguments){            
+            this.el = arguments.el;
+            this.model = arguments.project;
+        },
+
+        render: function(){
+            this.projectDetailView = new ProjectDetailView({
+                model: this.model,
+                el: this.el
+            });
+            this.projectDetailView.render();
+            new InputView({
+                model: this.model,
+                el: this.$('#input'),
+                parentView: this
+            });
+            return this;
+        }
     });
 
     window.SidebarApp = Backbone.View.extend({

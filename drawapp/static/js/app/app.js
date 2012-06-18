@@ -34,9 +34,6 @@
             el: $("#sidebar"),
             collection: app.projects
         });
-        app.detail = new DetailApp({
-            el: $("#app")
-        });
         app.router.bind('route:list', function(){
             app.projects.maybeFetch({
                 success: _.bind(app.sidebar.render, app.sidebar)
@@ -55,7 +52,6 @@
         });
 
         app.list.bind('navigate', app.router.navigate_to, app.router);
-        app.detail.bind('home', app.router.navigate_to, app.router);
         Backbone.history.start({
             pushState: true,
             silent: app.loaded

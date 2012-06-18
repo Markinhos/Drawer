@@ -55,10 +55,10 @@ class ProjectResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user', full=True)
     task_list = EmbeddedCollection(of = TaskCollectionResource, attribute = 'task_list', null=True, blank=True, full=True)
     class Meta:
-        queryset = Project.objects.all()
-        resource_name = 'project'
-        authorization = Authorization()
+        queryset            =    Project.objects.all()
+        resource_name       =    'project'
+        authorization       =    Authorization()
+        allowed_methods     =    ['get', 'post', 'put', 'delete']
         filtering = {
             "title": ('exact', 'startswith'),
-            }
-
+        }

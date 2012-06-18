@@ -108,10 +108,13 @@ class MongoListResource(ModelResource):
         return bundle
 
     def obj_update(self, bundle, request=None, **kwargs):
-        index = int(kwargs['index'])
+
         try:
+            index = int(kwargs['index'])
             bundle.obj = self.get_object_list(request)[index]
         except IndexError:
+            raise NotFound("A model instance matching the provided arguments could not be found.")
+        except KeyError:
             raise NotFound("A model instance matching the provided arguments could not be found.")
         bundle = self.full_hydrate(bundle)
         new_index = int(bundle.data['id'])
@@ -166,7 +169,10 @@ class MongoListResource(ModelResource):
             'subresource_name': self.attribute
         }
         if self.instance:
-            kwargs['pk'] = self.instance.pk
+            if hasattr(obj,'parent'):
+                kwargs['pk'] = obj.parent.pk
+            else:
+                kwargs['pk'] = self.instance.pk
 
 
         kwargs['index'] = obj.pk
@@ -176,7 +182,7 @@ class MongoListResource(ModelResource):
             kwargs['api_name'] = self._meta.api_name
 
         ret = self._build_reverse_url('api_dispatch_subresource_detail',
-                                       kwargs=kwargs)
+            kwargs=kwargs)
 
         return ret
             

@@ -1,7 +1,6 @@
 (function() {
 
-    window.Task = Backbone.Model.extend({
-        urlRoot: APP_GLOBAL.TASK_API
+    window.Task = Backbone.RelationalModel.extend({
     });
 
     window.TaskList = Backbone.Collection.extend({
@@ -43,8 +42,16 @@
             model.fetch(options);
         }
     });
-    window.Project = Backbone.Model.extend({
-        urlRoot: APP_GLOBAL.PROJECT_API
+    window.Project = Backbone.RelationalModel.extend({
+        urlRoot: APP_GLOBAL.PROJECT_API, 
+        relations: [
+            {
+                type: 'HasMany',
+                key: 'task_list',
+                url: this.urlRoot + '/' + this.idAttribute + '/',
+                relatedModel: 'Task'
+            }
+        ]
     });
 
     window.ProjectList = Backbone.Collection.extend({
