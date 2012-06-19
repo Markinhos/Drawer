@@ -9,7 +9,7 @@
             return this;
         },
         deleteTask: function(){
-            this.options.parentView.deleteOne(this.model.get('id'));
+            this.options.parentView.deleteOne(this.model.cid);
         }
     });
 
@@ -60,8 +60,8 @@
             view.bind('all', this.rethrow, this);
         },
 
-        deleteOne: function(id){
-            var t = this.collection.find(function(task){ return task.get('id') == id});
+        deleteOne: function(cid){
+            var t = this.collection.getByCid(cid);
             var v = this.views.filter(function(view) { return view.model == t })[0];
             t.destroy();
             v.remove();           
@@ -125,11 +125,14 @@
                     title: title
                 });
                 this.model.get('task_list').add(task);
-                this.model.save();
-                this.options.parentView.render();
-                //this.model.get('task_list').create(task);
+                this.model.save();                
+                //this.model.get('task_list').create(task);                                
                 this.$('#title').val('');
             }
+        },
+
+        render: function () {
+            $(this.el).html(ich.taskInputView());
         }
 
     });
@@ -149,12 +152,15 @@
 
         createProject: function () {
             var title = this.$('#projectTitle').val();
+            var description = this.$('#projectDescription').val();
             if (title) {
                 this.collection.create({
                     title: title,
+                    description: description,
                     user: '/api/v1/user/' + APP_GLOBAL.USER + '/'
                 });
                 this.$('#projectTitle').val('');
+                this.$('#projectDescription').val('');
             }
         }
 
@@ -165,10 +171,19 @@
         render: function(){
             this.model.fetch();
             $(this.el).html(ich.projectDetailView(this.model.toJSON()));
+
             this.taskListView = new TaskListView({
                 collection: this.model.get('task_list'),
                 el: this.$("#task-list")
             });
+
+            this.taskInputView = new InputView({
+                model: this.model,
+                el: this.$('#task-input'),
+                parentView: this.taskListView
+            });
+            
+            this.taskInputView.render();
             this.taskListView.render();            
             return this;
         }
@@ -196,12 +211,7 @@
                 model: this.model,
                 el: this.el
             });
-            this.projectDetailView.render();
-            new InputView({
-                model: this.model,
-                el: this.$('#input'),
-                parentView: this
-            });
+            this.projectDetailView.render();            
             return this;
         }
     });

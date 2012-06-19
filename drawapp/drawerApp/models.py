@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
 
 class Task(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200)    
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
