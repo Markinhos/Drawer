@@ -17,7 +17,7 @@
     <script src="{{ STATIC_URL }}js/lib/backbone-relational.js"></script>
     <script src="{{ STATIC_URL }}js/lib/ICanHaz.js"></script>
 
-    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}bootstrap2/less/bootstrap.less">
+    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}bootstrap2/less/bootstrap.less">    
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}bootstrap2/less/responsive.less">
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/styles.less">
     <script src="{{ STATIC_URL }}js/lib/less-1.3.0.min.js"></script>
@@ -26,7 +26,19 @@
         body { padding-top: 60px; }
     </style>
     <!--<link href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
-    
+    <script type="text/javascript">
+        (function () {
+            jQuery.ajaxSetup({
+                beforeSend: function () {
+                    $("#loaderDiv").show()
+                },
+                complete: function() {
+                    $("#loaderDiv").hide()
+                },
+                success: function () {}
+                });            
+        }) ();
+    </script>
     
 </head>
 <body>
@@ -63,6 +75,18 @@
 <script id="taskInputView" type="text/html">
     {% straight_include "taskInputView.mustache" %}
 </script>
+<script id="flash" type="text/html">
+    {% straight_include "flash.mustache" %}
+</script>
+
+<div id="loaderDiv" style="display: none">    
+    <div class="alert alert-info">
+        <div>
+            <div id="ajaxloader"> 
+            </div>
+        </div>
+    </div>
+</div>    
 
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
@@ -111,7 +135,7 @@
             <script type="text/javascript">                
                 APP_GLOBAL.USER = '{{ user.id }}'
             </script>
-            <div id="column2" class="span10">
+            <div id="column2" class="span10 column-joined">
                 <div class="well">
                     <div id="app">
 

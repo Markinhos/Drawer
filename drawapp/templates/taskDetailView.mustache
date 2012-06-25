@@ -1,11 +1,13 @@
-<div class="well task-item">
+<div class="well task-item">		
 	<div class="task-check">
-		<input type="checkbox">
+		<input class="task-status" type="checkbox" {{ doneStatus }}>
 	</div>
-	<div class="task-meta">
-        <i class="icon-trash" style="float: right"></i>
+	<div class="task-meta">		
+		<i class="icon-tags" style="float: right"></i>
+		<i class="icon-calendar" style="float: right"></i>
+        <a ref="#" rel="tooltip" title="Delete a task"><i class="icon-trash" style="float: right"></i></a>
     </div>
 	<div class="task-content">
 		<a href="#">{{ title }}</a>
-	</div>	
-</div>
+	</div>
+</div>	

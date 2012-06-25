@@ -1,8 +1,9 @@
-from drawapp.drawerApp.models import Task, Project, UserProfile
+from drawapp.drawerApp.models import Task, Project, UserProfile, ProjectForm, TaskForm
 from tastypie.resources import ModelResource
 from tastypie.authorization import Authorization
 from tastypie import fields, http
 from tastypie.http import HttpGone
+from tastypie.validation import FormValidation
 from tastypie.utils.urls import trailing_slash
 from tastypie.fields import (CharField,
                             ForeignKey,
@@ -27,7 +28,7 @@ class UserResource(MongoResource):
 
 
 class TaskResource(MongoResource):
-    task_list = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'task_list', null=True, blank=True, full=True)
+    tasks = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'tasks', null=True, blank=True, full=True)
     class Meta:
         queryset = Project.objects.all()
         resource_name = 'task'
@@ -35,10 +36,11 @@ class TaskResource(MongoResource):
 
 class TaskCollectionResource(MongoListResource):
     class Meta:
-        object_class = Task
-        queryset = Task.objects.all()
-        resource_name = 'task'
-        authorization = Authorization()
+        object_class        =   Task
+        queryset            =   Task.objects.all()
+        resource_name       =   'task'
+        authorization       =   Authorization()
+        validation          =   FormValidation(form_class=TaskForm)
 
 class ProjectListResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user')
@@ -46,19 +48,20 @@ class ProjectListResource(MongoResource):
         queryset = Project.objects.all()
         resource_name = 'projectList'
         authorization = Authorization()
-        excludes = ['task_list']
+        excludes = ['tasks']
         filtering = {
             "title": ('exact', 'startswith'),
         }
 
 class ProjectResource(MongoResource):
-    user = fields.ForeignKey(UserResource, 'user', full=True)
-    task_list = EmbeddedCollection(of = TaskCollectionResource, attribute = 'task_list', null=True, blank=True, full=True)
+    user = fields.ForeignKey(UserResource, 'user')
+    tasks = EmbeddedCollection(of = TaskCollectionResource, attribute = 'tasks', null=True, blank=True, full=True)
     class Meta:
         queryset            =    Project.objects.all()
         resource_name       =    'project'
         authorization       =    Authorization()
         allowed_methods     =    ['get', 'post', 'put', 'delete']
+        validation          =    FormValidation(form_class=ProjectForm)
         filtering = {
             "title": ('exact', 'startswith'),
         }

@@ -1,6 +1,8 @@
 .task-item {
 	width: 50%;
 	height: 20px;
+	margin-bottom: 1px;
+	padding: 10px 10px 10px 10px;
 	.task-content {
 		width: 80%;
 		margin-right: 30px;	
@@ -11,6 +13,7 @@
 	}
 	.task-meta {
 		width: 15%;
+		padding-top: 2px;
 		float: right;
 		&:hover{
 			cursor: pointer;
@@ -18,3 +21,37 @@
 	}
 }
 
+.column-joined{
+	margin-left: 0%;
+}
+
+div#loaderDiv {
+	position: absolute;
+	left: 50%;
+	top: 30%;
+	z-index: 1000;
+}
+div#ajaxloader {	
+	left: 50%;	
+	width: 20px;
+	height: 20px;
+	border: 8px solid #08c;
+	border-right-color: transparent;
+	border-radius: 50%;
+	box-shadow: 0 0 25px 2px #eee;
+	-webkit-animation: spin 1s linear infinite;
+	-moz-animation: spin 1s linear infinite;
+	-ms-animation: spin 1s linear infinite;
+	-o-animation: spin 1s linear infinite;	
+}
+@-webkit-keyframes spin{
+	from { -webkit-transform: rotate(0deg); opacity: 0.2; }
+	50% { -webkit-transform: rotate(180deg); opacity: 1; }
+	to 	{ -webkit-transform: rotate(360deg); opacity: 0.2; }
+}
+
+@keyframes spin{
+	from { transform: rotate(0deg); opacity: 0.2; }
+	50% { transform: rotate(180deg); opacity: 1; }
+	to 	{ transform: rotate(360deg); opacity: 0.2; }
+}

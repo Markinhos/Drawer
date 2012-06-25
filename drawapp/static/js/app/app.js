@@ -12,19 +12,32 @@
         },
 
         project_detail: function (id) {
+            app.projects.maybeFetch({
+                success: app.sidebar.render(id)
+            });
 
+            var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+
+            app.detail = new DetailApp({
+                project: project,
+                el: $("#app")
+            });
+            app.detail.render();
         },
 
         detail: function(){},
 
-        list: function(){}
+        list: function(){
+            app.projects.maybeFetch({
+                success: app.sidebar.render()
+            });
+        }
     });
 
 
     $(function(){
         window.app = window.app || {};
         app.router = new AppRouter();
-        app.tasks = new TaskList();
         app.projects = new ProjectList();
         app.list = new ListApp({
             el: $("#app"),
@@ -33,14 +46,6 @@
         app.sidebar = new SidebarApp({
             el: $("#sidebar"),
             collection: app.projects
-        });
-        app.router.bind('route:list', function(){
-            app.projects.maybeFetch({
-                success: _.bind(app.sidebar.render, app.sidebar)
-            });
-            app.tasks.maybeFetch({
-                success: _.bind(app.list.render, app.list)
-            });
         });
         app.router.bind('route:detail', function(id){
             app.tasks.getOrFetch(app.tasks.urlRoot + id + '/', {

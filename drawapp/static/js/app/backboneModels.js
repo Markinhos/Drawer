@@ -3,9 +3,12 @@
     window.Task = Backbone.RelationalModel.extend({
     });
 
-    window.TaskList = Backbone.Collection.extend({
-        urlRoot: '/api/v1/project/4fc3c6151d41c866b3000000/',
+    window.TaskCollection = Backbone.Collection.extend({
         model: Task,
+        urlRoot: APP_GLOBAL.PROJECT_API,
+        url: function(){
+            return this.project.id + 'tasks/';
+        },
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.
             if(this._fetched){
@@ -46,16 +49,20 @@
         urlRoot: APP_GLOBAL.PROJECT_API, 
         relations: [
             {
-                type: 'HasMany',
-                key: 'task_list',
+                type: Backbone.HasMany,
+                key: 'tasks',
                 url: this.urlRoot + '/' + this.idAttribute + '/',
-                relatedModel: 'Task'
+                relatedModel: 'Task',
+                collectionType: 'TaskCollection',
+                reverseRelation: {
+                    key: 'project'
+                }
             }
         ]
     });
 
     window.ProjectList = Backbone.Collection.extend({
-        urlRoot: APP_GLOBAL.PROJECT_API,
+        url: APP_GLOBAL.PROJECT_API,
         model: Project,
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.
