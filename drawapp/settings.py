@@ -14,7 +14,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django_mongodb_engine', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'heroku_app4229293',                      # Or path to database file if using sqlite3.
         'USER': 'heroku_app4229293',
         'PASSWORD': 'lrgbmvlvkiau1bln35sm8u71kg',
@@ -162,7 +162,7 @@ LOGGING = {
         }
 }
 
-try:
+"""try:
     from local_settings import *
 except ImportError:
-    pass
+    pass"""
