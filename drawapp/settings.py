@@ -15,11 +15,11 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django_mongodb_engine', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'heroku_app4229293',                      # Or path to database file if using sqlite3.
-        'USER': 'heroku_app4229293',
-        'PASSWORD': 'lrgbmvlvkiau1bln35sm8u71kg',
-        'HOST': 'dbh73.mongolab.com',
-        'PORT': 27737,
+        'NAME': 'heroku_app5558288',                      # Or path to database file if using sqlite3.
+        'USER': 'heroku_app5558288',
+        'PASSWORD': 'ret24bau7j83dhpou08jsqni7v',
+        'HOST': 'ds033907.mongolab.com',
+        'PORT': 33907,
         'SUPPORTS_TRANSACTIONS': False,
     },
 }
