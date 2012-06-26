@@ -14,7 +14,7 @@
         project_detail: function (id) {
             app.projects.maybeFetch({
                 success: app.sidebar.render(id)
-            });
+            }); 
 
             var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
 
@@ -29,7 +29,7 @@
 
         list: function(){
             app.projects.maybeFetch({
-                success: app.sidebar.render()
+                success: app.sidebar.render()   
             });
         }
     });

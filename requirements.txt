@@ -1,4 +1,5 @@
 git+https://github.com/django-nonrel/django-nonrel@master
+newrelic
 argparse==1.2.1
 certifi==0.0.8
 chardet==1.0.1
