@@ -1,24 +1,11 @@
-from drawapp.drawerApp.models import Task, Project, UserProfile, ProjectForm, TaskForm
-from tastypie.resources import ModelResource
+from drawapp.drawerApp.models import Task, Project, UserProfile
+from drawapp.drawerApp.modelforms import ProjectForm, TaskForm
 from tastypie.authorization import Authorization
-from tastypie import fields, http
-from tastypie.http import HttpGone
+from tastypie import fields
 from tastypie.validation import FormValidation
-from tastypie.utils.urls import trailing_slash
-from tastypie.fields import (CharField,
-                            ForeignKey,
-    )
-from datetime import datetime
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.contrib.auth.models import User
-from django.conf.urls.defaults import url
 from drawapp.tastypie_nonrel.resources import MongoResource, MongoListResource
-from drawapp.tastypie_nonrel.fields import (ListField,
-                            DictField,
-                            EmbeddedModelField,
-                            EmbeddedListField,
-                            EmbeddedCollection,
-    )
+from drawapp.tastypie_nonrel.fields import EmbeddedCollection
 
 class UserResource(MongoResource):
 
