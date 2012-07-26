@@ -12,17 +12,19 @@
         },
 
         project_detail: function (id) {
+            //fetch or get cached projects
             app.projects.maybeFetch({
-                success: app.sidebar.render(id)
+                //if success render sidebar and detail app
+                success: function() {
+                    app.sidebar.render(id);
+                    var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    app.detail = new DetailApp({
+                        project: project,
+                        el: $("#app")
+                    });
+                    app.detail.render();
+                }
             }); 
-
-            var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
-
-            app.detail = new DetailApp({
-                project: project,
-                el: $("#app")
-            });
-            app.detail.render();
         },
 
         detail: function(){},

@@ -25,6 +25,13 @@
         }
     });
 
+    window.NoteView = Backbone.View.extend({
+        render: function(){
+            $(this.el).html(ich.noteDetailView(data));
+            return this;
+        }
+    });
+
     window.ProjectView = Backbone.View.extend({
         events: {
             'click .projectDetail': 'project_detail'
@@ -35,7 +42,7 @@
             return this;
         },
         project_detail: function(){
-            app.router.navigate('project/' + this.model.get('id') + '/', true)
+            app.router.navigate('project/' + this.model.get('id') + '/', {trigger: true});
         }
     });
 
@@ -195,6 +202,7 @@
     });
 
     window.ProjectDetailView = Backbone.View.extend({ 
+
         render: function(){
             this.model.fetch();
             $(this.el).html(ich.projectDetailView(this.model.toJSON()));

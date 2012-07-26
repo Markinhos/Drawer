@@ -1,0 +1,30 @@
+[
+    {
+        "model": "auth.User",
+        "pk": "4ea9c4fdbb69337f8e000002",
+        "fields": {
+            "username": "marcos",
+            "email": "test@email.com"
+        }
+    },
+    {
+        "model": "drawerApp.Project",
+        "pk": "4ea9c4fdbb69337f8e000001",
+        "fields": {
+            "title": "projectTest1",
+            "pub_date" : "2012-07-17 12:24:28",
+            "description": "testDesc",
+            "user": "4ea9c4fdbb69337f8e000002",
+            "tasks": []
+        }
+    },
+    {
+        "model": "drawerApp.Task",
+        "pk": "4ea9c4fdbb69337f8e000003",
+        "fields": {
+            "title": "task1",
+            "created_date" : "2012-07-17 12:24:28",
+            "status": "TODO"
+        }
+    }
+]

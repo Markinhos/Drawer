@@ -1,4 +1,4 @@
-from drawapp.drawerApp.models import Project, Task
+from drawapp.drawerApp.models import Project, Task, Note
 from django.forms.models import ModelForm
 from django.forms.fields import ChoiceField
 
@@ -20,3 +20,7 @@ class ProjectForm(ModelForm):
             taskForm = TaskForm(task)
             if not taskForm.is_valid():
                 self._errors["error"] = taskForm.errors
+
+class NoteForm(ModelForm):
+    class Meta:
+        model = Note

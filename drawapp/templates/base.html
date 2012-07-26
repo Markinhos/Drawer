@@ -50,33 +50,35 @@
 <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript">    
     var APP_GLOBAL = {};
-    APP_GLOBAL.TASK_API = "{% url api_dispatch_list api_name="v1" resource_name="task" %}"
     APP_GLOBAL.PROJECT_API = "{% url api_dispatch_list api_name="v1" resource_name="project" %}"
 </script>
 <script src="{{ STATIC_URL }}js/app/backboneViews.js"></script>
 <script src="{{ STATIC_URL }}js/app/backboneModels.js"></script>
-<script src="{{ STATIC_URL }}js/app/app.js"></script>
+
 
 <script id="taskListView" type="text/html">
-    {% straight_include "taskListView.mustache" %}
+    {% straight_include "task/taskListView.mustache" %}
 </script>
 <script id="taskDetailView" type="text/html">
-    {% straight_include "taskDetailView.mustache" %}
+    {% straight_include "task/taskDetailView.mustache" %}
 </script>
 <script id="projectDetailView" type="text/html">
-    {% straight_include "projectDetailView.mustache" %}
+    {% straight_include "project/projectDetailView.mustache" %}
 </script>
 <script id="sidebarApp" type="text/html">
     {% straight_include "sidebarApp.mustache" %}
 </script>
 <script id="projectTemplate" type="text/html">
-    {% straight_include "projectTemplate.mustache" %}
+    {% straight_include "project/projectTemplate.mustache" %}
 </script>
 <script id="taskInputView" type="text/html">
-    {% straight_include "taskInputView.mustache" %}
+    {% straight_include "task/taskInputView.mustache" %}
 </script>
 <script id="flash" type="text/html">
     {% straight_include "flash.mustache" %}
+</script>
+<script id="noteDetailView" type="text/html">
+    {% straight_include "note/noteDetailView.mustache" %}
 </script>
 
 <div id="loaderDiv" style="display: none">    
@@ -125,6 +127,7 @@
 </div>
 {% if user.is_authenticated %}
 <div class="container-fluid">
+    <script src="{{ STATIC_URL }}js/app/app.js"></script>
     <div id="columns" class="row-fluid">
             <div class="span2">
                 <div class="well sidebar-nav">

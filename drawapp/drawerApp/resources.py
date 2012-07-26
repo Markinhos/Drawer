@@ -1,5 +1,5 @@
-from drawapp.drawerApp.models import Task, Project, UserProfile
-from drawapp.drawerApp.modelforms import ProjectForm, TaskForm
+from drawapp.drawerApp.models import Task, Project, UserProfile, Note
+from drawapp.drawerApp.modelforms import ProjectForm, TaskForm, NoteForm
 from tastypie.authorization import Authorization
 from tastypie import fields
 from tastypie.validation import FormValidation
@@ -14,12 +14,19 @@ class UserResource(MongoResource):
         resource_name = 'user'
 
 
-class TaskResource(MongoResource):
+"""class TaskResource(MongoResource):
     tasks = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'tasks', null=True, blank=True, full=True)
     class Meta:
         queryset = Project.objects.all()
         resource_name = 'task'
         authorization = Authorization()
+
+class NoteResource(MongoResource):
+    tasks = EmbeddedCollection(of = 'drawapp.drawerApp.api.NoteCollectionResource', attribute = 'notes', null=True, blank=True, full=True)
+    class Meta:
+        queryset = Project.objects.all()
+        resource_name = 'note'
+        authorization = Authorization()"""
 
 class TaskCollectionResource(MongoListResource):
     class Meta:
@@ -28,6 +35,14 @@ class TaskCollectionResource(MongoListResource):
         resource_name       =   'task'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=TaskForm)
+
+class NoteCollectionResource(MongoListResource):
+    class Meta:
+        object_class        =   Note
+        queryset            =   Note.objects.all()
+        resource_name       =   'note'
+        authorization       =   Authorization()
+        validation          =   FormValidation(form_class=NoteForm)
 
 class ProjectListResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user')
@@ -43,6 +58,7 @@ class ProjectListResource(MongoResource):
 class ProjectResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user')
     tasks = EmbeddedCollection(of = TaskCollectionResource, attribute = 'tasks', null=True, blank=True, full=True)
+    notes = EmbeddedCollection(of = NoteCollectionResource, attribute = 'notes', null=True, blank=True, full=True)
     class Meta:
         queryset            =    Project.objects.all()
         resource_name       =    'project'
