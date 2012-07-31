@@ -11,6 +11,16 @@
                 reverseRelation: {
                     key: 'project'
                 }
+            },
+            {
+                type: Backbone.HasMany,
+                key: 'notes',
+                url: this.urlRoot + '/' + this.idAttribute + '/',
+                relatedModel: 'Note',
+                collectionType: 'NoteCollection',
+                reverseRelation: {
+                    key: 'project'
+                }
             }
         ]
     });

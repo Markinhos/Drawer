@@ -36,7 +36,7 @@
         },
 
         render: function () {
-            $(this.el).html(ich.taskInputView());
+            $(this.el).html(ich.taskAddTemplate());
         }
 
     });

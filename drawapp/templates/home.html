@@ -1,14 +1,4 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-{% if project_collection %}
-<ul>
-    {% for task in project_collection %}
-    <li><a href="/project/detail/{{ task.id }}">{{ task.title }}</a></li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No tasks found</p>
-{% endif %}
-<p><a href="/project/add">Add a Project</a></p>
 {% endblock %}

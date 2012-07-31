@@ -1,5 +1,5 @@
 (function () {
-    window.TaskView = Backbone.View.extend({
+    window.TaskDetailView = Backbone.View.extend({
         events: {
             'click .icon-trash': 'deleteTask',
             'change .task-status' : 'selectStatus'
@@ -16,7 +16,7 @@
             isTodo ? doneStatus = '' : doneStatus = 'checked';
             data = this.model.toJSON();
             data.doneStatus = doneStatus;
-            $(this.el).html(ich.taskDetailView(data));
+            $(this.el).html(ich.taskDetailTemplate(data));
             return this;
         },
         deleteTask: function(){

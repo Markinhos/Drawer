@@ -55,53 +55,63 @@
 </script>
 <!--Load backbone js models-->
 <script src="{{ STATIC_URL }}js/models/task.js"></script>
-<script src="{{ STATIC_URL }}js/models/project.js"></script>
 <script src="{{ STATIC_URL }}js/models/note.js"></script>
+<script src="{{ STATIC_URL }}js/models/project.js"></script>
 <script src="{{ STATIC_URL }}js/collections/notes.js"></script>
 <script src="{{ STATIC_URL }}js/collections/projects.js"></script>
 <script src="{{ STATIC_URL }}js/collections/tasks.js"></script>
 <!--Load backbone js views-->
-<script src="{{ STATIC_URL }}js/views/note/individual.js"></script>
 <script src="{{ STATIC_URL }}js/views/note/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/note/list.js"></script>
-<script src="{{ STATIC_URL }}js/views/task/individual.js"></script>
+<script src="{{ STATIC_URL }}js/views/note/add.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/add.js"></script>
-<script src="{{ STATIC_URL }}js/views/project/individual.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/add.js"></script>
-<script src="{{ STATIC_URL }}js/views/shared/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/shared/sidebar.js"></script>
+<script src="{{ STATIC_URL }}js/views/shared/menu.js"></script>
 <script src="{{ STATIC_URL }}js/views/shared/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/shared/flash.js"></script>
+<script src="{{ STATIC_URL }}js/views/composite/projectTaskAddTaskListView.js"></script>
+<script src="{{ STATIC_URL }}js/views/composite/projectNoteAddNoteListView.js"></script>
 
+<script src="{{ STATIC_URL }}js/router.js"></script>
 <script src="{{ STATIC_URL }}js/app.js"></script>
 
-<script id="taskListView" type="text/html">
-    {% straight_include "task/taskListView.mustache" %}
+<script id="taskListTemplate" type="text/html">
+    {% straight_include "task/taskListTemplate.mustache" %}
 </script>
-<script id="taskDetailView" type="text/html">
-    {% straight_include "task/taskDetailView.mustache" %}
-</script>
-<script id="projectDetailView" type="text/html">
-    {% straight_include "project/projectDetailView.mustache" %}
+<script id="taskDetailTemplate" type="text/html">
+    {% straight_include "task/taskDetailTemplate.mustache" %}
 </script>
 <script id="sidebarApp" type="text/html">
-    {% straight_include "sidebarApp.mustache" %}
+    {% straight_include "shared/sidebarApp.mustache" %}
+</script>
+<script id="menuView" type="text/html">
+    {% straight_include "shared/menu.mustache" %}
 </script>
 <script id="projectTemplate" type="text/html">
     {% straight_include "project/projectTemplate.mustache" %}
 </script>
-<script id="taskInputView" type="text/html">
-    {% straight_include "task/taskInputView.mustache" %}
+<script id="taskAddTemplate" type="text/html">
+    {% straight_include "task/taskAddTemplate.mustache" %}
 </script>
 <script id="flash" type="text/html">
-    {% straight_include "flash.mustache" %}
+    {% straight_include "shared/flash.mustache" %}
 </script>
-<script id="noteDetailView" type="text/html">
-    {% straight_include "note/noteDetailView.mustache" %}
+<script id="noteDetailTemplate" type="text/html">
+    {% straight_include "note/noteDetailTemplate.mustache" %}
+</script>
+<script id="noteAddTemplate" type="text/html">
+    {% straight_include "note/noteAddTemplate.mustache" %}
+</script>
+<script id="projectTaskAddTaskListTemplate" type="text/html">
+    {% straight_include "composite/projectTaskAddTaskListTemplate.mustache" %}
+</script>
+<script id="projectNoteAddNoteListTemplate" type="text/html">
+    {% straight_include "composite/projectNoteAddNoteListTemplate.mustache" %}
 </script>
 
 <div id="loaderDiv" style="display: none">    

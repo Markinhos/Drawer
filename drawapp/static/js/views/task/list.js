@@ -18,7 +18,7 @@
         },
 
         addOne: function(task){
-            var view = new TaskView({
+            var view = new TaskDetailView({
                 parentView: this,
                 model: task
             });

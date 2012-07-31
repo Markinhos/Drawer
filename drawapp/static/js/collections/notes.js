@@ -3,7 +3,7 @@
         model: Note,
         urlRoot: APP_GLOBAL.PROJECT_API,
         url: function(){
-            return this.project.id + 'tasks/';
+            return this.project.id + 'notes/';
         },
         maybeFetch: function (options) {
             // Helper function to fetch only if this collection has not been fetched before.

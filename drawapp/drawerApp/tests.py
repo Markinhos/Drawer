@@ -50,3 +50,8 @@ class ProjectResourceTest(TestCase):
     def test_get_tasks(self):
         resp = self.client.get('/api/v1/task/')
         self.assertEqual(resp.status_code, 200)
+
+    #Note tests
+    def test_get_notes(self):
+        resp = self.client.get('/api/v1/note/')
+        self.assertEqual(resp.status_code, 200)

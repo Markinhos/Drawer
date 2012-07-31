@@ -1,5 +1,5 @@
 (function () {
-    window.InputProjectView = Backbone.View.extend({
+    window.AddProjectView = Backbone.View.extend({
         events: {
             'click .projectInput': 'createProject',
             'keypress #projectTitle': 'createOnEnterProject'

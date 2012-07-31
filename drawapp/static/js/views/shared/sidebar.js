@@ -6,12 +6,12 @@
         },
         render: function(id){
             $(this.el).html(ich.sidebarApp({}));
-            var list = new ListProjectView({
+            this.list = new ListProjectView({
                 collection: this.collection,
                 active: id || null
             });
-            list.addAll();
-            new InputProjectView({
+            this.list.addAll();
+            new AddProjectView({
                 collection: this.collection,
                 el: this.$('#projectModal')
             });
