@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from drawapp.drawerApp.models import Project, Task
+from drawapp.drawerApp.models import Project, Task, Note
 import slumber
 from tastypie.serializers import Serializer
 
@@ -47,11 +47,42 @@ class ProjectResourceTest(TestCase):
         self.assertEqual(len(self.serializer.deserialize(resp.content)['objects']), 1)
         assert True
 
-    def test_get_tasks(self):
+    """def test_get_tasks(self):
         resp = self.client.get('/api/v1/task/')
         self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp['Content-Type'].startswith('application/json'))"""
 
-    #Note tests
+#Notes tests
+class NoteResourceTest(TestCase):
+    fixtures = ['data.json']
+    def setUp(self):
+        super(NoteResourceTest, self).setUp()
+        self.project_id = '4ea9c4fdbb69337f8e000001'
+        self.project = Project.objects.get(pk= self.project_id)
+        self.post_data = {
+            'title': 'testTitle',
+            'content': 'note content test',
+        }
+        self.serializer = Serializer()
+
     def test_get_notes(self):
-        resp = self.client.get('/api/v1/note/')
+        resp = self.client.get('/api/v1/project/{0}/notes/'.format(self.project_id))
         self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp['Content-Type'].startswith('application/json'))
+
+    def test_post_note(self):
+        format = self.serializer.content_types.get('json')
+        serialized_data = self.serializer.serialize(self.post_data, format='application/json')
+        self.assertEqual(len(self.project.notes), 0)
+        resp = self.client.post('/api/v1/project/{0}/notes/'.format(self.project_id), data = serialized_data, content_type='application/json')
+        self.project = Project.objects.get(pk= self.project_id)
+        self.assertEqual(resp.status_code, 201)
+        self.assertEqual(len(self.project.notes), 1)
+
+    def test_sync_evernote(self):
+        note = Note(title = 'test note sync', content = 'test content sync')
+        self.project.notes.append(note)
+        self.project.save()
+        createdNote = note.sync_note_evernote()
+        self.assertTrue(createdNote is not None)
+        self.assertTrue(createdNote.active)

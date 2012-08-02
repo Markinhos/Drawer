@@ -15,7 +15,8 @@
             "pub_date" : "2012-07-17 12:24:28",
             "description": "testDesc",
             "user": "4ea9c4fdbb69337f8e000002",
-            "tasks": []
+            "tasks": [],
+            "notes": []
         }
     },
     {

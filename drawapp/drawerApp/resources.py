@@ -13,7 +13,11 @@ class UserResource(MongoResource):
         queryset = User.objects.all()
         resource_name = 'user'
 
-
+class UserProfileResource(MongoResource):
+    class Meta:
+        queryset = UserProfile.objects.all()
+        resource_name = 'userProfile'
+        authorization = Authorization()
 """class TaskResource(MongoResource):
     tasks = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'tasks', null=True, blank=True, full=True)
     class Meta:
@@ -43,6 +47,13 @@ class NoteCollectionResource(MongoListResource):
         resource_name       =   'note'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=NoteForm)
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        bundle = super(NoteCollectionResource, self).obj_create(bundle,request, **kwargs)
+        #Check if evernote accout is set up
+        #user_profile = UserProfile.objects.get(request.user)
+        #self.instance.notes[0].sync_note_evernote("testing oha")
+        return bundle
 
 class ProjectListResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user')
