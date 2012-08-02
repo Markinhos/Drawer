@@ -148,7 +148,6 @@
                                 <a href="{% url logout %}">Logout</a>
                             </ul>
                         </li>
-
                     </ul>
                 {% else %}
                     <a data-toggle="modal" class="btn btn-inverse" href="#loginModal">Log in</a>
@@ -186,15 +185,15 @@
 {% else %}
     <div class="container">
         <div class="hero-unit">
-            <h1>You are not logged motherfucker!!</h1>
-            <p>Click on the right side to log in or you'll suffer.</p>
+            <h1>You are not logged</h1>
+            <p>Click on the right side to log in.</p>
         </div>
         <div id="loginModal" class="modal hide fade">
             {% load url from future %}
             <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
             <div class="modal-header">
                 <button class="close" data-dismiss="modal">&times;</button>
-                <h3>Login motherfucker</h3>
+                <h3>Login</h3>
             </div>
             <div id="loginModalBody" class="modal-body">
 
