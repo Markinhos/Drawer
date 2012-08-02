@@ -41,6 +41,7 @@ class TaskCollectionResource(MongoListResource):
         validation          =   FormValidation(form_class=TaskForm)
 
 class NoteCollectionResource(MongoListResource):
+    title = fields.CharField(attribute= 'title', null = True, blank = True)
     class Meta:
         object_class        =   Note
         queryset            =   Note.objects.all()
