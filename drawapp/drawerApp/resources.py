@@ -1,7 +1,8 @@
 from drawapp.drawerApp.models import Task, Project, UserProfile, Note
 from drawapp.drawerApp.modelforms import ProjectForm, TaskForm, NoteForm
 from tastypie.authorization import Authorization
-from tastypie import fields
+from tastypie import fields, utils
+from datetime import datetime
 from tastypie.validation import FormValidation
 from django.contrib.auth.models import User
 from drawapp.tastypie_nonrel.resources import MongoResource, MongoListResource
@@ -33,6 +34,7 @@ class NoteResource(MongoResource):
         authorization = Authorization()"""
 
 class TaskCollectionResource(MongoListResource):
+    created_date = fields.DateTimeField(default = datetime.now)
     class Meta:
         object_class        =   Task
         queryset            =   Task.objects.all()
@@ -42,6 +44,7 @@ class TaskCollectionResource(MongoListResource):
 
 class NoteCollectionResource(MongoListResource):
     title = fields.CharField(attribute= 'title', null = True, blank = True)
+    created_date = fields.DateTimeField(default = datetime.now)
     class Meta:
         object_class        =   Note
         queryset            =   Note.objects.all()
