@@ -4,7 +4,8 @@
         "pk": "4ea9c4fdbb69337f8e000002",
         "fields": {
             "username": "marcos",
-            "email": "test@email.com"
+            "email": "test@email.com",
+            "password" : "test"
         }
     },
     {

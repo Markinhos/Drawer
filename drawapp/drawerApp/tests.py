@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from drawapp.drawerApp.models import Project, Task, Note
+from drawapp.drawerApp.models import Project, Task, Note, UserProfile
 import slumber
 from tastypie.serializers import Serializer
+from drawerApp.models import EvernoteProfile
 
 class ProjectResourceTest(TestCase):
     fixtures = ['data.json']
@@ -64,6 +65,11 @@ class NoteResourceTest(TestCase):
             'content': 'note content test',
         }
         self.serializer = Serializer()
+        self.user = User.objects.create_user("marcos2", 'marcos2@test.com', "test")
+        self.client.login(username = "marcos2", password = "test")
+        self.evernote_profile = EvernoteProfile()
+        self.user_profile = UserProfile(user = self.user, evernote_profile = self.evernote_profile)
+        self.user_profile.save()
 
     def test_get_notes(self):
         resp = self.client.get('/api/v1/project/{0}/notes/'.format(self.project_id))
@@ -74,7 +80,7 @@ class NoteResourceTest(TestCase):
         format = self.serializer.content_types.get('json')
         serialized_data = self.serializer.serialize(self.post_data, format='application/json')
         self.assertEqual(len(self.project.notes), 0)
-        resp = self.client.post('/api/v1/project/{0}/notes/'.format(self.project_id), data = serialized_data, content_type='application/json')
+        resp = self.client.post('/api/v1/project/{0}/notes/'.format(self.project_id), data = serialized_data, content_type='application/json' )
         self.project = Project.objects.get(pk= self.project_id)
         self.assertEqual(resp.status_code, 201)
         self.assertEqual(len(self.project.notes), 1)
@@ -83,6 +89,10 @@ class NoteResourceTest(TestCase):
         note = Note(title = 'test note sync', content = 'test content sync')
         self.project.notes.append(note)
         self.project.save()
-        createdNote = note.sync_note_evernote()
+        createdNote = note.sync_note_evernote(self.user_profile.evernote_profile)
         self.assertTrue(createdNote is not None)
         self.assertTrue(createdNote.active)
+
+    def test_get_synced_notes(self):
+        Note.get_synced_notes(self.user_profile.evernote_profile)
+        self.assertTrue(False)

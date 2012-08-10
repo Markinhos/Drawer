@@ -33,7 +33,7 @@
 
         project_detail_note: function(id) {
             //fetch or get cached projects            
-            app.projects.maybeFetch({
+            app.projects.fetch({
                 //if success render sidebar and detail app
                 success: function() {
                     app.sidebar.render(id);

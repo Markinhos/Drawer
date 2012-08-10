@@ -1,0 +1,20 @@
+<div id="noteModal" class="note-modal modal hide fade">    
+    <form method="post" action="#">
+        <div class="modal-header">
+            <div class="note-modal-title">
+                <h2>{{ title }}</h2>
+            </div>
+            <div class="note-modal-actions">
+                <i class="icon-edit"></i>
+            </div>            
+        </div>
+        <div id="loginModalBody" class="modal-body">
+            
+            <p>{{& content }}</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <input class="btn btn-primary" type="submit" value="Edit" />
+        </div>
+    </form>
+</div>

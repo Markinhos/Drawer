@@ -163,6 +163,8 @@ LOGGING = {
         }
 }
 
+EVERNOTE_NOTEBOOK = '@Drawer'
+
 try:
     from local_settings import *
 except ImportError:

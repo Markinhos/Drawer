@@ -25,7 +25,29 @@
 .note-item {
 	height: 240px;
 	background-color: @grayLighter;
+	.caption{
+		cursor: pointer;
+		height: 70%;
+		overflow: hidden;
+	}
+	.note-actions{
+		margin-top: 5%;
+		padding-left: 2%;
+	}
+	
 }
+.note-modal {
+	.modal-header{
+		.note-modal-title{
+			width: 90%;			
+		}
+		.note-modal-actions{
+			width: 10%;
+			float: right;
+		}
+	}
+}
+
 .column-joined{
 	margin-left: 0%;
 }
