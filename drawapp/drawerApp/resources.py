@@ -7,6 +7,7 @@ from tastypie.validation import FormValidation
 from django.contrib.auth.models import User
 from drawapp.tastypie_nonrel.resources import MongoResource, MongoListResource
 from drawapp.tastypie_nonrel.fields import EmbeddedCollection
+from drawerApp.utils import EvernoteHelper
 
 class UserResource(MongoResource):
 
@@ -83,6 +84,7 @@ class NoteCollectionResource(MongoListResource):
     evernote_guid = fields.CharField(null=True, blank=True)
     modified = fields.DateTimeField(default = datetime.now)
     created = fields.DateTimeField(default = datetime.now)
+    snipett = fields.CharField(readonly=True)
 
     class Meta:
         object_class        =   Note
@@ -90,6 +92,9 @@ class NoteCollectionResource(MongoListResource):
         resource_name       =   'note'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=NoteForm)
+
+    def dehydrate_snipett(self, bundle):
+        return EvernoteHelper.create_snipett(bundle.obj.content)
 
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = super(NoteCollectionResource, self).obj_create(bundle,request, **kwargs)

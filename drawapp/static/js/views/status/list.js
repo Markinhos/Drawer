@@ -1,6 +1,6 @@
 (function () {
     window.StatusListView = Backbone.View.extend({
-        el: '#task-list',
+        el: '#status-list',
         initialize: function(){
             _.bindAll(this, 'addOne', 'addAll');
 
@@ -17,10 +17,10 @@
             this.collection.each(this.addOne);
         },
 
-        addOne: function(task){
+        addOne: function(status){
             var view = new StatusDetailView({
                 parentView: this,
-                model: task
+                model: status
             });
             $(this.el).prepend(view.render().el);
             this.views.push(view);

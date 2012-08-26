@@ -122,13 +122,20 @@ class EvernoteHelper(object):
         local_note.title = evernote_note.title
         tree = etree.fromstring(evernote_note.content)
         content, snipett = "", ""
-        snipett_list = tree.xpath('//text()')
-        for chunk in snipett_list:
-            snipett += chunk + " "
         for chunk in list(tree):
             content += etree.tostring(chunk)
         local_note.content = content
-        local_note.snipett = snipett.strip()
+        local_note.snipett = self.create_snipett(evernote_note.content)
         local_note.evernote_guid = evernote_note.guid
         local_note.evernote_usn = evernote_note.updateSequenceNum
         return local_note
+
+    @classmethod
+    def create_snipett(cls, content):
+        snipett = ""
+        tree = etree.fromstring('<div>' + content + '</div>')
+        snipett_list = tree.xpath('//text()')
+        for chunk in list(snipett_list):
+            snipett += chunk + " "
+        return snipett.strip()
+

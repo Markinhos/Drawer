@@ -88,7 +88,7 @@
         },
 
         project_detail: function (id){
-            this.project_detail_tasks(id);
+            this.project_detail_activity(id);
         },
         list: function(){
             app.projects.maybeFetch({

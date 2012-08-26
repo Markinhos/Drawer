@@ -121,7 +121,6 @@ class Comment(models.Model):
 class Note(models.Model):
     title = models.CharField(max_length=200, default='', blank= True)
     content = models.TextField(max_length=5000)
-    snipett = models.TextField(max_length=5000)
     created = models.DateTimeField(auto_now=True)
     modified = models.DateTimeField(auto_now_add=True, null=True)
     evernote_usn = models.IntegerField(default=0, blank=True)
