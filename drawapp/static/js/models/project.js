@@ -21,6 +21,26 @@
                 reverseRelation: {
                     key: 'project'
                 }
+            },
+            {
+                type: Backbone.HasMany,
+                key: 'files',
+                url: this.urlRoot + '/' + this.idAttribute + '/',
+                relatedModel: 'File',
+                collectionType: 'FileCollection',
+                reverseRelation: {
+                    key: 'project'
+                }
+            },
+            {
+                type: Backbone.HasMany,
+                key: 'statuses',
+                url: this.urlRoot + '/' + this.idAttribute + '/',
+                relatedModel: 'Status',
+                collectionType: 'StatusCollection',
+                reverseRelation: {
+                    key: 'project'
+                }
             }
         ]
     });

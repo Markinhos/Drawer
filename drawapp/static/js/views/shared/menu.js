@@ -2,17 +2,25 @@
     window.MenuView = Backbone.View.extend({
     	events: {
     		'click .task': 'navigate_to_tasks',
-    		'click .note': 'navigate_to_notes'
+    		'click .note': 'navigate_to_notes',
+            'click .file': 'navigate_to_files',
+            'click .activity': 'navigate_to_activity'
 		},
         render: function(data){
             $(this.el).html(ich.menuView(data));
             return this;
         },
         navigate_to_notes: function(){
-        	app.router.navigate('project/' + this.model.get('id') + '/note/', {trigger: true});
+        	app.router.navigate('project/' + this.model.get('id') + '/notes/', {trigger: true});
         },
         navigate_to_tasks: function(){
-        	app.router.navigate('project/' + this.model.get('id') + '/task/', {trigger: true});
+        	app.router.navigate('project/' + this.model.get('id') + '/tasks/', {trigger: true});
+        },
+        navigate_to_files: function(){
+            app.router.navigate('project/' + this.model.get('id') + '/files/', {trigger: true});
+        },
+        navigate_to_activity: function(){
+            app.router.navigate('project/' + this.model.get('id') + '/activity/', {trigger: true});
         }
     });
 })();

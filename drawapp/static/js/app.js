@@ -11,6 +11,8 @@
         app.menu = new MenuView({
             el: $("#app")
         });
+        app.userProfile = new UserProfile();
+        app.userProfile.fetch();
         Backbone.history.start({
             pushState: true,
             silent: app.loaded

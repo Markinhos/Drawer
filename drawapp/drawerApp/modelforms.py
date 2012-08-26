@@ -1,4 +1,4 @@
-from drawapp.drawerApp.models import Project, Task, Note
+from drawapp.drawerApp.models import Project, Task, Note, FileMetadata, Comment
 from django.forms.models import ModelForm
 from django.forms.fields import ChoiceField
 
@@ -24,3 +24,11 @@ class ProjectForm(ModelForm):
 class NoteForm(ModelForm):
     class Meta:
         model = Note
+
+class FileMetadataForm(ModelForm):
+    class Meta:
+        model = FileMetadata
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment

@@ -5,7 +5,6 @@ from evernote.edam.userstore import UserStore
 from thrift.protocol import TBinaryProtocol
 from thrift.transport import THttpClient
 from django.conf import settings
-import xml.dom as minidom
 import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.type.ttypes as Types
 from lxml import etree as etree

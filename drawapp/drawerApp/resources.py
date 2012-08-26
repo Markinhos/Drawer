@@ -1,5 +1,5 @@
-from drawapp.drawerApp.models import Task, Project, UserProfile, Note
-from drawapp.drawerApp.modelforms import ProjectForm, TaskForm, NoteForm
+from drawapp.drawerApp.models import Task, Project, UserProfile, Note, FileMetadata, Comment
+from drawapp.drawerApp.modelforms import ProjectForm, TaskForm, NoteForm, FileMetadataForm, CommentForm
 from tastypie.authorization import Authorization
 from tastypie import fields, utils
 from datetime import datetime
@@ -13,12 +13,14 @@ class UserResource(MongoResource):
     class Meta:
         queryset = User.objects.all()
         resource_name = 'user'
-
+        
 class UserProfileResource(MongoResource):
+    user = fields.ForeignKey(UserResource, 'user', full=True)
     class Meta:
         queryset = UserProfile.objects.all()
         resource_name = 'userProfile'
         authorization = Authorization()
+        excludes = ['dropbox_profile', 'evernote_profile']
 """class TaskResource(MongoResource):
     tasks = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'tasks', null=True, blank=True, full=True)
     class Meta:
@@ -33,8 +35,27 @@ class NoteResource(MongoResource):
         resource_name = 'note'
         authorization = Authorization()"""
 
+class FileMetadataCollectionResource(MongoListResource):
+    created = fields.DateTimeField(default = datetime.now)
+
+    class Meta:
+        object_class        =   FileMetadata
+        queryset            =   FileMetadata.objects.all()
+        resource_name       =   'fileMetadata'
+        authorization       =   Authorization()
+        validation          =   FormValidation(form_class=FileMetadataForm)
+
+    def get_list(self, request, **kwargs):
+        user_profile = UserProfile.objects.get(user = request.user)
+        if True:
+            project = Project.objects.get(pk = self.instance.pk)
+            FileMetadata.get_synced_files(user_profile, project)
+        return super(FileMetadataCollectionResource, self).get_list(request, **kwargs)
+
 class TaskCollectionResource(MongoListResource):
-    created_date = fields.DateTimeField(default = datetime.now)
+    created = fields.DateTimeField(default = datetime.now)
+    modified = fields.DateTimeField(default = datetime.now)
+
     class Meta:
         object_class        =   Task
         queryset            =   Task.objects.all()
@@ -42,11 +63,23 @@ class TaskCollectionResource(MongoListResource):
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=TaskForm)
 
+
+class CommentCollectionResource(MongoListResource):
+    owner = fields.ForeignKey(UserResource, 'owner')
+
+    class Meta:
+        object_class        =   Comment
+        queryset            =   Comment.objects.all()
+        resource_name       =   'comment'
+        authorization       =   Authorization()
+
 class NoteCollectionResource(MongoListResource):
     title = fields.CharField(attribute= 'title', default='', blank = True)
     evernote_usn = fields.IntegerField(default=0, blank=True, null=True)
     evernote_guid = fields.CharField(null=True, blank=True)
-    modified_date = fields.DateTimeField(default = datetime.now)
+    modified = fields.DateTimeField(default = datetime.now)
+    created = fields.DateTimeField(default = datetime.now)
+
     class Meta:
         object_class        =   Note
         queryset            =   Note.objects.all()
@@ -69,25 +102,13 @@ class NoteCollectionResource(MongoListResource):
             Note.get_synced_notes(user_profile, project)
         return super(NoteCollectionResource, self).get_list(request, **kwargs)
 
-
-
-class ProjectListResource(MongoResource):
-    user = fields.ForeignKey(UserResource, 'user')
-    pub_date = fields.DateTimeField(default=datetime.now)
-    class Meta:
-        queryset = Project.objects.all()
-        resource_name = 'projectList'
-        authorization = Authorization()
-        excludes = ['tasks']
-        filtering = {
-            "title": ('exact', 'startswith'),
-        }
-
 class ProjectResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user')
     tasks = EmbeddedCollection(of = TaskCollectionResource, attribute = 'tasks', null=True, blank=True, full=True)
     notes = EmbeddedCollection(of = NoteCollectionResource, attribute = 'notes', null=True, blank=True, full=True)
-    pub_date = fields.DateTimeField(default = datetime.now)
+    statuses = EmbeddedCollection(of = CommentCollectionResource, attribute = 'statuses', null=True, blank=True, full=True)
+    files = EmbeddedCollection(of = FileMetadataCollectionResource, attribute = 'files', null=True, blank=True, full=True)
+
     class Meta:
         queryset            =    Project.objects.all()
         resource_name       =    'project'

@@ -165,6 +165,12 @@ LOGGING = {
 
 EVERNOTE_NOTEBOOK = '@Drawer'
 
+DROPBOX_AUTH_KEY = '8gvbfoxxb9f98ah'
+
+DROPBOX_AUTH_SECRET = 'xciu5lbxmiiboju'
+
+DROPBOX_ACCESS_TYPE = 'app_folder'
+
 try:
     from local_settings import *
 except ImportError:

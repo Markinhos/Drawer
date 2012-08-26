@@ -1,8 +1,54 @@
-from drawapp.drawerApp.models import Project
+import urllib
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.models import User
+from dropbox import session, client
+from django.conf import settings
+from django.http import HttpRequest, HttpResponse
+from drawerApp.models import UserProfile
+from django.shortcuts import redirect, render
 
 def index(request):
-    return render_to_response('home.html', context_instance = RequestContext(request))
+    user_profile = UserProfile.objects.get(user = request.user)
+    context = {'user_profile': user_profile,}
+    return render(request, 'home.html', context)
+
+def get_dropbox_auth_url(request):
+    if request.method == 'GET':
+        user_profile = UserProfile.objects.get(user = request.user)
+        callback_url = request.GET.get('callback_url')
+        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
+        request_token = sess.obtain_request_token()
+        url = sess.build_authorize_url(request_token, callback_url)
+        user_profile.dropbox_profile.request_token =  { "key" : request_token.key, "secret": request_token.secret}
+        user_profile.save()
+        return redirect(url)
+
+
+def get_dropbox_access_token(request):
+    if request.method == "GET":
+        user_profile = UserProfile.objects.get(user = request.user)
+        request_token = user_profile.dropbox_profile.request_token
+        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
+        request_token = session.OAuthToken(request_token['key'], request_token['secret'])
+        access_token = sess.obtain_access_token(request_token)
+
+        user_profile.dropbox_profile.access_token = { "key" : access_token.key, "secret": access_token.secret}
+        user_profile.dropbox_profile.is_dropbox_synced = True
+        user_profile.save()
+        return redirect("/project/{0}/files/".format(request.GET.get('project_id')))
+
+def upload_dropbox_file(request):
+    if request.method == 'POST':
+        user_profile = UserProfile.objects.get(user = request.user)
+        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+        drop_client = client.DropboxClient(sess)
+
+        file = request.FILES['file']
+        result = drop_client.put_file('/' + file.name, file.file)
+
+        dest_path = result['path']
+
+        return redirect("/project/{0}/files/".format(request.POST.get('project_id')))
