@@ -1,0 +1,6 @@
+<form enctype="multipart/form-data" method="POST" action="/upload-dropbox-file/">
+	{{& csfr_input }}
+	<input type="hidden" name="project_id" value={{ project_id}}>
+    <input type="file" name="file"/><br/>
+    <input type="submit"/>
+</form>

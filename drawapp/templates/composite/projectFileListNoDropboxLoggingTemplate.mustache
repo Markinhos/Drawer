@@ -1,0 +1,10 @@
+<div class="well">
+	<h2 class="title">{{ title }}</h2>
+	<p class="description"><strong>Descriptsion:</strong> {{ description }}</p>
+	<div id="errors">
+	</div>
+	<div>
+		<h3>You are not logged on dropbox</h3>
+		<p>In order to sync your files you have to grant access to this app <a href="/dropbox-url/?callback_url=http://localhost:5000/dropbox-access-token/?project_id={{ id }}" >here</a></p>
+	</div>
+</div>
