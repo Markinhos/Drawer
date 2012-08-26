@@ -66,12 +66,16 @@ class TaskCollectionResource(MongoListResource):
 
 class CommentCollectionResource(MongoListResource):
     owner = fields.ForeignKey(UserResource, 'owner')
+    owner_name = fields.CharField(readonly=True)
 
     class Meta:
         object_class        =   Comment
         queryset            =   Comment.objects.all()
         resource_name       =   'comment'
         authorization       =   Authorization()
+
+    def dehydrate_owner_name(self, bundle):
+        return bundle.obj.owner.username
 
 class NoteCollectionResource(MongoListResource):
     title = fields.CharField(attribute= 'title', default='', blank = True)
