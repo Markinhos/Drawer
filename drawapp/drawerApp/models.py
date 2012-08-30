@@ -36,7 +36,7 @@ class UserProfile(models.Model):
     dropbox_profile = EmbeddedModelField(model = DropboxProfile, null= True)
 
 class FileMetadata(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now())
     icon = models.CharField(max_length=100)
     is_dir = models.BooleanField()
     modified = models.DateField()
@@ -103,8 +103,8 @@ class Task(models.Model):
     STATUS = ['DONE', 'TODO']
     title = models.CharField(max_length=200)
     status = models.CharField(max_length=50, choices=[(item, item) for item in STATUS])
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now())
+    modified = models.DateTimeField(auto_now=True)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
 
     def __unicode__(self):
@@ -113,7 +113,7 @@ class Task(models.Model):
 
 class Comment(models.Model):
     text = models.CharField(max_length=1000)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now())
     modified = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
@@ -124,7 +124,7 @@ class Comment(models.Model):
 class Note(models.Model):
     title = models.CharField(max_length=200, default='', blank= True)
     content = models.TextField(max_length=5000)
-    created = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(default=datetime.now())
     modified = models.DateTimeField(auto_now_add=True, null=True)
     evernote_usn = models.IntegerField(default=0, blank=True)
     evernote_guid = models.CharField(max_length=200, null=True, blank=True)
@@ -195,7 +195,7 @@ class Project(models.Model):
     files = EmbeddedModelListField(EmbeddedModelField('FileMetadata'), null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=5000)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default=datetime.now())
     modified = models.DateTimeField(auto_now=True)
 
     def save(self):
