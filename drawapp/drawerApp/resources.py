@@ -36,8 +36,23 @@ class NoteResource(MongoResource):
         resource_name = 'note'
         authorization = Authorization()"""
 
+class CommentCollectionResource(MongoListResource):
+    owner = fields.ForeignKey(UserResource, 'owner')
+    owner_name = fields.CharField(readonly=True)
+    comments = EmbeddedCollection(of = 'drawapp.drawerApp.resources.CommentCollectionResource', attribute = 'comments', null=True, blank=True, full=True)
+
+    class Meta:
+        object_class        =   Comment
+        queryset            =   Comment.objects.all()
+        resource_name       =   'comment'
+        authorization       =   Authorization()
+
+    def dehydrate_owner_name(self, bundle):
+        return bundle.obj.owner.username
+
 class FileMetadataCollectionResource(MongoListResource):
     created = fields.DateTimeField(default = datetime.now)
+    comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
 
     class Meta:
         object_class        =   FileMetadata
@@ -56,6 +71,7 @@ class FileMetadataCollectionResource(MongoListResource):
 class TaskCollectionResource(MongoListResource):
     created = fields.DateTimeField(default = datetime.now)
     modified = fields.DateTimeField(default = datetime.now)
+    comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
 
     class Meta:
         object_class        =   Task
@@ -64,20 +80,6 @@ class TaskCollectionResource(MongoListResource):
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=TaskForm)
 
-
-class CommentCollectionResource(MongoListResource):
-    owner = fields.ForeignKey(UserResource, 'owner')
-    owner_name = fields.CharField(readonly=True)
-
-    class Meta:
-        object_class        =   Comment
-        queryset            =   Comment.objects.all()
-        resource_name       =   'comment'
-        authorization       =   Authorization()
-
-    def dehydrate_owner_name(self, bundle):
-        return bundle.obj.owner.username
-
 class NoteCollectionResource(MongoListResource):
     title = fields.CharField(attribute= 'title', default='', blank = True)
     evernote_usn = fields.IntegerField(default=0, blank=True, null=True)
@@ -85,6 +87,7 @@ class NoteCollectionResource(MongoListResource):
     modified = fields.DateTimeField(default = datetime.now)
     created = fields.DateTimeField(default = datetime.now)
     snipett = fields.CharField(readonly=True)
+    comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
 
     class Meta:
         object_class        =   Note

@@ -1,11 +1,15 @@
-<div class="well status-item">
-	<p class="status-content">
-		<blockquote>
-			<p>{{ text }}</p>
-			<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
-		</blockquote>
-	</p>
-	<div class="status-meta">
-		<i class="icon-comment"></i>
-	</div>		
-</div>	
+<div class="well status-container">
+	<div class="well status-item">
+			<blockquote>
+				<p>{{ text }}</p>
+				<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
+			</blockquote>
+		<div class="status-meta">
+			<i class="icon-comment"></i>
+		</div>		
+	</div>	
+	<div class="comments-container">		
+		<ul id="status-comments-list-{{ id }}" class="status-comments-list">
+		</ul>
+	</div>
+</div>

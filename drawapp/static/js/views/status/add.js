@@ -24,7 +24,7 @@
                 var result = this.model.get('statuses').create(status,{ wait : true ,
                     success : function(model) {
                         that.options.parentView.addOne(status);
-                        this.$('#status-title').val('');
+                        this.$('#status-text').val('');
                     },
                     error : function(model, response){
                         that.errorView = new Flash(),

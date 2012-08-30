@@ -10,8 +10,10 @@ from drawerApp.models import UserProfile
 from django.shortcuts import redirect, render
 
 def index(request):
-    user_profile = UserProfile.objects.get(user = request.user)
-    context = {'user_profile': user_profile,}
+    context = {}
+    if request.user.id is not None:
+        user_profile = UserProfile.objects.get(user = request.user)
+        context = {'user_profile': user_profile,}
     return render(request, 'home.html', context)
 
 def get_dropbox_auth_url(request):

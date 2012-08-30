@@ -48,6 +48,7 @@ class FileMetadata(models.Model):
     size = models.CharField(max_length=200)
     thumb_exists = models.BooleanField()
     thumb_url = models.SlugField()
+    comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
 
     def __unicode__(self):
         return self.title
@@ -104,6 +105,7 @@ class Task(models.Model):
     status = models.CharField(max_length=50, choices=[(item, item) for item in STATUS])
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now_add=True)
+    comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
 
     def __unicode__(self):
         return self.title
@@ -114,6 +116,7 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User)
+    comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
 
     def __unicode__(self):
         return self.status
@@ -125,6 +128,7 @@ class Note(models.Model):
     modified = models.DateTimeField(auto_now_add=True, null=True)
     evernote_usn = models.IntegerField(default=0, blank=True)
     evernote_guid = models.CharField(max_length=200, null=True, blank=True)
+    comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
 
     def save(self):
         super(Note, self).save()

@@ -23,6 +23,19 @@
                 model: status
             });
             $(this.el).prepend(view.render().el);
+            view.commentAddView = new CommentAddView({
+                el: $("#status-comments-list-" +  view.model.get('id')),
+                model: status
+            });
+
+            view.commentListView = new CommentListView({
+                el: $("#status-comments-list-" +  view.model.get('id')),
+                collection: status.get('comments')
+            });
+
+            view.commentAddView.render();
+            view.commentListView.render();
+
             this.views.push(view);
             view.bind('all', this.rethrow, this);
         },
