@@ -99,17 +99,6 @@ class FileMetadata(models.Model):
                     parent_project.files.append(fileMetadata)
             parent_project.save()
 
-class Task(models.Model):
-    STATUS = ['DONE', 'TODO']
-    title = models.CharField(max_length=200)
-    status = models.CharField(max_length=50, choices=[(item, item) for item in STATUS])
-    created = models.DateTimeField(default=datetime.now())
-    modified = models.DateTimeField(auto_now=True)
-    comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
-
-    def __unicode__(self):
-        return self.title
-
 
 class Comment(models.Model):
     text = models.CharField(max_length=1000)
@@ -118,14 +107,25 @@ class Comment(models.Model):
     owner = models.ForeignKey(User)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
 
+
+
+class Task(models.Model):
+    STATUS = ['DONE', 'TODO']
+    title = models.CharField(max_length=200)
+    status = models.CharField(max_length=50, choices=[(item, item) for item in STATUS])
+    created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
+    modified = models.DateTimeField(auto_now=True)
+    comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
+    #comments = EmbeddedModelListField(models.ForeignKey(Comment), null= True, blank=True)
+
     def __unicode__(self):
-        return self.status
+        return self.title
 
 class Note(models.Model):
     title = models.CharField(max_length=200, default='', blank= True)
     content = models.TextField(max_length=5000)
-    created = models.DateTimeField(default=datetime.now())
-    modified = models.DateTimeField(auto_now_add=True, null=True)
+    created = models.DateTimeField(default=datetime.now(), null=True)
+    modified = models.DateTimeField(auto_now=True, null=True)
     evernote_usn = models.IntegerField(default=0, blank=True)
     evernote_guid = models.CharField(max_length=200, null=True, blank=True)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
@@ -195,7 +195,7 @@ class Project(models.Model):
     files = EmbeddedModelListField(EmbeddedModelField('FileMetadata'), null=True, blank=True)
     title = models.CharField(max_length=200)
     description = models.CharField(max_length=5000)
-    created = models.DateTimeField(default=datetime.now())
+    created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
     modified = models.DateTimeField(auto_now=True)
 
     def save(self):

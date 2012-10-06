@@ -6,6 +6,7 @@
 
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
+
         },
 
         changeEvent: function(){
@@ -23,18 +24,17 @@
                 model: status
             });
             $(this.el).prepend(view.render().el);
-            view.commentAddView = new CommentAddView({
-                el: $("#status-comments-list-" +  view.model.get('id')),
-                model: status
-            });
+            //view.commentAddView = new CommentAddView({
+              //  model: status
+            //});
 
-            view.commentListView = new CommentListView({
-                el: $("#status-comments-list-" +  view.model.get('id')),
-                collection: status.get('comments')
-            });
+            //view.commentListView = new CommentListView({
+            //    el: $("#status-comments-list-" +  view.model.get('id')),
+            //    collection: status.get('comments')
+            //});
 
-            view.commentAddView.render();
-            view.commentListView.render();
+            //$("#comments-container-" +  view.model.get('id')).append(view.commentAddView.render().el);
+            //view.commentListView.render();
 
             this.views.push(view);
             view.bind('all', this.rethrow, this);

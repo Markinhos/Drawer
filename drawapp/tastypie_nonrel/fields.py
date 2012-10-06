@@ -141,7 +141,7 @@ class EmbeddedCollection(ToManyField):
                                                  help_text=help_text)
 
     def dehydrate(self, bundle):
-        if not bundle.obj or not bundle.obj.pk:
+        if not bundle.obj or not hasattr(bundle.obj, 'pk'):
             if not self.null:
                 raise ApiFieldError("The model '%r' does not have a primary key and can not be d in a ToMany context." % bundle.obj)
             return []

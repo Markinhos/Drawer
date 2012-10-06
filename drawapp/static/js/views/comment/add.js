@@ -18,11 +18,11 @@
         createComment: function () {
             var text = this.$('#comment-text').val();
             if (text) {
-                var comment = new Comment({
+                var comment = {
                     text: text,
                     owner: '/api/v1/user/' + APP_GLOBAL.USER + '/'
-                });
-                this.model.get('comments').add(comment);
+                };
+                this.model.get('comments').push(comment);
                 var that = this;
                 var result = this.model.save({ wait : true ,
                     success : function(model) {
@@ -40,6 +40,7 @@
 
         render: function () {
             $(this.el).html(ich.commentAddTemplate());
+            return this;
         }
 
     });

@@ -1132,6 +1132,7 @@
 		 * @return {jQuery.when[]} An array of request objects
 		 */
 		fetchRelated: function( key, options, update ) {
+			debugger;
 			options || ( options = {} );
 			var setUrl,
 				requests = [],

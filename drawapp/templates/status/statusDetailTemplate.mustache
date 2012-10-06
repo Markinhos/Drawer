@@ -5,11 +5,19 @@
 				<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
 			</blockquote>
 		<div class="status-meta">
-			<i class="icon-comment"></i>
+			<i class="icon-comment" id="icon-comment-{{ id }}"></i>
 		</div>		
 	</div>	
-	<div class="comments-container">		
-		<ul id="status-comments-list-{{ id }}" class="status-comments-list">
+	<div class="comments-container" id="comments-container-{{ id }}">
+		<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none; diplay: none;">
+			{{#comments}}
+				<li class="comment-item well">
+					<blockquote class="comment-content">
+						<p>{{ text }}</p>
+						<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
+					</blockquote>		
+				</li>
+			{{/comments}}
 		</ul>
 	</div>
 </div>

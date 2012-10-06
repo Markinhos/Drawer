@@ -69,7 +69,7 @@ class FileMetadataCollectionResource(MongoListResource):
         return super(FileMetadataCollectionResource, self).get_list(request, **kwargs)
 
 class TaskCollectionResource(MongoListResource):
-    created = fields.DateTimeField(default = datetime.now)
+    created = fields.DateTimeField(default = datetime.now, null=True, blank=True)
     modified = fields.DateTimeField(default = datetime.now)
     comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
 
@@ -120,6 +120,7 @@ class ProjectResource(MongoResource):
     notes = EmbeddedCollection(of = NoteCollectionResource, attribute = 'notes', null=True, blank=True, full=True)
     statuses = EmbeddedCollection(of = CommentCollectionResource, attribute = 'statuses', null=True, blank=True, full=True)
     files = EmbeddedCollection(of = FileMetadataCollectionResource, attribute = 'files', null=True, blank=True, full=True)
+    created = fields.DateTimeField(default = datetime.now)
 
     class Meta:
         queryset            =    Project.objects.all()

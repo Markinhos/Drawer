@@ -7,7 +7,7 @@
         },
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.
-            if(this._fetched){
+            if (this._fetched){
                 // If this has already been fetched, call the success, if it exists
                 options.success && options.success();
                 return;
