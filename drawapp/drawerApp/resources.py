@@ -2,6 +2,8 @@ from drawapp.drawerApp.models import Task, Project, UserProfile, Note, FileMetad
 from drawapp.drawerApp.modelforms import ProjectForm, TaskForm, NoteForm, FileMetadataForm, CommentForm
 from tastypie.authorization import Authorization
 from tastypie import fields, utils
+from tastypie.authorization import DjangoAuthorization
+from tastypie.authentication import BasicAuthentication, Authentication
 from datetime import datetime
 from tastypie.validation import FormValidation
 from django.contrib.auth.models import User
@@ -125,7 +127,8 @@ class ProjectResource(MongoResource):
     class Meta:
         queryset            =    Project.objects.all()
         resource_name       =    'project'
-        authorization       =    Authorization()
+        authorization       =    DjangoAuthorization()
+        authentication      =    Authentication()
         allowed_methods     =    ['get', 'post', 'put', 'delete']
         validation          =    FormValidation(form_class=ProjectForm)
         filtering = {
@@ -133,3 +136,10 @@ class ProjectResource(MongoResource):
         }
     def obj_create(self, bundle, request=None, **kwargs):
         return super(ProjectResource, self).obj_create(bundle, request, **kwargs)
+    def apply_authorization_limits(self, request, object_list):
+        if request.user.is_active:
+            user_profile = UserProfile.objects.get(user=request.user)
+            return object_list.filter(id__in=user_profile.projects)
+            #return object_list.filter(user=request.user)
+        else:
+            return []

@@ -106,6 +106,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     )
 
+AUTHENTICATION_BACKENDS = (
+    'permission_backend_nonrel.backends.NonrelPermissionBackend',
+)
+
+
 ROOT_URLCONF = 'drawapp.urls'
 
 LOGIN_URL = '/'
@@ -131,6 +136,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     'djangotoolbox',
+    'permission_backend_nonrel',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
     'django_mongodb_engine',
