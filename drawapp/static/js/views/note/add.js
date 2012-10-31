@@ -26,8 +26,8 @@
                         this.$('#note-content').val('');
                     },
                     error : function(model, response){
-                        that.errorView = new Flash(),
-                        that.errorView.render({message : "Sorry, there has been an error. :(" })
+                        that.errorView = new Flash();
+                        that.errorView.render("Sorry, there has been an error. :(", "error");
                     }
                 });
             }

@@ -18,6 +18,7 @@
             var view = new ProjectView({
                 id: thisModel.id,
                 model: thisModel,
+                parentView: this,
                 className: (this.options.active && this.options.active === thisModel.get('id')) ? 'active' : ''
             });
             $(this.el).children().first().after(view.render().el);
@@ -27,7 +28,15 @@
 
         rethrow: function () {
             this.trigger.apply(this, arguments);
+        },
+
+        deleteOne: function(cid){
+            var t = this.collection.getByCid(cid);
+            var v = this.views.filter(function(view) { return view.model == t })[0];
+            t.destroy();
+            v.remove();
         }
+
 
     });
 })();

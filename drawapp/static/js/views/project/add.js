@@ -13,8 +13,8 @@
         },
 
         createProject: function () {
-            var title = this.$('#projectTitle').val();
-            var description = this.$('#projectDescription').val();
+            var title = $('#projectTitle').val();
+            var description = $('#projectDescription').val();
             if (title) {
                 this.collection.create({
                     title: title,

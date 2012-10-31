@@ -13,7 +13,7 @@
             this.list.addAll();
             new AddProjectView({
                 collection: this.collection,
-                el: this.$('#projectModal')
+                el: $('#projectModal')
             });
         }
     });

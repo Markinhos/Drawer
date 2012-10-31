@@ -2,7 +2,7 @@ import urllib
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import authenticate, login
 from dropbox import session, client
 from django.conf import settings
@@ -27,12 +27,17 @@ def signup(request):
         user = User.objects.create_user(user_name, user_mail, user_password)
 
         #Includes in group regular users
-        group = Group.objects.get(name='Users')
+        group, created = Group.objects.get_or_create(name='Users')
+        if created:
+            utils.add_permission_to_group(Permission.objects.get(codename='add_project'))
+            utils.add_permission_to_group(Permission.objects.get(codename='change_project'))
+            utils.add_permission_to_group(Permission.objects.get(codename='delete_project'))
+
         utils.add_user_to_group(user,group)
+        user.save()
 
         user_profile = UserProfile()
         user_profile.user = user
-        user.save()
         user_profile.save()
 
 

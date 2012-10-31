@@ -1,7 +1,7 @@
-from drawapp.drawerApp.models import Task, Project, UserProfile, Note, FileMetadata, Comment
+from drawapp.drawerApp.models import Task, Project, UserProfile, Note, FileMetadata, Comment, Invitation
 from drawapp.drawerApp.modelforms import ProjectForm, TaskForm, NoteForm, FileMetadataForm, CommentForm
 from tastypie.authorization import Authorization
-from tastypie import fields, utils
+from tastypie import fields, utils, http
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import BasicAuthentication, Authentication
 from datetime import datetime
@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from drawapp.tastypie_nonrel.resources import MongoResource, MongoListResource
 from drawapp.tastypie_nonrel.fields import EmbeddedCollection
 from drawerApp.utils import EvernoteHelper
+from bson.objectid import ObjectId
 
 class UserResource(MongoResource):
 
@@ -19,11 +20,13 @@ class UserResource(MongoResource):
         
 class UserProfileResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user', full=True)
+    invitations = EmbeddedCollection(of='drawapp.drawerApp.resources.InvitationResource', attribute='invitations', null=True, full='True')
     class Meta:
         queryset = UserProfile.objects.all()
         resource_name = 'userProfile'
         authorization = Authorization()
         excludes = ['dropbox_profile', 'evernote_profile']
+
 """class TaskResource(MongoResource):
     tasks = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'tasks', null=True, blank=True, full=True)
     class Meta:
@@ -131,15 +134,50 @@ class ProjectResource(MongoResource):
         authentication      =    Authentication()
         allowed_methods     =    ['get', 'post', 'put', 'delete']
         validation          =    FormValidation(form_class=ProjectForm)
-        filtering = {
-            "title": ('exact', 'startswith'),
-        }
+
     def obj_create(self, bundle, request=None, **kwargs):
         return super(ProjectResource, self).obj_create(bundle, request, **kwargs)
     def apply_authorization_limits(self, request, object_list):
         if request.user.is_active:
             user_profile = UserProfile.objects.get(user=request.user)
-            return object_list.filter(id__in=user_profile.projects)
-            #return object_list.filter(user=request.user)
+            #project_list = Project.objects.filter(id__in=user_profile.projects)
+            #object_list = Project.objects.raw_query({'_id': { '$in': [ObjectId(x) for x in (set(user_profile.projects) & set(([p.id for p in object_list])))] }})
+            object_list = Project.objects.filter(id__in=[ObjectId(x) for x in (set(user_profile.projects) & set(([p.id for p in object_list])))])
+            return object_list
         else:
             return []
+
+    def obj_delete(self, request=None, **kwargs):
+        project = Project.objects.get(id=kwargs["pk"])
+        user = User.objects.get(id=request.user.id)
+        user_profile = UserProfile.objects.get(user=request.user)
+
+        if len(project.members) > 1:
+            project.members.remove(ObjectId(user.id))
+            user_profile.projects.remove(ObjectId(project.id))
+            user_profile.save()
+            project.save()
+            return http.HttpNoContent
+        else:
+            return super(ProjectResource, self).obj_delete(request, **kwargs)
+
+class InvitationResource(MongoListResource):
+    project = fields.ForeignKey(ProjectResource, 'project', full=False)
+    receiver = fields.CharField()
+
+    class Meta:
+        queryset = Invitation.objects.all()
+        resource_name = 'invitation'
+        authorization = Authorization()
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        #find user
+        if User.objects.filter(email=bundle.data["receiver"]).exists():
+            user_receiver = User.objects.get(email=bundle.data["receiver"])
+            user_profile_receiver = UserProfile.objects.get(user=user_receiver)
+            project_shared = Project.objects.get(id=ObjectId(bundle.data["project_id"]))
+            project_shared.members.append(user_profile_receiver.id)
+            project_shared.save()
+            user_profile_receiver.projects.append(project_shared.id)
+            user_profile_receiver.save()
+        return super(InvitationResource,self).obj_create(bundle, request, **kwargs)

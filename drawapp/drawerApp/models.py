@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from djangotoolbox.fields import ListField, EmbeddedModelField, DictField
 from django.contrib.auth.models import User
 from dropbox.session import DropboxSession
@@ -13,6 +13,8 @@ import evernote.edam.error.ttypes as Errors
 from dropbox import client, rest, session
 from django.conf import settings
 from datetime import datetime
+from django_mongodb_engine.contrib import MongoDBManager
+from bson.objectid import ObjectId
 
 
 class EmbeddedModelListField(ListField):
@@ -180,12 +182,21 @@ class Note(models.Model):
     def __unicode__(self):
         return self.title
 
-def update_user_profile_projects(sender, instance, created, **kwargs):
+def update_user_profile_projects_create(sender, instance, created, **kwargs):
     if created:
         user_profile = UserProfile.objects.get(user=instance.user)
-        user_profile.projects.append(instance.id)
-        user_profile.save()
+        if instance.id not in user_profile.projects:
+            user_profile.projects.append(instance.id)
+            user_profile.save()
+            instance.members.append(user_profile.id)
+            instance.save()
 
+def update_user_profile_projects_delete(sender, instance, **kwargs):
+    if len(instance.members) == 1:
+        user_profile = UserProfile.objects.get(user=instance.user)
+        if instance.id in user_profile.projects:
+            user_profile.projects.remove(instance.id)
+            user_profile.save()
 
 class Project(models.Model):
     user = models.ForeignKey(User)
@@ -197,13 +208,15 @@ class Project(models.Model):
     description = models.CharField(max_length=5000)
     created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
     modified = models.DateTimeField(auto_now=True)
+    members = ListField(models.ForeignKey(User), editable=False)
+    objects = MongoDBManager()
 
-    def save(self):
-        super(Project, self).save()
+post_delete.connect(update_user_profile_projects_delete, sender=Project)
+post_save.connect(update_user_profile_projects_create, sender=Project)
 
-post_save.connect(update_user_profile_projects, sender=Project)
-
-
+class Invitation(models.Model):
+    receiver = models.EmailField()
+    project = models.OneToOneField(Project)
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
@@ -211,4 +224,6 @@ class UserProfile(models.Model):
     is_dropbox_synced = models.BooleanField()
     evernote_profile = EmbeddedModelField(model = EvernoteProfile, null= True)
     dropbox_profile = EmbeddedModelField(model = DropboxProfile, null= True)
-    projects = ListField(models.ForeignKey(Project))
+    projects = ListField(models.CharField(max_length=24))
+    invitations = EmbeddedModelListField(EmbeddedModelField('Invitation'), null=True, blank=True)
+    objects = MongoDBManager()
