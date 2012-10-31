@@ -90,7 +90,7 @@ class NoteCollectionResource(MongoListResource):
     evernote_usn = fields.IntegerField(default=0, blank=True, null=True)
     evernote_guid = fields.CharField(null=True, blank=True)
     modified = fields.DateTimeField(default = datetime.now)
-    created = fields.DateTimeField(default = datetime.now)
+    created = fields.DateTimeField(default = datetime.now, null=True, blank=True)
     snipett = fields.CharField(readonly=True)
     comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
 
@@ -140,8 +140,6 @@ class ProjectResource(MongoResource):
     def apply_authorization_limits(self, request, object_list):
         if request.user.is_active:
             user_profile = UserProfile.objects.get(user=request.user)
-            #project_list = Project.objects.filter(id__in=user_profile.projects)
-            #object_list = Project.objects.raw_query({'_id': { '$in': [ObjectId(x) for x in (set(user_profile.projects) & set(([p.id for p in object_list])))] }})
             object_list = Project.objects.filter(id__in=[ObjectId(x) for x in (set(user_profile.projects) & set(([p.id for p in object_list])))])
             return object_list
         else:

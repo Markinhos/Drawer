@@ -98,6 +98,7 @@
                     var userProfile = app.userProfile;
                     var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
                     app.menu.model = project;
+                    app.menu.render({ "people-active" : "active"});
                     app.detail = new ProjectPeopleView({
                         userProfile: userProfile,
                         project: project,
