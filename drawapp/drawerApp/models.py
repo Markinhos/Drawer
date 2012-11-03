@@ -45,22 +45,30 @@ class FileMetadata(models.Model):
     thumb_url = models.SlugField()
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
 
-    def __unicode__(self):
-        return self.title
 
     @classmethod
     def get_synced_files(cls, user_profile, parent_project):
         sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
         sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
         api_client = client.DropboxClient(sess)
-        current_path = ''
+        current_path = parent_project.title + '/'
         resp = api_client.metadata(current_path)
 
         if 'contents' in resp:
+
+            #Search for removed files on dropbox
+            files = parent_project.files
+            removed_files = filter(lambda n : n.path not in [file["path"] for file in resp["contents"]], files)
+            for f in removed_files:
+                parent_project.files.remove(f)
+            parent_project.save()
+
+
+            #Gets all the new or updated files
             for f in resp['contents']:
-                files = parent_project.files
+
                 local_file = filter(lambda n : n.path == f['path'], files)
-                #If the a local file is not found then it is created, otherwise it is updated
+                #If the a local file is not found then it is created, otherwise it is updatedfiles
                 if len(local_file) is not 1:
                     fileMetadata = FileMetadata()
                     fileMetadata.path = f['path']
@@ -92,6 +100,7 @@ class FileMetadata(models.Model):
                     else:
                         fileMetadata.thumb_exists = False
                     parent_project.files.append(fileMetadata)
+
             parent_project.save()
 
 

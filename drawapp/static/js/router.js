@@ -75,15 +75,19 @@
             app.projects.fetch({
                 //if success render sidebar and detail app
                 success: function() {
-                    app.sidebar.render(id);
-                    var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
-                    app.menu.model = project;
-                    app.menu.render({ "file-active" : "active"});
-                    app.detail = new ProjectFileListView({
-                        project: project,
-                        el: $("#content")
-                    });
-                    app.detail.render();
+                    app.projects.get(APP_GLOBAL.PROJECT_API + id + '/').get('files').fetch({
+                        success: function(){
+                            app.sidebar.render(id);
+                            var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                            app.menu.model = project;
+                            app.menu.render({ "file-active" : "active"});
+                            app.detail = new ProjectFileListView({
+                                project: project,
+                                el: $("#content")
+                            });
+                            app.detail.render();
+                        }
+                    });                    
                 }
             });
         },

@@ -11,6 +11,9 @@ from drawapp.tastypie_nonrel.resources import MongoResource, MongoListResource
 from drawapp.tastypie_nonrel.fields import EmbeddedCollection
 from drawerApp.utils import EvernoteHelper
 from bson.objectid import ObjectId
+from dropbox.session import DropboxSession
+from django.conf import settings
+from dropbox import session, client
 
 class UserResource(MongoResource):
 
@@ -26,20 +29,6 @@ class UserProfileResource(MongoResource):
         resource_name = 'userProfile'
         authorization = Authorization()
         excludes = ['dropbox_profile', 'evernote_profile']
-
-"""class TaskResource(MongoResource):
-    tasks = EmbeddedCollection(of = 'drawapp.drawerApp.api.TaskCollectionResource', attribute = 'tasks', null=True, blank=True, full=True)
-    class Meta:
-        queryset = Project.objects.all()
-        resource_name = 'task'
-        authorization = Authorization()
-
-class NoteResource(MongoResource):
-    tasks = EmbeddedCollection(of = 'drawapp.drawerApp.api.NoteCollectionResource', attribute = 'notes', null=True, blank=True, full=True)
-    class Meta:
-        queryset = Project.objects.all()
-        resource_name = 'note'
-        authorization = Authorization()"""
 
 class CommentCollectionResource(MongoListResource):
     owner = fields.ForeignKey(UserResource, 'owner')
@@ -66,12 +55,13 @@ class FileMetadataCollectionResource(MongoListResource):
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=FileMetadataForm)
 
-    def get_list(self, request, **kwargs):
+    def obj_get_list(self, request=None, **kwargs):
         user_profile = UserProfile.objects.get(user = request.user)
-        if True:
+        if user_profile.is_dropbox_synced:
             project = Project.objects.get(pk = self.instance.pk)
             FileMetadata.get_synced_files(user_profile, project)
-        return super(FileMetadataCollectionResource, self).get_list(request, **kwargs)
+            self.instance.files = project.files
+        return super(FileMetadataCollectionResource, self).obj_get_list(request, **kwargs)
 
 class TaskCollectionResource(MongoListResource):
     created = fields.DateTimeField(default = datetime.now, null=True, blank=True)
@@ -136,7 +126,14 @@ class ProjectResource(MongoResource):
         validation          =    FormValidation(form_class=ProjectForm)
 
     def obj_create(self, bundle, request=None, **kwargs):
-        return super(ProjectResource, self).obj_create(bundle, request, **kwargs)
+        response =  super(ProjectResource, self).obj_create(bundle, request, **kwargs)
+        user_profile = UserProfile.objects.get(user=request.user)
+        if user_profile.is_dropbox_synced:
+            sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+            sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+            api_client = client.DropboxClient(sess)
+            api_client.file_create_folder(response.obj.title)
+        return response
     def apply_authorization_limits(self, request, object_list):
         if request.user.is_active:
             user_profile = UserProfile.objects.get(user=request.user)

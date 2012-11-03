@@ -1,7 +1,7 @@
 (function () {
     window.ProjectView = Backbone.View.extend({
         events: {
-            'click .project-tool' : 'showPopup',
+            'click .project-tool' : 'deleteProject',
             'click .projectDetail': 'project_detail'            
         },
         tagName: 'li',
@@ -13,9 +13,11 @@
             app.router.navigate('project/' + this.model.get('id') + '/', {trigger: true});
         },
 
-        showPopup: function(e){
+        deleteProject: function(e){
             e.stopPropagation();
-            this.options.parentView.deleteOne(this.model.cid);
+            if(confirm("Are you sure you want to delete this project?")){            
+                this.options.parentView.deleteOne(this.model.cid);
+            }
         }
     });
 })();

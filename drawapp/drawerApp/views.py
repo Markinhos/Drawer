@@ -7,9 +7,10 @@ from django.contrib.auth import authenticate, login
 from dropbox import session, client
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse
-from drawerApp.models import UserProfile
+from drawerApp.models import UserProfile, EvernoteProfile, DropboxProfile, Project
 from django.shortcuts import redirect, render
 from permission_backend_nonrel import utils
+from dropbox.session import DropboxSession
 
 def index(request):
     context = {}
@@ -38,10 +39,13 @@ def signup(request):
 
         user_profile = UserProfile()
         user_profile.user = user
+        user_profile.evernote_profile = EvernoteProfile()
+        user_profile.dropbox_profile = DropboxProfile()
+        user_profile.is_dropbox_synced, user_profile.is_evernote_synced = False, False
+        user_profile.invitations = []
         user_profile.save()
-
-
         user = authenticate(username = user_name, password= user_password)
+
         login(request, user)
         return redirect("/")
 
@@ -67,8 +71,17 @@ def get_dropbox_access_token(request):
         access_token = sess.obtain_access_token(request_token)
 
         user_profile.dropbox_profile.access_token = { "key" : access_token.key, "secret": access_token.secret}
-        user_profile.dropbox_profile.is_dropbox_synced = True
+        user_profile.is_dropbox_synced = True
         user_profile.save()
+
+        #Create project folder
+        sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+        api_client = client.DropboxClient(sess)
+
+        projects = Project.objects.filter(pk__in=user_profile.projects)
+        for p in projects:
+            api_client.file_create_folder(p.title)
         return redirect("/project/{0}/files/".format(request.GET.get('project_id')))
 
 def upload_dropbox_file(request):
@@ -79,7 +92,8 @@ def upload_dropbox_file(request):
         drop_client = client.DropboxClient(sess)
 
         file = request.FILES['file']
-        result = drop_client.put_file('/' + file.name, file.file)
+        folder = Project.objects.get(id=request.POST['project_id']).title
+        result = drop_client.put_file('/' + folder + '/' + file.name, file.file)
 
         dest_path = result['path']
 
