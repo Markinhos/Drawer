@@ -1,13 +1,34 @@
-<div class="well task-item">		
-	<div class="task-check">
-		<input class="task-status" type="checkbox" {{ doneStatus }}>
+<div class="accordion-group">
+	<div class="task-item accordion-toggle" data-toggle="collapse" data-target="#data-{{ id }}">
+		<div class="accordion-heading">	
+			<div class="task-check">
+				<input class="task-status" type="checkbox" {{ doneStatus }}>
+			</div>
+			<div class="task-meta">		
+				<!--<i class="icon-tags" style="float: right"></i>
+				<i class="icon-calendar" style="float: right"></i>
+		        <a ref="#" rel="tooltip" title="Delete a task"><i class="icon-trash" style="float: right"></i></a>
+		        <i class="icon-circle-arrow-right task-tools" style="float: right; font-size:18px;"></i>-->
+		    </div>
+			<div class="task-content">
+				<a href="#">{{ title }}</a>
+			</div>
+		</div>
 	</div>
-	<div class="task-meta">		
-		<i class="icon-tags" style="float: right"></i>
-		<i class="icon-calendar" style="float: right"></i>
-        <a ref="#" rel="tooltip" title="Delete a task"><i class="icon-trash" style="float: right"></i></a>
-    </div>
-	<div class="task-content">
-		<a href="#">{{ title }}</a>
+	<div id="data-{{ id }}" class="accordion-body collapse">
+		<div class="accordion-inner">
+			<div>Due date:</div>
+			<div class="input-append date" id="dp3" data-date="12-02-2012" data-date-format="{{todayDay}}-{{todayMonth}}-{{todayYear}}">
+				<input class="span2 dateinput" size="16" type="text" value="{{todayDay}}-{{todayMonth}}-{{todayYear}}">
+			</div>
+			<div class="input-append bootstrap-timepicker-component">
+				<input class="timepicker-default input-small" type="text" value="">
+				<span class="add-on"><i class="icon-time" ></i></span>
+			</div>
+  
+			<p>Creator:</p>
+			<p>Priority:</p>
+			<p>Description:</p>
+		</div>
 	</div>
-</div>	
+</div>
