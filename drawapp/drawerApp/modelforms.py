@@ -7,6 +7,7 @@ class TaskForm(ModelForm):
 
     class Meta:
         model = Task
+        exclude = ('creator','duedate', 'created')
 
 class ProjectForm(ModelForm):
     class Meta:

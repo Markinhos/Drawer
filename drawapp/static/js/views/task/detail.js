@@ -1,42 +1,93 @@
 (function () {
     window.TaskDetailView = Backbone.View.extend({
         events: {
-            'click .icon-trash': 'deleteTask',
-            'change .task-status' : 'selectStatus',
-            'hover .task-tools' : 'increaseIconTool'
+            'click .delete-task': 'deleteTask',
+            'click .task-status' : 'selectStatus',
+            'click .task-description' : 'editDescription',
+            'click .edit-task' : 'editTask',
+            'hover .task-description' : 'hoverTaskDescription'
         },
-        selectStatus: function(){
+        selectStatus: function(e){
+            e.stopPropagation();
             var status;
             status = this.model.get('status') === "TODO" ? "DONE" : "TODO"
             this.model.set('status', status)
             this.model.save();
+            this.options.parentView.moveToDoneOne(this.model.cid);
         },
-        render: function(){
+        render: function(accordionOpen){
             var isDone, doneStatus;
             isTodo = this.model.get('status') === "TODO";
             isTodo ? doneStatus = '' : doneStatus = 'checked';
             data = this.model.toJSON();
-            data.doneStatus = doneStatus;
-            var today = new Date();
-            data.todayDay = today.getDay();
-            data.todayMonth = today.getMonth();
-            data.todayYear = today.getFullYear();
+            data.doneStatus = doneStatus; 
+            if(!isTodo){
+                data.opacity = "checked";
+            }
+            if(accordionOpen) { data.accordionOpen = "in"; }
+            if (this.model.get('duedate')){
+                var duedate = new Date(this.model.get('duedate'));
+                data.duedateDate = duedate.getDay() + '-' + duedate.getMonth() + '-' + duedate.getFullYear();
+                data.duedateTime = duedate.getHours() + ':' + duedate.getMinutes();
+            }
+            if (this.model.get('description')){
+                data.descriptionHtml = '<span class="task-description">' + this.model.get('description') + '</span>';
+            }
+            else {
+                data.descriptionHtml = '<textarea class="task-description editable" placeholder="Add a description"></textarea>';   
+            }                    
             $(this.el).html(ich.taskDetailTemplate(data));            
-            $(this.el).find(".dateinput").datepicker({ format: 'dd-mm-yyyy'});
-            //$(this.el).find(".timepicker-default").timepicker({defultTime: 'current'});
+            $(this.el).find(".bootstrap-datepicker").datepicker({ format: 'dd-mm-yyyy' });
+            $(this.el).find(".timepicker-default").timepicker({ showMeridian: false});
             return this;
         },
-        deleteTask: function(){
-            this.options.parentView.deleteOne(this.model.cid);
+        deleteTask: function(e){
+            if(confirm("Are you sure do you want to delete the task?")){
+                this.options.parentView.deleteOne(this.model.cid);
+            }            
         },
-        increaseIconTool: function(e){
-            var element = $(this.el).find(".task-tools");
-            if(!element.hasClass("icon-large")){
-                $(this.el).find(".task-tools").addClass("icon-large");
+        editDescription: function(e)
+        {
+            var clickedEl = $(e.target);
+            if (!clickedEl.hasClass('editable')){
+                var description = this.model.get('description');
+                if (description) {
+                    clickedEl.replaceWith('<textarea class="task-description editable">' + this.model.get('description') + '</textarea>');
+                }
+                else {
+                    clickedEl.replaceWith('<textarea class="task-description editable"></textarea>');
+                }  
+            }
+        },
+        hoverTaskDescription: function(e){
+            var clickedEl = $(e.target);
+            if (clickedEl.hasClass("bordered")){
+                clickedEl.removeClass("bordered");
             }
             else{
-                $(this.el).find(".task-tools").removeClass("icon-large");
+                clickedEl.addClass("bordered");
+            }            
+        },        
+        editTask: function(e){
+            debugger;
+            var parent = $(e.target).parents(".task-group");
+
+            var desc = parent.find('.task-description').val();
+            this.model.set({ description: desc});
+
+            var d;        
+            if(parent.find('.task-date').val()){
+                var date = parent.find('.task-date').val().match(/(\d+)/g);
+                var time = ["0","0"]              
+                if(parent.find('.task-time').val()){
+                    time = parent.find('.task-time').val().match(/(\d+)/g);
+                }
+                d = new Date(date[2], date[1] - 1, date[0], time[1], time[0]);
+                this.model.set({ duedate: d.toLocaleString()});
             }
+
+            this.model.save();
+            this.render(true);           
         }
     });
 })();

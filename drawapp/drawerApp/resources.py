@@ -67,6 +67,8 @@ class TaskCollectionResource(MongoListResource):
     created = fields.DateTimeField(default = datetime.now, null=True, blank=True)
     modified = fields.DateTimeField(default = datetime.now)
     comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
+    creator = fields.ForeignKey(UserResource, 'creator')
+    creator_name = fields.CharField(readonly=True)
 
     class Meta:
         object_class        =   Task
@@ -74,6 +76,9 @@ class TaskCollectionResource(MongoListResource):
         resource_name       =   'task'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=TaskForm)
+
+    def dehydrate_creator_name(self, bundle):
+        return bundle.obj.creator.username
 
 class NoteCollectionResource(MongoListResource):
     title = fields.CharField(attribute= 'title', default='', blank = True)

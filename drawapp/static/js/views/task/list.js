@@ -22,7 +22,12 @@
                 parentView: this,
                 model: task
             });
-            $(this.el).prepend(view.render().el);
+            if(task.get('status') == "DONE"){
+                $(this.el).find("#task-list-recently-done").prepend(view.render().el);
+            }
+            else{
+                $(this.el).find("#task-to-do").prepend(view.render().el);                
+            }
             this.views.push(view);
             view.bind('all', this.rethrow, this);
         },
@@ -32,6 +37,19 @@
             var v = this.views.filter(function(view) { return view.model == t })[0];
             t.destroy();
             v.remove();
+            this.views.pop(v);
+        },
+
+        moveToDoneOne: function(cid){
+            var task = this.collection.getByCid(cid);
+            var view = this.views.filter(function(view) { return view.model == task })[0];
+            $(view).detach();
+            if(task.get('status') == "DONE"){
+                $(this.el).find("#task-list-recently-done").prepend(view.render().el);
+            }
+            else{
+                $(this.el).find("#task-to-do").prepend(view.render().el);                
+            }
         },
 
         rethrow: function(){

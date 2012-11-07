@@ -18,7 +18,8 @@
             if (title) {
                 var task = new Task({
                     title: title,
-                    status : 'TODO'
+                    status : 'TODO',
+                    creator: '/api/v1/user/' + APP_GLOBAL.USER + '/'
                 });
                 var that = this;
                 var result = this.model.get('tasks').create(task,{ wait : true ,

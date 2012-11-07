@@ -120,10 +120,9 @@ class Task(models.Model):
     created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
     modified = models.DateTimeField(auto_now=True)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
-    #comments = EmbeddedModelListField(models.ForeignKey(Comment), null= True, blank=True)
-
-    def __unicode__(self):
-        return self.title
+    description = models.CharField(max_length=5000, null=True, blank=True)
+    creator = models.OneToOneField(User)
+    duedate = models.DateField(null=True,blank=True)
 
 class Note(models.Model):
     title = models.CharField(max_length=200, default='', blank= True)
