@@ -31,9 +31,9 @@ def signup(request):
         #Includes in group regular users
         group, created = Group.objects.get_or_create(name='Users')
         if created:
-            utils.add_permission_to_group(Permission.objects.get(codename='add_project'))
-            utils.add_permission_to_group(Permission.objects.get(codename='change_project'))
-            utils.add_permission_to_group(Permission.objects.get(codename='delete_project'))
+            utils.add_permission_to_group(Permission.objects.get(codename='add_project'), group)
+            utils.add_permission_to_group(Permission.objects.get(codename='change_project'), group)
+            utils.add_permission_to_group(Permission.objects.get(codename='delete_project'), group)
 
         utils.add_user_to_group(user,group)
         user.save()

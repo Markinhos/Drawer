@@ -25,9 +25,8 @@
 
             if(!app.userProfile.get('is_evernote_synced')){
                 this.errorView = new Flash({ el: "#flash"});
-                this.errorView.render('You are not logged into evernote! If you would like, click <a href="http://' +
-                        data.host = location.protocol + '//' + window.location.host; 
-                        + '/evernote-url/">here</a>');
+                this.errorView.render('You are not logged into evernote! If you would like, click <a href="http://' 
+                    + location.protocol + '//' + window.location.host + '/evernote-url/">here</a>');
             }  
 
             return this;
