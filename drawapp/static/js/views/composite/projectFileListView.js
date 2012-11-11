@@ -7,7 +7,9 @@
         render: function(){            
             //If user is not logged to dropbox prompt not logged view
             if(!app.userProfile.get('is_dropbox_synced')){
-                $(this.el).html(ich.projectFileListNoDropboxLoggingTemplate(this.model.toJSON()));
+                data = this.model.toJSON();
+                data.host = location.protocol + '//' + window.location.host;
+                $(this.el).html(ich.projectFileListNoDropboxLoggingTemplate(data));
             }
             //Show dropbox files
             else

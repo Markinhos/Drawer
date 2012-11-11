@@ -30,7 +30,7 @@
                         this.$('#comment-text').val('');
                     },
                     error : function(model, response){
-                        that.errorView = new Flash(),
+                        that.errorView = new Flash({el : "#flash"}),
                         that.errorView.render("Sorry, there has been an error. :(", "error")
                     }
                 });

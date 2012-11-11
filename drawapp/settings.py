@@ -171,11 +171,17 @@ LOGGING = {
 
 EVERNOTE_NOTEBOOK = '@Drawer'
 
+EVERNOTE_AUTH_KEY = 'markinhosx'
+
+EVERNOTE_AUTH_SECRET = '3162dc9e83f2f16e'
+
+
 DROPBOX_AUTH_KEY = '8gvbfoxxb9f98ah'
 
 DROPBOX_AUTH_SECRET = 'xciu5lbxmiiboju'
 
 DROPBOX_ACCESS_TYPE = 'app_folder'
+
 
 try:
     from local_settings import *

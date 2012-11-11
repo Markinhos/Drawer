@@ -11,6 +11,7 @@ from drawerApp.models import UserProfile, EvernoteProfile, DropboxProfile, Proje
 from django.shortcuts import redirect, render
 from permission_backend_nonrel import utils
 from dropbox.session import DropboxSession
+import urllib2, cgi
 
 def index(request):
     context = {}
@@ -49,6 +50,15 @@ def signup(request):
         login(request, user)
         return redirect("/")
 
+def get_evernote_auth_url(request):
+
+    if request.method == 'GET':
+        user_profile = UserProfile.objects.get(user = request.user)
+        callback_url = request.GET.get('callback_url')
+        project_id = request.GET.get('project_id')
+        url_evernote = "https://sandbox.evernote.com/oauth?oauth_consumer_key=" + settings.EVERNOTE_AUTH_KEY + "&oauth_signature=" + settings.EVERNOTE_AUTH_SECRET +"&oauth_signature_method=PLAINTEXT&oauth_timestamp=1288364369&oauth_nonce=d3d9446802a44259&oauth_callback=http%3A%2F%2F" + request.get_host() + "%2Fevernote-access-token%2F%3Faction%3DoauthCallback%3Fproject%3D"+project_id
+        temporary_credentials = urllib2.urlopen(url_evernote).read()
+        return redirect("https://sandbox.evernote.com/OAuth.action?" + temporary_credentials)
 
 def get_dropbox_auth_url(request):
     if request.method == 'GET':
@@ -61,6 +71,29 @@ def get_dropbox_auth_url(request):
         user_profile.save()
         return redirect(url)
 
+def get_evernote_access_token(request):
+    if request.method == "GET":
+        user_profile = UserProfile.objects.get(user = request.user)
+
+        access_token = request.GET.get("oauth_token")
+        oauth_verifier = request.GET.get("oauth_verifier")
+
+        token_credentials = urllib2.urlopen("https://sandbox.evernote.com/oauth?oauth_consumer_key=" + settings.EVERNOTE_AUTH_KEY + "&oauth_signature=" + settings.EVERNOTE_AUTH_SECRET +"&oauth_signature_method=PLAINTEXT&oauth_timestamp=1288364369&oauth_nonce=d3d9446802a44259&oauth_token=" + access_token + "&oauth_verifier=" + oauth_verifier).read()
+        token_credentials = urllib2.unquote(token_credentials)
+        list_answer = token_credentials.split('&')
+
+        project_id = request.GET.get('action').split('?')[1].split('=')[1]
+        dict_answer = cgi.parse_qs(token_credentials)
+        user_profile.evernote_profile.access_token = dict_answer['oauth_token'].pop()
+        #user_profile.evernote_profile.secret_auth_token = dict_answer['oauth_token_secret'].pop()
+        user_profile.evernote_profile.edam_shard = dict_answer['edam_shard'].pop()
+        user_profile.evernote_profile.edam_userid = dict_answer['edam_userId'].pop()
+        user_profile.evernote_profile.edam_expires = dict_answer['edam_expires'].pop()
+        user_profile.evernote_profile.notebook_url = dict_answer['edam_noteStoreUrl'].pop()
+
+        user_profile.is_evernote_synced = True
+        user_profile.save()
+        return redirect("/project/{0}/notes/".format(project_id))
 
 def get_dropbox_access_token(request):
     if request.method == "GET":

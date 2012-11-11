@@ -5,6 +5,8 @@
             this.model = arguments.project;
         },
         render: function(){
+                      
+
             $(this.el).html(ich.projectNoteAddNoteListTemplate(this.model.toJSON()));
 
             this.noteListView = new NoteListView({
@@ -20,6 +22,12 @@
                     
             this.noteAddView.render();
             this.noteListView.render();
+
+            if(!app.userProfile.get('is_evernote_synced')){
+                this.errorView = new Flash({ el: "#flash"});
+                this.errorView.render('You are not logged into evernote! If you would like, click <a href="http://localhost:5000/evernote-url/">here</a>');
+            }  
+
             return this;
         }
     });

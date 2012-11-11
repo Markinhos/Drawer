@@ -22,7 +22,12 @@ class EmbeddedModelListField(ListField):
         return models.Field.formfield(self, EmbeddedModelListFormField, **kwargs)
 
 class EvernoteProfile(models.Model):
-    auth_token = "S=s1:U=2b020:E=1402f30e366:C=138d77fb766:P=1cd:A=en-devtoken:H=6d184bd37dbf135150efeba02c89ebb3"
+    auth_token = models.CharField(max_length=500)
+    secret_auth_token = models.CharField(max_length=500)
+    notebook_url = models.URLField()
+    edam_userid = models.IntegerField()
+    edam_expires = models.IntegerField()
+    edam_shard = models.CharField(max_length=10)
     notebook_guid = models.CharField(max_length=500)
     latest_update_count = models.IntegerField(default=0)
 
