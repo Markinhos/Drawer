@@ -102,9 +102,10 @@ class NoteCollectionResource(MongoListResource):
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = super(NoteCollectionResource, self).obj_create(bundle,request, **kwargs)
         #Check if evernote accout is set up
-        """user_profile = UserProfile.objects.get(user = request.user)
+        user_profile = UserProfile.objects.get(user = request.user)
         if user_profile.is_evernote_synced:
-            self.instance.notes[int(bundle.obj.id)].sync_note_evernote(user_profile)"""
+            project = Project.objects.get(pk = self.instance.pk)
+            self.instance.notes[int(bundle.obj.id)].sync_note_evernote(user_profile.evernote_profile, project)
         return bundle
 
     def get_list(self, request, **kwargs):
@@ -112,6 +113,7 @@ class NoteCollectionResource(MongoListResource):
         if user_profile.is_evernote_synced:
             project = Project.objects.get(pk = self.instance.pk)
             Note.get_synced_notes(user_profile, project)
+            self.instance.notes = project.notes
         return super(NoteCollectionResource, self).get_list(request, **kwargs)
 
 class ProjectResource(MongoResource):

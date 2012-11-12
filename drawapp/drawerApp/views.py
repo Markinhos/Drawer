@@ -84,7 +84,7 @@ def get_evernote_access_token(request):
 
         project_id = request.GET.get('action').split('?')[1].split('=')[1]
         dict_answer = cgi.parse_qs(token_credentials)
-        user_profile.evernote_profile.access_token = dict_answer['oauth_token'].pop()
+        user_profile.evernote_profile.auth_token = dict_answer['oauth_token'].pop()
         #user_profile.evernote_profile.secret_auth_token = dict_answer['oauth_token_secret'].pop()
         user_profile.evernote_profile.edam_shard = dict_answer['edam_shard'].pop()
         user_profile.evernote_profile.edam_userid = dict_answer['edam_userId'].pop()

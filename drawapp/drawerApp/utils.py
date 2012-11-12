@@ -13,8 +13,9 @@ from lxml import etree as etree
 
 class EvernoteHelper(object):
     EVERNOTE_HOST = "sandbox.evernote.com"
-    def __init__(self, auth_token):
-        self.auth_token = auth_token
+    def __init__(self, evernote_profile):
+        self.auth_token = evernote_profile.auth_token
+        self.evernote_profile = evernote_profile
         self._user_store = None
         self._note_store = None
 
@@ -43,7 +44,8 @@ class EvernoteHelper(object):
         return user_store
 
     def _get_note_store(self):
-        note_store_url = self.user_store.getNoteStoreUrl(self.auth_token)
+        #note_store_url = self.user_store.getNoteStoreUrl(self.auth_token)
+        note_store_url= self.evernote_profile.notebook_url
         note_store_http_client = THttpClient.THttpClient(note_store_url)
         note_store_protocol = TBinaryProtocol.TBinaryProtocol(note_store_http_client)
         note_store = NoteStore.Client(note_store_protocol)
@@ -58,18 +60,19 @@ class EvernoteHelper(object):
         else:
             return False
 
-    def get_notebook(self, evernote_profile):
+    def get_notebook(self, evernote_profile, project):
         # List all of the notebooks in the user's account
         notebooks = self.note_store.listNotebooks(self.auth_token)
 
         notebook_create = Types.Notebook()
-        notebook_create.name = settings.EVERNOTE_NOTEBOOK
+        notebook_create.stack = settings.EVERNOTE_NOTEBOOK
+        notebook_create.name = project.title
 
         notfind = (n for n in notebooks)
 
         nb = next(notfind, None)
         while nb is not None:
-            if (nb.guid == evernote_profile.notebook_guid) or (nb.name == settings.EVERNOTE_NOTEBOOK):
+            if (nb.guid == evernote_profile.notebook_guid) or (nb.name == project.title):
                 notebook_create = nb
                 nb = None
             else:
@@ -83,15 +86,15 @@ class EvernoteHelper(object):
         notebook_create = self.note_store.createNotebook(self.auth_token, notebook)
         return notebook_create
 
-    def get_metadata_notes(self, evernote_profile):
+    def get_metadata_notes(self, evernote_profile, project):
         filter = NoteStore.NoteFilter()
-        filter.notebookGuid = self.get_notebook(evernote_profile).guid
+        filter.notebookGuid = self.get_notebook(evernote_profile, project).guid
         rspec = NotesMetadataResultSpec()
         rspec.includeUpdateSequenceNum = True
         new_notes = self.note_store.findNotesMetadata(self.auth_token, filter , 0, 20, rspec)
         return new_notes
 
-    def create_note(self, title, content):
+    def create_note(self, title, content, project):
     # To create a new note, simply create a new Note object and fill in
         # attributes such as the note's title.
         note = Types.Note()
@@ -108,7 +111,7 @@ class EvernoteHelper(object):
         # Finally, send the new note to Evernote using the createNote method
         # The new Note object that is returned will contain server-generated
         # attributes such as the new note's unique GUID.
-        note.notebookGuid = self.evernote_profile.guid
+        note.notebookGuid = self.get_notebook(self.evernote_profile, project).guid
 
         return note
 
@@ -133,7 +136,10 @@ class EvernoteHelper(object):
     @classmethod
     def create_snipett(cls, content):
         snipett = ""
-        tree = etree.fromstring('<div>' + content + '</div>')
+        try:
+            tree = etree.fromstring(content)
+        except:
+            tree = etree.fromstring('<div>' + content + '</div>')
         snipett_list = tree.xpath('//text()')
         for chunk in list(snipett_list):
             snipett += chunk + " "

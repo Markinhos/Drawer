@@ -145,12 +145,12 @@ class Note(models.Model):
     def get_synced_notes(cls, user_profile, parent_project):
         evernote_profile = user_profile.evernote_profile
         auth_token = evernote_profile.auth_token
-        evernote_helper = EvernoteHelper(auth_token)
+        evernote_helper = EvernoteHelper(evernote_profile)
         note_store = evernote_helper.note_store
 
         current_state = evernote_helper.current_state_count
         if evernote_profile.latest_update_count < current_state:
-            new_notes = evernote_helper.get_metadata_notes(evernote_profile)
+            new_notes = evernote_helper.get_metadata_notes(evernote_profile, parent_project)
 
             for metadata_note in new_notes.notes:
                 #look for note in db
@@ -172,22 +172,22 @@ class Note(models.Model):
             user_profile.save()
             parent_project.save()
 
-    def sync_note_evernote(self, evernote_profile):
+    def sync_note_evernote(self, evernote_profile, project):
         auth_token = evernote_profile.auth_token
-        evernote_helper = EvernoteHelper(auth_token)
+        evernote_helper = EvernoteHelper(evernote_profile)
         noteStore = evernote_helper.note_store
 
-        note = evernote_helper.create_note(self.title, self.content)
+        note = evernote_helper.create_note('test', self.content, project)
 
         try:
             created_note = noteStore.createNote(auth_token, note)
         except Errors.EDAMUserException, Errors.EDAMNotFoundException:
             return None
-        except Exception:
+        except:
             return None
 
         #If note is synced fine the usn is updated
-        evernote_profile.latest_update_count = created_note.usn
+        evernote_profile.latest_update_count = created_note.updateSequenceNum
         evernote_profile.save()
 
         return created_note

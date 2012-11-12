@@ -17,7 +17,7 @@
             var content = this.$('#note-content').val();
             if (content) {
                 var note = new Note({
-                    content: '<div class="note-content">' + content + '</div>'
+                    content: '<div>' + content + '</div>'
                 });
                 var that = this;
                 var result = this.model.get('notes').create(note,{ wait : true ,
