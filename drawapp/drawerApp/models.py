@@ -172,25 +172,50 @@ class Note(models.Model):
             user_profile.save()
             parent_project.save()
 
-    def sync_note_evernote(self, evernote_profile, project):
-        auth_token = evernote_profile.auth_token
-        evernote_helper = EvernoteHelper(evernote_profile)
+    def sync_note_evernote(self, user_profile, project):
+        auth_token = user_profile.evernote_profile.auth_token
+        evernote_helper = EvernoteHelper(user_profile.evernote_profile)
         noteStore = evernote_helper.note_store
 
-        note = evernote_helper.create_note('test', self.content, project)
+        note = evernote_helper.create_note(self.title, self.content, project)
 
         try:
             created_note = noteStore.createNote(auth_token, note)
-        except Errors.EDAMUserException, Errors.EDAMNotFoundException:
+        except Errors.EDAMUserException as e:
+            return None
+        except Errors.EDAMNotFoundException as e:
             return None
         except:
             return None
 
         #If note is synced fine the usn is updated
-        evernote_profile.latest_update_count = created_note.updateSequenceNum
-        evernote_profile.save()
+        user_profile.evernote_profile.latest_update_count = created_note.updateSequenceNum
+        user_profile.save()
+
+        self.evernote_usn = created_note.updateSequenceNum
+        self.evernote_guid = created_note.guid
+        project.notes[int(self.id)] = self
+        project.save()
 
         return created_note
+
+    def delete_note_evernote(self, user_profile):
+        auth_token = user_profile.evernote_profile.auth_token
+        evernote_helper = EvernoteHelper(user_profile.evernote_profile)
+        noteStore = evernote_helper.note_store
+
+        try:
+            update_num = noteStore.deleteNote(auth_token, self.evernote_guid)
+        except Errors.EDAMUserException as e:
+            return None
+        except Errors.EDAMNotFoundException as e:
+            return None
+        except:
+            return None
+
+        user_profile.evernote_profile.latest_update_count = update_num
+        user_profile.save()
+        return True
 
     def __unicode__(self):
         return self.title

@@ -98,7 +98,7 @@ class EvernoteHelper(object):
     # To create a new note, simply create a new Note object and fill in
         # attributes such as the note's title.
         note = Types.Note()
-        note.title = title if (title is not None) else ''
+        note.title = title if (title is not None and len(title)  > 0) else 'No title'
 
         # The content of an Evernote note is represented using Evernote Markup Language
         # (ENML). The full ENML specification can be found in the Evernote API Overview
