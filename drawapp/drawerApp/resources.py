@@ -105,7 +105,7 @@ class NoteCollectionResource(MongoListResource):
         user_profile = UserProfile.objects.get(user = request.user)
         if user_profile.is_evernote_synced:
             project = Project.objects.get(pk = self.instance.pk)
-            self.instance.notes[int(bundle.obj.id)].sync_note_evernote(user_profile, project)
+            self.instance.notes[int(bundle.obj.id)].create_note_evernote(user_profile, project)
         return bundle
 
     def obj_delete(self, request=None, **kwargs):

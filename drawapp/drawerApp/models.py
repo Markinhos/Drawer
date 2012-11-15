@@ -152,6 +152,11 @@ class Note(models.Model):
         if evernote_profile.latest_update_count < current_state:
             new_notes = evernote_helper.get_metadata_notes(evernote_profile, parent_project)
 
+            #Look for removed notes
+            removed_notes = [n for n in parent_project.notes if lambda nt : nt not in [en.guid for en in new_notes.notes]]
+            for f in removed_notes:
+                parent_project.notes.remove(f)
+
             for metadata_note in new_notes.notes:
                 #look for note in db
                 notes = parent_project.notes
@@ -172,7 +177,7 @@ class Note(models.Model):
             user_profile.save()
             parent_project.save()
 
-    def sync_note_evernote(self, user_profile, project):
+    def create_note_evernote(self, user_profile, project):
         auth_token = user_profile.evernote_profile.auth_token
         evernote_helper = EvernoteHelper(user_profile.evernote_profile)
         noteStore = evernote_helper.note_store

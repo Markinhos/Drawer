@@ -1,7 +1,7 @@
 (function () {
 	window.NoteDetailView = Backbone.View.extend({
 		tagName: "li",
-		className: "span3",
+		className: "",
 		events: {
             'click #delete-note': 'deleteNote',
             'click .caption'    : 'showModal'
