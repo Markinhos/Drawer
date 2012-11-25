@@ -1,4 +1,14 @@
-<div id="input">
-	<textarea id="note-content" type="text" placeholder="Add a new note:" />
-	<button class="btn btn-primary noteInput" style="margin-bottom: 9px">Add</button>
-<div>
+<div id="note-editor-content" class="well">	
+	<div class="row-fluid">
+		<div class="well small span10 title-note">
+			<input class="editor-note-title span10 pull-left" value="" placeholder="Title..."/>
+		</div>
+		<div class="btn-toolbar pull-right span2">
+				<div class="btn-group">
+					<a class="btn" href="#"><i class="icon-save save-note"></i></a>
+					<a class="btn" href="#"><i class="icon-trash delete-note"></i></a>
+				</div>
+			</div>
+	</div>
+	<textarea class="editor-note-area" rows="10" placeholder="Content..."></textarea>
+</div>

@@ -160,6 +160,7 @@ class EmbeddedCollection(ToManyField):
             m2m_resource = self.get_related_resource(m2m)
             m2m_bundle = Bundle(obj=m2m)
             self.m2m_resources.append(m2m_resource)
+            m2m_bundle.request = bundle.request
             m2m_dehydrated.append(self.dehydrate_related(m2m_bundle, m2m_resource))
         return m2m_dehydrated
 

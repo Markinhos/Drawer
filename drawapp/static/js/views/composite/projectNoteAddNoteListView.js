@@ -1,5 +1,10 @@
 (function () {
     window.ProjectNoteAddNoteListView = Backbone.View.extend({
+        events: {
+            'click .add-note': 'addNote',
+            'click .evernote-refresher': 'refreshNotes'
+        },
+
         initialize: function(arguments){            
             this.el = arguments.el;
             this.model = arguments.project;
@@ -9,17 +14,23 @@
 
             this.noteListView = new NoteListView({
                 collection: this.model.get('notes'),
-                el: this.$("#note-list")
+                el: this.$("#note-list"),
+                parentView: this
             });
-
-            this.noteAddView = new NoteAddView({
-                model: this.model,
-                el: $("#note-input"),
-                parentView: this.noteListView
-            });
+            
+            var that = this;
+            if(this.model.get('notes').last()){
+                this.noteEditView = new NoteEditView({
+                    model: this.model.get('notes').last(),
+                    el: $(".editor-side"),
+                    parentView: that
+                });
+            }            
                     
-            this.noteAddView.render();
             this.noteListView.render();
+            if(this.noteEditView){
+                this.noteEditView.render();
+            }            
 
             if(!app.userProfile.get('is_evernote_synced')){
                 this.errorView = new Flash({ el: "#flash"});
@@ -28,6 +39,26 @@
             }  
 
             return this;
+        },
+
+        addNote: function(){
+            if( this.noteEditView ) {this.noteEditView.undelegateEvents();}
+            this.noteAddView = new NoteAddView({
+                model: this.model.get('notes'),
+                el: $(".editor-side"),
+                parentView: this
+            });
+            this.noteAddView.render();
+        },
+
+        refreshNotes: function(e){
+            var elem = $(e.target)
+            elem.addClass('icon-large');
+            this.model.get('notes').fetch({
+                success : function(){
+                    elem.removeClass('icon-large')
+                }
+            });
         }
     });
 })();

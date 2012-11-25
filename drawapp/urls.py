@@ -30,6 +30,8 @@ urlpatterns += patterns('',
     url(r'^dropbox-access-token/', 'drawerApp.views.get_dropbox_access_token'),
     url(r'^evernote-access-token/', 'drawerApp.views.get_evernote_access_token'),
     url(r'^upload-dropbox-file/', 'drawerApp.views.upload_dropbox_file'),
+    url(r'^get-evernote-image/', 'drawerApp.views.get_evernote_image'),
+    url(r'^get-evernote-thumbnail/', 'drawerApp.views.get_evernote_thumbnail'),
     url(r'^api/', include(v1.urls)),
     url(r'^.*$', 'drawerApp.views.index', name="Home"
     ),

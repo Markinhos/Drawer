@@ -1,9 +1,8 @@
 (function () {
     window.NoteListView = Backbone.View.extend({
         el: '#note-list',
-        initialize: function(){
+        initialize: function(arguments){
             _.bindAll(this, 'addOne', 'addAll');
-
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
         },
@@ -13,14 +12,17 @@
         },
 
         addAll: function(){
-            this.views = [];
+            $(this.views).each(function(index){
+                this.remove();
+            });
+            this.views = [];            
             this.collection.each(this.addOne);
         },
 
-        addOne: function(task){
+        addOne: function(note){
             var view = new NoteDetailView({
-                parentView: this,
-                model: task
+                parentView: this.options.parentView,
+                model: note
             });
             $(this.el).prepend(view.render().el);
             this.views.push(view);

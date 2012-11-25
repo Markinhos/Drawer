@@ -1,29 +1,31 @@
 (function () {
     window.NoteAddView = Backbone.View.extend({
         events: {
-            'click .noteInput': 'createNote',
-            'keypress #note-content': 'createOnEnter'
+            'click .save-note': 'saveNote',
+            'click .delete-note': 'deleteNote'
         },
 
-        createOnEnter: function (e) {
-            if ((e.keyCode || e.which) === 13) {
-                this.createNote();
-                e.preventDefault();
-            }
-
+        deleteNote: function(e) {
+            if(confirm("Are you sure you want to delete this note?")){
+                this.undelegateEvents();
+                this.options.parentView.render();
+            }            
         },
 
-        createNote: function () {
-            var content = this.$('#note-content').val();
-            if (content) {
-                var note = new Note({
-                    content: '<div>' + content + '</div>'
-                });
+        saveNote: function (e) {
+            var contentEdited = this.$('.editor-note-area').val();
+            var titleEdited = this.$('.editor-note-title').val();            
+            if (contentEdited && titleEdited) {
+                //this.model.set({content : contentEdited, title: titleEdited });
                 var that = this;
-                var result = this.model.get('notes').create(note,{ wait : true ,
+                var note = new Note({
+                    content: '<en-note>' + contentEdited + '</en-note>',
+                    title: titleEdited
+                });
+                var result = this.model.create(note, {
                     success : function(model) {
-                        that.options.parentView.addOne(note);
-                        this.$('#note-content').val('');
+                        that.undelegateEvents();
+                        that.options.parentView.render();
                     },
                     error : function(model, response){
                         that.errorView = new Flash({el : "#flash"});
@@ -32,9 +34,10 @@
                 });
             }
         },
-
         render: function () {
             $(this.el).html(ich.noteAddTemplate());
+            var editor = $(this.el).find('.editor-note-area');
+            editor.wysihtml5();
         }
 
     });

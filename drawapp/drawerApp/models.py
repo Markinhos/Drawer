@@ -137,6 +137,7 @@ class Note(models.Model):
     evernote_usn = models.IntegerField(default=0, blank=True)
     evernote_guid = models.CharField(max_length=200, null=True, blank=True)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
+    resources = DictField()
 
     def save(self):
         super(Note, self).save()
@@ -153,7 +154,8 @@ class Note(models.Model):
             new_notes = evernote_helper.get_metadata_notes(evernote_profile, parent_project)
 
             #Look for removed notes
-            removed_notes = [n for n in parent_project.notes if lambda nt : nt not in [en.guid for en in new_notes.notes]]
+            guid_new_notes = [en.guid for en in new_notes.notes]
+            removed_notes = [n for n in parent_project.notes if n.evernote_guid not in guid_new_notes]
             for f in removed_notes:
                 parent_project.notes.remove(f)
 

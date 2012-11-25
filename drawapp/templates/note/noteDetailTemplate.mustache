@@ -1,8 +1,10 @@
-
-	<a href="#"><strong>{{ title }}</strong><br />{{ snipett }}</a>
-	<!--<div class="caption">
-		<p>{{ snipett }}</p>		
+<a href="#" class="tabbed-note" style="height: 75px;overflow: hidden; text-overflow: ellipsis">
+	<div class="row-fluid">
+		<div class="span10">
+			<strong>{{ title }}</strong><br />{{ snipett }}
+		</div>
+		<div class="span2 pull-right">
+				<img src="/get-evernote-thumbnail/?evernote-guid={{ evernote_guid }}" alt="bla" width="75px" height="75px">
+		</div>	
 	</div>
-	<div class="note-actions">
-		<p><a href="#" id="delete-note" class="btn btn-primary">Delete</a></p>
-	</div>-->
+</a>

@@ -12,6 +12,8 @@ from django.shortcuts import redirect, render
 from permission_backend_nonrel import utils
 from dropbox.session import DropboxSession
 import urllib2, cgi
+from drawerApp.utils import EvernoteHelper
+from urllib import urlencode
 
 def index(request):
     context = {}
@@ -131,3 +133,31 @@ def upload_dropbox_file(request):
         dest_path = result['path']
 
         return redirect("/project/{0}/files/".format(request.POST.get('project_id')))
+
+def get_evernote_image(request):
+    if request.method == 'GET':
+        user_profile = UserProfile.objects.get(user = request.user)
+        ev_h = EvernoteHelper(user_profile.evernote_profile)
+
+        """project = Project.objects.get(id=request.GET.get('project-id'))
+        resources_dict = [note.resources for note in project.notes]
+        guids_dict = {}
+        map(guids_dict.update, resources_dict)"""
+        import io, binascii
+        resource = ev_h.note_store.getResourceByHash(user_profile.evernote_profile.auth_token, request.GET.get('note-guid'),binascii.unhexlify(request.GET.get('hash')), True, False, False)
+
+        return HttpResponse(resource.data.body, resource.mime)
+
+def get_evernote_thumbnail(request):
+    if request.method == 'GET':
+        user_profile = UserProfile.objects.get(user = request.user)
+
+        evernote_url = 'https://sandbox.evernote.com/shard/s1/thm/note/'
+        evernote_guid = request.GET.get('evernote-guid')
+        data = dict(auth = user_profile.evernote_profile.auth_token)
+
+        req = urllib2.Request(evernote_url + evernote_guid)
+        req = urllib2.urlopen(req, data=urlencode(data))
+        thum = req.read()
+
+        return HttpResponse(thum, req.headers.type)

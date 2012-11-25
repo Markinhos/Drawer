@@ -8,11 +8,11 @@ from django.conf import settings
 import evernote.edam.userstore.constants as UserStoreConstants
 import evernote.edam.type.ttypes as Types
 from lxml import etree as etree
-
-
+from xml.sax.saxutils import escape
+import binascii
 
 class EvernoteHelper(object):
-    EVERNOTE_HOST = "sandbox.evernote.com"
+    EVERNOTE_HOST = "www.evernote.com"
     def __init__(self, evernote_profile):
         self.auth_token = evernote_profile.auth_token
         self.evernote_profile = evernote_profile
@@ -105,8 +105,7 @@ class EvernoteHelper(object):
         # at http://dev.evernote.com/documentation/cloud/chapters/ENML.php
         note.content = '<?xml version="1.0" encoding="UTF-8"?>'
         note.content += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">'
-        note.content += '<en-note>'+ content +'<br/>'
-        note.content += '</en-note>'
+        note.content += content +'<br/>'
 
         # Finally, send the new note to Evernote using the createNote method
         # The new Note object that is returned will contain server-generated
@@ -124,11 +123,9 @@ class EvernoteHelper(object):
     def copy_evernote_note(self, evernote_note, local_note):
         local_note.title = evernote_note.title
         tree = etree.fromstring(evernote_note.content)
-        content, snipett = "", ""
-        for chunk in list(tree):
-            content += etree.tostring(chunk)
-        local_note.content = content
-        local_note.snipett = self.create_snipett(evernote_note.content)
+        local_note.content = etree.tostring(tree.xpath("//en-note")[0])
+        for r in evernote_note.resources:
+            local_note.resources[binascii.hexlify(r.data.bodyHash)] = r.guid
         local_note.evernote_guid = evernote_note.guid
         local_note.evernote_usn = evernote_note.updateSequenceNum
         return local_note
@@ -145,3 +142,21 @@ class EvernoteHelper(object):
             snipett += chunk + " "
         return snipett.strip()
 
+    def replace_images(self, content, note_guid):
+        tree = etree.fromstring(content)
+        images = tree.xpath('/en-note//en-media')
+        for image in images:
+            image_type = image.attrib['type']
+            if image_type[:image_type.find("/")] == "image":
+                stringified_att = ''
+                attributes = image.attrib
+                for att_key, att_value in attributes.items():
+                    stringified_att += att_key + '="' + att_value + '" '
+                #host = self.evernote_profile.notebook_url.replace("notestore", "res") + "/" + image.attrib['hash'] + "." + image_type[image_type.find("/") + 1:] + '?resizeSmall"'
+                host = "/get-evernote-image/?hash=" + image.attrib['hash'] + "&note-guid=" + note_guid
+                image_node = '<img ' + stringified_att + ' ' + 'src="' + escape(host) + '" ></img>'
+                image_elem = etree.fromstring(image_node)
+                image.getparent().insert(image.getparent().index(image),image_elem)
+                image.getparent().remove(image)
+
+        return etree.tostring(tree.xpath('/en-note')[0])
