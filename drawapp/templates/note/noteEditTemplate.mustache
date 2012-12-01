@@ -1,0 +1,17 @@
+<div id="note-editor-content" class="well" >           
+	<!--<textarea style="color: black; background-color: transparent; border: 0px">{{& content }}</textarea>-->
+	
+	<div class="row-fluid">
+		<div class="well small span10">
+			<div class="span10 pull-left title-note"><h3>{{ title }}</h3></div>			
+			<!--<div class="span1 pull-right"><i class="icon-pencil span6 pull-right"></i><i class="icon-trash span6 pull-right"></i></div>-->
+		</div>
+		<div class="btn-toolbar pull-right span2">
+				<div class="btn-group">
+					<a class="btn edit-link" href="#"><i class="icon-pencil edit-note"></i></a>
+					<a class="btn" href="#"><i class="icon-trash delete-note"></i></a>
+				</div>
+			</div>
+	</div>
+	<div class="well content-note" style="height: 600px; overflow: scroll;">{{& content}}</div>
+</div>
