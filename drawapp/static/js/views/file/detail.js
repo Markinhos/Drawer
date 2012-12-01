@@ -3,7 +3,9 @@
 		tagName: "tr",
         render: function(){
             data = this.model.toJSON();
-            data.file_name = this.model.get('path').substring(1);
+            data.file_name = this.model.get('filename');
+            d = new Date(this.model.get('modified'));
+            data.localetime = d.toLocaleDateString();
             if(this.model.get('thumb_exists')) {
                 $(this.el).html(ich.fileDetailThumbnailTemplate(data));
             }

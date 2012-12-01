@@ -161,3 +161,29 @@ def get_evernote_thumbnail(request):
         thum = req.read()
 
         return HttpResponse(thum, req.headers.type)
+
+def get_dropbox_file(request):
+    if request.method == 'GET':
+
+        user_profile = UserProfile.objects.get(user = request.user)
+        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+        drop_client = client.DropboxClient(sess)
+
+        res = drop_client.media(request.GET.get('path'))
+        req = urllib2.urlopen(res[u'url'])
+        file = req.read()
+        return HttpResponse(file, req.headers.type)
+
+def get_dropbox_share(request):
+    if request.method == 'GET':
+
+        user_profile = UserProfile.objects.get(user = request.user)
+        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+        drop_client = client.DropboxClient(sess)
+
+        res = drop_client.share(request.GET.get('path'))
+        req = urllib2.urlopen(res[u'url'])
+        file = req.read()
+        return HttpResponse(file, req.headers.type)

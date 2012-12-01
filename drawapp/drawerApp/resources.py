@@ -47,13 +47,17 @@ class CommentCollectionResource(MongoListResource):
 class FileMetadataCollectionResource(MongoListResource):
     created = fields.DateTimeField(default = datetime.now)
     comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
-
+    filename = fields.CharField(readonly=True)
     class Meta:
         object_class        =   FileMetadata
         queryset            =   FileMetadata.objects.all()
         resource_name       =   'fileMetadata'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=FileMetadataForm)
+
+    def dehydrate_filename(self, bundle):
+        path = bundle.obj.path
+        return path[path.rfind('/') + 1:]
 
     def obj_get_list(self, request=None, **kwargs):
         user_profile = UserProfile.objects.get(user = request.user)

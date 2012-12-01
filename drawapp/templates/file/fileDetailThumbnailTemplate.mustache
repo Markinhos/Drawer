@@ -1,1 +1,6 @@
-<td><img src={{ thumb_url }} alt="{{ file_name }}" class="img-polaroid" width="32px" height="32px"></td><td>{{ file_name }}</td><td>{{ size }}</td><td>{{ modified }}</td>
+<td><img src={{ thumb_url }} alt="{{ file_name }}" class="img-polaroid" width="32px" height="32px"></td>
+<td><a href="/get-dropbox-share/?path={{ path }}" target="_blank"><i class="icon-large icon-dropbox"></i></a></td>
+<td><a href="/get-dropbox-file/?path={{ path }}" class="fancybox" rel="gallery">{{ file_name }}</a></td>
+<td> {{ mime_type }}</td>
+<td>{{ size }}</td>
+<td>{{ localetime }}</td>

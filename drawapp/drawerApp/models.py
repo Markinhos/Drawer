@@ -50,7 +50,6 @@ class FileMetadata(models.Model):
     thumb_url = models.SlugField()
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
 
-
     @classmethod
     def get_synced_files(cls, user_profile, parent_project):
         sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
@@ -128,6 +127,7 @@ class Task(models.Model):
     description = models.CharField(max_length=5000, null=True, blank=True)
     creator = models.OneToOneField(User)
     duedate = models.DateField(null=True,blank=True)
+    location = models.CharField(max_length=500, null=True, blank=True)
 
 class Note(models.Model):
     title = models.CharField(max_length=200, default='', blank= True)

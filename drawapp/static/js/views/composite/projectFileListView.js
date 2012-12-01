@@ -28,6 +28,7 @@
                 });
                 this.fileAddView.render();
                 this.fileListView.render();
+                $(".fancybox").fancybox();
             }            
             
             return this;

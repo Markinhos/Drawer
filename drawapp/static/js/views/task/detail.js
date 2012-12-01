@@ -4,8 +4,10 @@
             'click .delete-task': 'deleteTask',
             'click .task-status' : 'selectStatus',
             'click .task-description' : 'editDescription',
+            'click .task-location' : 'editLocation',
             'click .edit-task' : 'editTask',
-            'hover .task-description' : 'hoverTaskDescription'
+            'hover .task-description' : 'hoverTaskDescription',
+            'hover .task-location' : 'hoverTaskDescription'
         },
         selectStatus: function(e){
             e.stopPropagation();
@@ -35,10 +37,26 @@
             }
             else {
                 data.descriptionHtml = '<textarea class="task-description editable" placeholder="Add a description"></textarea>';   
-            }                    
+            }
+
+            if(this.model.get('location')){
+                data.locationHtml = '<a class="fancybox-media" href="https://maps.google.com/maps?q="' + this.model.get('location') +' ">' + this.model.get('location') + '</a>';
+            }
+            else {
+                data.locationHtml = '<input class="task-location editable" placeholder="Add a location" type="text"></input>';   
+            }
+
             $(this.el).html(ich.taskDetailTemplate(data));            
             $(this.el).find(".bootstrap-datepicker").datepicker({ format: 'dd-mm-yyyy' });
             $(this.el).find(".timepicker-default").timepicker({ showMeridian: false});
+
+            $('.fancybox-media').fancybox({
+                openEffect  : 'none',
+                closeEffect : 'none',
+                helpers : {
+                    media : {}
+                }
+            });
             return this;
         },
         deleteTask: function(e){
@@ -59,6 +77,19 @@
                 }  
             }
         },
+        editLocation: function(e)
+        {
+            var clickedEl = $(e.target);
+            if (!clickedEl.hasClass('editable')){
+                var description = this.model.get('location');
+                if (description) {
+                    clickedEl.replaceWith('<input class="task-location editable" placeholder="Add a location" type="text">' + this.model.get('location') + '</input>');
+                }
+                else {
+                    clickedEl.replaceWith('<input class="task-location editable" placeholder="Add a location" type="text"></input>');
+                }  
+            }
+        },
         hoverTaskDescription: function(e){
             var clickedEl = $(e.target);
             if (clickedEl.hasClass("bordered")){
@@ -74,6 +105,9 @@
 
             var desc = parent.find('.task-description').val();
             this.model.set({ description: desc});
+
+            var loc = parent.find('.task-location').val();
+            this.model.set({ location: loc});
 
             var d;        
             if(parent.find('.task-date').val()){
