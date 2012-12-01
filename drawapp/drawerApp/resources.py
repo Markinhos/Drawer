@@ -108,18 +108,21 @@ class NoteCollectionResource(MongoListResource):
         return bundle.obj.evernote_guid
     def dehydrate_content(self, bundle):
         if hasattr(bundle.request, 'user'):
-            #from django.core import urlresolvers
 
             user_profile = UserProfile.objects.get(user = bundle.request.user)
-            ev_h = EvernoteHelper(user_profile.evernote_profile)
 
-            """urlconf = settings.ROOT_URLCONF
-            urlresolvers.set_urlconf(urlconf)
-            resolver = urlresolvers.RegexURLResolver(r'^/', urlconf)
-            callback, callback_args, callback_kwargs = resolver.resolve(
-                bundle.request.path_info)"""
+            if user_profile.is_evernote_synced:
+                ev_h = EvernoteHelper(user_profile.evernote_profile)
 
-            return ev_h.replace_images(bundle.obj.content, bundle.obj.evernote_guid)
+                """urlconf = settings.ROOT_URLCONF
+                urlresolvers.set_urlconf(urlconf)
+                resolver = urlresolvers.RegexURLResolver(r'^/', urlconf)
+                callback, callback_args, callback_kwargs = resolver.resolve(
+                    bundle.request.path_info)"""
+
+                return ev_h.replace_images(bundle.obj.content, bundle.obj.evernote_guid)
+            else:
+                return bundle.obj.content
 
     def obj_create(self, bundle, request=None, **kwargs):
         bundle = super(NoteCollectionResource, self).obj_create(bundle,request, **kwargs)
