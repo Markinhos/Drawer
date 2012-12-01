@@ -40,7 +40,7 @@
             }
 
             if(this.model.get('location')){
-                data.locationHtml = '<a class="fancybox-media" href="https://maps.google.com/maps?q="' + this.model.get('location') +' ">' + this.model.get('location') + '</a>';
+                data.locationHtml = '<a class="fancybox-media span1" href="https://maps.google.com/maps?q=' + this.model.get('location') +'"><i class="icon-globe"></i></a><div class="span4 task-location">' + this.model.get('location') + '</div>';
             }
             else {
                 data.locationHtml = '<input class="task-location editable" placeholder="Add a location" type="text"></input>';   
@@ -53,6 +53,7 @@
             $('.fancybox-media').fancybox({
                 openEffect  : 'none',
                 closeEffect : 'none',
+                type: 'iframe',
                 helpers : {
                     media : {}
                 }
@@ -83,7 +84,7 @@
             if (!clickedEl.hasClass('editable')){
                 var description = this.model.get('location');
                 if (description) {
-                    clickedEl.replaceWith('<input class="task-location editable" placeholder="Add a location" type="text">' + this.model.get('location') + '</input>');
+                    clickedEl.replaceWith('<input class="task-location editable" placeholder="Add a location" type="text" value="' + this.model.get('location') + '"</input>');
                 }
                 else {
                     clickedEl.replaceWith('<input class="task-location editable" placeholder="Add a location" type="text"></input>');
@@ -103,11 +104,10 @@
             debugger;
             var parent = $(e.target).parents(".task-group");
 
-            var desc = parent.find('.task-description').val();
-            this.model.set({ description: desc});
+            var desc = parent.find('.task-description').val() || parent.find('.task-description').text();
+            var loc = parent.find('.task-location').val() || parent.find('.task-location').text();
 
-            var loc = parent.find('.task-location').val();
-            this.model.set({ location: loc});
+            this.model.set({ description: desc, location: loc });
 
             var d;        
             if(parent.find('.task-date').val()){

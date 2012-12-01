@@ -3,6 +3,7 @@
         model: Task,
         urlRoot: APP_GLOBAL.PROJECT_API,
         url: function(){
+            debugger;
             return this.project.id + 'tasks/';
         },
         maybeFetch: function(options){

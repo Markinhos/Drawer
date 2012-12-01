@@ -9,7 +9,8 @@
                 relatedModel: 'Task',
                 collectionType: 'TaskCollection',
                 reverseRelation: {
-                    key: 'project'
+                    key: 'project',
+                    includeInJSON: 'id'
                 }
             },
             {
@@ -19,7 +20,8 @@
                 relatedModel: 'Note',
                 collectionType: 'NoteCollection',
                 reverseRelation: {
-                    key: 'project'
+                    key: 'project',
+                    includeInJSON: 'id'
                 }
             },
             {
@@ -29,7 +31,8 @@
                 relatedModel: 'File',
                 collectionType: 'FileCollection',
                 reverseRelation: {
-                    key: 'project'
+                    key: 'project',
+                    includeInJSON: 'id'
                 }
             },
             {
@@ -39,7 +42,8 @@
                 relatedModel: 'Status',
                 collectionType: 'StatusCollection',
                 reverseRelation: {
-                    key: 'project'
+                    key: 'project',
+                    includeInJSON: 'id'
                 }
             }
         ]

@@ -11,7 +11,7 @@ from drawerApp.models import UserProfile, EvernoteProfile, DropboxProfile, Proje
 from django.shortcuts import redirect, render
 from permission_backend_nonrel import utils
 from dropbox.session import DropboxSession
-import urllib2, cgi
+import urllib2, cgi, datetime
 from drawerApp.utils import EvernoteHelper
 from urllib import urlencode
 
@@ -139,14 +139,11 @@ def get_evernote_image(request):
         user_profile = UserProfile.objects.get(user = request.user)
         ev_h = EvernoteHelper(user_profile.evernote_profile)
 
-        """project = Project.objects.get(id=request.GET.get('project-id'))
-        resources_dict = [note.resources for note in project.notes]
-        guids_dict = {}
-        map(guids_dict.update, resources_dict)"""
-        import io, binascii
+        import binascii
         resource = ev_h.note_store.getResourceByHash(user_profile.evernote_profile.auth_token, request.GET.get('note-guid'),binascii.unhexlify(request.GET.get('hash')), True, False, False)
 
-        return HttpResponse(resource.data.body, resource.mime)
+        res = _setCacheHeaders(resource.data.body,resource.mime)
+        return res
 
 def get_evernote_thumbnail(request):
     if request.method == 'GET':
@@ -160,7 +157,8 @@ def get_evernote_thumbnail(request):
         req = urllib2.urlopen(req, data=urlencode(data))
         thum = req.read()
 
-        return HttpResponse(thum, req.headers.type)
+        res = _setCacheHeaders(thum,req.headers.type)
+        return res
 
 def get_dropbox_file(request):
     if request.method == 'GET':
@@ -173,7 +171,8 @@ def get_dropbox_file(request):
         res = drop_client.media(request.GET.get('path'))
         req = urllib2.urlopen(res[u'url'])
         file = req.read()
-        return HttpResponse(file, req.headers.type)
+        res = _setCacheHeaders(file,req.headers.type)
+        return res
 
 def get_dropbox_share(request):
     if request.method == 'GET':
@@ -184,6 +183,16 @@ def get_dropbox_share(request):
         drop_client = client.DropboxClient(sess)
 
         res = drop_client.share(request.GET.get('path'))
-        req = urllib2.urlopen(res[u'url'])
-        file = req.read()
-        return HttpResponse(file, req.headers.type)
+        return redirect(res[u'url'])
+
+def _setCacheHeaders(body, type):
+    res = HttpResponse()
+    current_time = datetime.datetime.utcnow()
+    last_modified = current_time - datetime.timedelta(days=1)
+    res['Content-Type'] = type
+    res['Last-Modified'] = last_modified.strftime('%a, %d %b %Y %H:%M:%S GMT')
+    res['Expires'] = current_time + datetime.timedelta(days=30)
+    res['Cache-Control']  = 'public, max-age=315360000'
+    res['Date']           = current_time
+    res.content = body
+    return res
