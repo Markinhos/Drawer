@@ -12,7 +12,10 @@
         },
 
         addAll: function(){
-            this.views = [];
+            $(this.views).each(function(index){
+                this.remove();
+            });
+            this.views = [];            
             this.collection.each(this.addOne);
         },
 

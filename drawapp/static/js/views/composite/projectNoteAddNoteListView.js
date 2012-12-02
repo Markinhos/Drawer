@@ -52,7 +52,7 @@
         },
 
         refreshNotes: function(e){
-            var elem = $(e.target)
+            var elem = $(e.target);
             elem.addClass('icon-large');
             this.model.get('notes').fetch({
                 success : function(){

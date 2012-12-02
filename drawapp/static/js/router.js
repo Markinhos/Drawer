@@ -36,7 +36,7 @@
 
         project_detail_notes: function(id) {
             //fetch or get cached projects            
-            app.projects.fetch({
+            app.projects.maybeFetch({
                 //if success render sidebar and detail app
                 success: function() {
                     app.sidebar.render(id);
@@ -54,7 +54,7 @@
 
         project_detail_activity: function(id) {
             //fetch or get cached projects            
-            app.projects.fetch({
+            app.projects.maybeFetch({
                 //if success render sidebar and detail app
                 success: function() {
                     app.sidebar.render(id);
@@ -72,29 +72,25 @@
 
         project_detail_files: function(id) {
             //fetch or get cached projects            
-            app.projects.fetch({
+            app.projects.maybeFetch({
                 //if success render sidebar and detail app
                 success: function() {
-                    app.projects.get(APP_GLOBAL.PROJECT_API + id + '/').get('files').fetch({
-                        success: function(){
-                            app.sidebar.render(id);
-                            var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
-                            app.menu.model = project;
-                            app.menu.render({ "file-active" : "active"});
-                            app.detail = new ProjectFileListView({
-                                project: project,
-                                el: $("#content")
-                            });
-                            app.detail.render();
-                        }
-                    });                    
+                    app.sidebar.render(id);
+                    var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    app.menu.model = project;
+                    app.menu.render({ "file-active" : "active"});
+                    app.detail = new ProjectFileListView({
+                        project: project,
+                        el: $("#content")
+                    });
+                    app.detail.render();                                       
                 }
             });
         },
 
         project_detail_people: function(id) {
             //fetch or get cached projects            
-            app.projects.fetch({
+            app.projects.maybeFetch({
                 //if success render sidebar and detail app
                 success: function() {
                     app.sidebar.render(id);

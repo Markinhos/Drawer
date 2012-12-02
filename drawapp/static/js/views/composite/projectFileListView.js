@@ -1,5 +1,8 @@
 (function () {
     window.ProjectFileListView = Backbone.View.extend({
+        events: {
+            'click .dropbox-refresher': 'refreshFiles'
+        },
         initialize: function(arguments){            
             this.el = arguments.el;
             this.model = arguments.project;            
@@ -32,6 +35,16 @@
             }            
             
             return this;
+        },
+
+        refreshFiles: function(e){
+            var elem = $(e.target);
+            elem.addClass('icon-large');
+            this.model.get('files').fetch({
+                success : function(){
+                    elem.removeClass('icon-large')
+                }
+            });
         }
     });
 })();

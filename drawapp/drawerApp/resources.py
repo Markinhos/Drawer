@@ -67,6 +67,13 @@ class FileMetadataCollectionResource(MongoListResource):
             self.instance.files = project.files
         return super(FileMetadataCollectionResource, self).obj_get_list(request, **kwargs)
 
+    def obj_delete(self, request=None, **kwargs):
+        #Check if evernote accout is set up
+        user_profile = UserProfile.objects.get(user = request.user)
+        if user_profile.is_dropbox_synced:
+            self.instance.files[int(kwargs['index'])].delete_file_dropbox(user_profile)
+        return super(FileMetadataCollectionResource, self).obj_delete(request, **kwargs)
+
 class TaskCollectionResource(MongoListResource):
     created = fields.DateTimeField(default = datetime.now, null=True, blank=True)
     modified = fields.DateTimeField(default = datetime.now)
@@ -137,7 +144,6 @@ class NoteCollectionResource(MongoListResource):
         #Check if evernote accout is set up
         user_profile = UserProfile.objects.get(user = request.user)
         if user_profile.is_evernote_synced:
-            project = Project.objects.get(pk = self.instance.pk)
             self.instance.notes[int(kwargs['index'])].delete_note_evernote(user_profile)
         return super(NoteCollectionResource, self).obj_delete(request, **kwargs)
 

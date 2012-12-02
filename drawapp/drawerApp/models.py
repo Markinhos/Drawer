@@ -107,6 +107,14 @@ class FileMetadata(models.Model):
 
             parent_project.save()
 
+    def delete_file_dropbox(self, user_profile):
+        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+        drop_client = client.DropboxClient(sess)
+
+        result = drop_client.file_delete(self.path)
+        return True
+
 
 class Comment(models.Model):
     text = models.CharField(max_length=1000)
