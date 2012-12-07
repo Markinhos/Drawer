@@ -4,7 +4,7 @@
         initialize: function(){
             _.bindAll(this, 'addOne', 'addAll');
 
-            this.collection.bind('reset', this.addAll, this);
+            //this.collection.bind('reset', this.addAll, this);
             this.views = [];
 
         },

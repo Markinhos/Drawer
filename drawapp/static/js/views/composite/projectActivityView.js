@@ -18,8 +18,20 @@
                 parentView: this.statusListView
             });
 
+            //this.noteAddView = new NoteAddView({
+                //model: this.model.get('notes'),
+                //el: $(".tool-list"),
+              //  parentView: this
+            //});
+
             this.statusAddView.render();
             this.statusListView.render();
+
+            debugger;
+            //this.noteAddView.render();
+            
+            this.statusListView.collection.startLongPolling();
+            this.statusListView.collection.on('reset', function(){ console.log('Comments fetched'); });
             return this;
         }
     });

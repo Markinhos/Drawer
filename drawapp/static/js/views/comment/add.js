@@ -26,8 +26,9 @@
                 var that = this;
                 var result = this.model.save({ wait : true ,
                     success : function(model) {
+                        debugger;
                         that.options.parentView.addOne(comment);
-                        this.$('#comment-text').val('');
+                        that.$('#comment-text').val('');
                     },
                     error : function(model, response){
                         that.errorView = new Flash({el : "#flash"}),

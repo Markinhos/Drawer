@@ -1,6 +1,7 @@
 (function () {
     window.CommentDetailView = Backbone.View.extend({
 		className: "well",
+        tagName: "li",
         render: function(){
             $(this.el).html(ich.commentDetailTemplate(this.model.toJSON()));
             return this;

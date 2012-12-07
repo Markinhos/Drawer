@@ -1,5 +1,5 @@
-<div class="well status-container">
-	<div class="well status-item">
+<div class="status-container span12">
+	<div class="row-fluid well status-item" style="padding-right:0px;">
 			<blockquote>
 				<p>{{ text }}</p>
 				<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
@@ -9,15 +9,7 @@
 		</div>		
 	</div>	
 	<div class="comments-container" id="comments-container-{{ id }}">
-		<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none; diplay: none;">
-			{{#comments}}
-				<li class="comment-item well">
-					<blockquote class="comment-content">
-						<p>{{ text }}</p>
-						<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
-					</blockquote>		
-				</li>
-			{{/comments}}
+		<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none; diplay: none;">			
 		</ul>
 	</div>
 </div>

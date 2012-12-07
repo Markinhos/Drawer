@@ -6,7 +6,6 @@
             'click .delete-note': 'deleteNote'
         },
         initialize: function(arguments){
-            debugger;
             this.parentView = arguments.parentView;
         },
         deleteNote: function(e) {
@@ -22,7 +21,6 @@
             if (contentEdited && titleEdited) {
                 //this.model.set({content : contentEdited, title: titleEdited });
                 var that = this;
-                debugger;
                 var result = this.model.save({content : contentEdited, title: titleEdited}, {
                     success : function(model) {
                         that.render();
@@ -36,7 +34,6 @@
         },
 
         makeEditable: function(e){
-            debugger;
             var clickedEl = $(e.target);
             var editor = $('<textarea class="editor-note-area" rows="10">' + this.model.get('content') + '</textarea>');
             clickedEl.parents().find("#note-editor-content").find(".content-note").replaceWith(editor);

@@ -18,8 +18,7 @@
             this.noteModalView.render();
             return this;
         },
-        render: function(){      
-            debugger;  	
+        render: function(){
             $(this.el).html(ich.noteDetailTemplate(this.model.toJSON()));
             return this;
         },

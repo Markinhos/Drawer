@@ -115,16 +115,6 @@ class FileMetadata(models.Model):
         result = drop_client.file_delete(self.path)
         return True
 
-
-class Comment(models.Model):
-    text = models.CharField(max_length=1000)
-    created = models.DateTimeField(default=datetime.now())
-    modified = models.DateTimeField(auto_now=True)
-    owner = models.ForeignKey(User)
-    comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
-
-
-
 class Task(models.Model):
     STATUS = ['DONE', 'TODO']
     title = models.CharField(max_length=200)
@@ -136,6 +126,17 @@ class Task(models.Model):
     creator = models.OneToOneField(User)
     duedate = models.DateField(null=True,blank=True)
     location = models.CharField(max_length=500, null=True, blank=True)
+
+class Comment(models.Model):
+    text = models.CharField(max_length=1000)
+    created = models.DateTimeField(default=datetime.now())
+    modified = models.DateTimeField(auto_now=True)
+    owner = models.ForeignKey(User)
+    comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
+    task = models.ForeignKey(Task, null=True)
+
+    def save(self):
+        super(Comment, self).save()
 
 class Note(models.Model):
     title = models.CharField(max_length=200, default='', blank= True)
@@ -263,6 +264,9 @@ class Project(models.Model):
     modified = models.DateTimeField(auto_now=True)
     members = ListField(models.ForeignKey(User), editable=False)
     objects = MongoDBManager()
+
+    def save(self):
+        return super(Project, self).save()
 
 post_delete.connect(update_user_profile_projects_delete, sender=Project)
 post_save.connect(update_user_profile_projects_create, sender=Project)

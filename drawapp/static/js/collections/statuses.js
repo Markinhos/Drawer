@@ -1,9 +1,14 @@
 (function() {
     window.StatusCollection = Backbone.Collection.extend({
         model: Status,
+        longPolling : false,
+        invervalSeconds : 10,
         urlRoot: APP_GLOBAL.PROJECT_API,
         url: function(){
             return this.project.id + 'statuses/';
+        },
+        initialize : function(){
+            _.bindAll(this);
         },
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.
@@ -39,6 +44,29 @@
             });
 
             model.fetch(options);
+        },        
+        startLongPolling : function(invervalSeconds){
+            this.longPolling = true;
+            if( invervalSeconds ){
+                this.invervalSeconds = invervalSeconds;
+            }
+            this.executeLongPolling();
+        },
+        stopLongPolling : function(){
+            this.longPolling = false;
+        },
+        executeLongPolling : function(){
+            var that = this;
+            this.fetch({
+                success : function(collection, response, options) {
+                    that.onFetch();
+                }
+            });
+        },
+        onFetch : function () {
+            if( this.longPolling ){
+                setTimeout(this.executeLongPolling, 1000 * this.invervalSeconds); // in order to update the view each N seconds
+            }
         }
     });
 })();

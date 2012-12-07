@@ -58,6 +58,9 @@
     <script type="text/javascript" src="{{ STATIC_URL }}/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
 
     <link type="text/css" href="{{ STATIC_URL }}/css/bootstrap.icon-large.css" rel="stylesheet">
+
+    <!--embed.ly-->
+    <script src="http://scripts.embed.ly/jquery.embedly.min.js"></script>
     <style>
         body { padding-top: 60px; }
     </style>
@@ -149,6 +152,12 @@
 </script>
 <script id="statusDetailTemplate" type="text/html">
     {% straight_include "status/statusDetailTemplate.mustache" %}
+</script>
+<script id="statusDetailLinkTemplate" type="text/html">
+    {% straight_include "status/statusDetailLinkTemplate.mustache" %}
+</script>
+<script id="statusDetailLinkVideoTemplate" type="text/html">
+    {% straight_include "status/statusDetailLinkVideoTemplate.mustache" %}
 </script>
 <script id="statusAddTemplate" type="text/html">
     {% straight_include "status/statusAddTemplate.mustache" %}

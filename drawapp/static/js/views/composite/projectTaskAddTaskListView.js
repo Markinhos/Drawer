@@ -5,7 +5,6 @@
             this.model = arguments.project;
         },
         render: function(){
-            debugger;
             $(this.el).html(ich.projectTaskAddTaskListTemplate(this.model.toJSON()));
 
             this.taskListView = new TaskListView({

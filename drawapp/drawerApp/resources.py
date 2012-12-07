@@ -34,6 +34,7 @@ class CommentCollectionResource(MongoListResource):
     owner = fields.ForeignKey(UserResource, 'owner')
     owner_name = fields.CharField(readonly=True)
     comments = EmbeddedCollection(of = 'drawapp.drawerApp.resources.CommentCollectionResource', attribute = 'comments', null=True, blank=True, full=True)
+    task = fields.ForeignKey('drawapp.drawerApp.resources.TaskCollectionResource', 'task', null=True)
 
     class Meta:
         object_class        =   Comment
@@ -43,6 +44,15 @@ class CommentCollectionResource(MongoListResource):
 
     def dehydrate_owner_name(self, bundle):
         return bundle.obj.owner.username
+    def hydrate_comments(self, bundle):
+        if 'comments' in bundle.data and len(bundle.data['comments']) > 0:
+            import copy
+            bundle_copy = copy.deepcopy(bundle)
+            self.full_dehydrate(bundle_copy)
+            bundle_copy.data['comments'].append(bundle.data['comments'][-1])
+            bundle.data['comments'] = bundle_copy.data['comments']
+        return bundle
+
 
 class FileMetadataCollectionResource(MongoListResource):
     created = fields.DateTimeField(default = datetime.now)

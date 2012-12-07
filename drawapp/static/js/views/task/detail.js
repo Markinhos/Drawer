@@ -101,7 +101,6 @@
             }            
         },        
         editTask: function(e){
-            debugger;
             var parent = $(e.target).parents(".task-group");
 
             var desc = parent.find('.task-description').val() || parent.find('.task-description').text();
