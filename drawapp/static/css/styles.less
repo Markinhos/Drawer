@@ -88,17 +88,19 @@
 	margin-left: 0%;
 }
 
-.projectDetail .project-tool{
-	position: relative;
-	> i {
-		visibility: hidden;
+.project-detail{
+	> .project-tool{
+		> i {
+			visibility: hidden;
+		}
 	}
 	&:hover{
-		> i {
+		> .project-tool > i {
 			visibility: visible;
 		}
 	}
 }
+
 div.project-tool-popover {
 	width: auto;
 }

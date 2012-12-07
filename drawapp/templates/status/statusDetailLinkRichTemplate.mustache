@@ -1,10 +1,11 @@
 <div class="status-container span12">
-	<div class="row-fluid well status-item" style="padding-right:0px;">
-			<blockquote>
-				<p>{{ text }}</p>
-				<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
-			</blockquote>
-		<div class="status-meta">
+	<div class="row-fluid well status-item" style="max-height: 270px; padding-right:0px;">
+		<div class="link-content">
+			<div class="pull-left span11">
+				{{& html }}
+			</div>
+		</div>
+		<div class="status-meta span1">
 			<ul style="list-style:none;">
 				<li><a href="#" rel="tooltip" title="Attach a task"><i class="icon-tasks"></i></a></li>
 				<li><a href="#" rel="tooltip" title="Attach a note"><i class="icon-file"></i></a></li>
@@ -13,7 +14,7 @@
 		</div>		
 	</div>	
 	<div class="comments-container" id="comments-container-{{ id }}">
-		<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none; diplay: none;">			
+		<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none;">			
 		</ul>
 	</div>
 </div>

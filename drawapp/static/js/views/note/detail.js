@@ -23,6 +23,8 @@
             return this;
         },
         showEditor: function(e){
+            $(this.options.parentView.el).find("li.active").removeClass("active")
+            $(this.el).addClass("active");
             if(this.options.parentView.noteEditView){                
                 this.options.parentView.noteEditView.model = this.model;
                 this.options.parentView.noteEditView.delegateEvents();

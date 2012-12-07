@@ -1,39 +1,71 @@
 (function () {
     window.StatusDetailView = Backbone.View.extend({
         events: {
-            'click .status-meta': 'toggleComments',
+            'click .icon-comment': 'toggleComments',
+            'click .icon-tasks': 'createTask',
             'click .preview': 'showVideo'
         },    
         initialize: function(){
             _.bindAll();
             this.model.bind('change', this.render, this);
         },
-    	toggleComments: function(){
+    	toggleComments: function(e){
+            e.preventDefault();
     		$("#status-comments-list-" + this.model.get('id')).slideToggle();
     	},
         isLink: function(link){
             var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
             return re.test(link);
         },
+        createTask: function(e){
+            var title = this.model.get('text');
+            if (title) {
+                var task = new Task({
+                    title: title,
+                    status : 'TODO',
+                    creator: '/api/v1/user/' + APP_GLOBAL.USER + '/'
+                });
+                var that = this;
+
+                debugger;
+                var result = this.model.get('project').get('tasks').create(task,{ wait : true ,
+                    success : function(model) {
+                        debugger;
+                        that.model.set('task', task.id);
+                        that.model.save();
+                        that.options.parentView.options.parentView.renderTask(task.get('id'));
+                    },
+                    error : function(model, response){
+                        that.errorView = new Flash();
+                        that.errorView.render("Sorry, there has been an error. :(", "error");
+                    }
+                });
+            }
+        },
         showVideo: function(e){
-            debugger;
             e.preventDefault();
-            if (this.dataResponse && this.dataResponse.type === "video"){
+            if (this.model.get('dataResponse') && this.model.get('dataResponse').type === "video"){
                 data = this.model.toJSON();
                 //var parsedHtml = $(this.dataResponse.html).removeAttr("width").removeAttr("height");
                 //this.dataResponse.html = parsedHtml;
-                $.extend(data, this.dataResponse);
+                $.extend(data, this.model.get('dataResponse'));
                 $(this.el).find(".link-content").replaceWith(ich.statusDetailLinkVideoTemplate(data));
             }
-            else if(this.dataResponse && this.dataResponse.type === "link"){
-                window.open(this.dataResponse.url);
+            else if(this.model.get('dataResponse') && this.model.get('dataResponse').type === "link"){
+                window.open(this.model.get('dataResponse').url);
             }
         },
         renderLink: function(res, dict){
-            this.dataResponse = res;
+            //this.dataResponse = res;
+            this.model.set('dataResponse', res);
             data = this.model.toJSON();
-            $.extend(data, this.dataResponse);
-            $(this.el).html(ich.statusDetailLinkTemplate(data));
+            $.extend(data, this.model.get('dataResponse'));
+            if(this.model.get('dataResponse').type === "rich"){                
+                $(this.el).html(ich.statusDetailLinkRichTemplate(data));
+            }            
+            else{
+                $(this.el).html(ich.statusDetailLinkTemplate(data));
+            }
             this.renderComments();
         },        
         renderComments: function(){
@@ -48,12 +80,11 @@
             $(".status-comments-list", this.el).append(this.commentAddView.render().el);            
         },
         render: function(){
-            if(this.isLink(this.model.get('text'))) {                
-                if(!this.dataResponse){
-                    this.dataResponse = {};
+            if(this.isLink(this.model.get('text'))) {
+                if(!this.model.get('dataResponse')){                    
                     var that = this;
-                    debugger;
                     var widthVideo = $(window).width()/3.5;
+                    $(this.el).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div>');
                     $.embedly(this.model.get('text'), { key : "a3fa84e00cb84b0386bde0b7055c8bb4" , maxWidth: parseInt(widthVideo), maxHeight: 200,
                         success: function(oembed, dict) { 
                             console.log("Link fetched");
@@ -62,14 +93,14 @@
                     });
                 }
                 else{
-                    this.renderLink(this.dataResponse, {});
+                    this.renderLink(this.model.get('dataResponse'), {});
                 }                
             }
             else
             {
                 $(this.el).html(ich.statusDetailTemplate(this.model.toJSON()));
                 this.renderComments();
-            }                            
+            }
             return this;
         },
         deleteStatus: function(){

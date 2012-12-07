@@ -2,7 +2,7 @@
     window.StatusCollection = Backbone.Collection.extend({
         model: Status,
         longPolling : false,
-        invervalSeconds : 10,
+        invervalSeconds : 120,
         urlRoot: APP_GLOBAL.PROJECT_API,
         url: function(){
             return this.project.id + 'statuses/';
@@ -39,7 +39,7 @@
                 return;
             }
 
-            model = new Task({
+            model = new Status({
                 resource_uri: id
             });
 

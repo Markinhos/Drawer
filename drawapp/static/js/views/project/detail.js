@@ -2,14 +2,14 @@
     window.ProjectView = Backbone.View.extend({
         events: {
             'click .project-tool' : 'deleteProject',
-            'click .projectDetail': 'project_detail'            
+            'click .project-detail': 'projectDetail'            
         },
         tagName: 'li',
         render: function(){
             $(this.el).html(ich.projectTemplate(this.model.toJSON()));
             return this;
         },
-        project_detail: function(){
+        projectDetail: function(){
             app.router.navigate('project/' + this.model.get('id') + '/', {trigger: true});
         },
 
