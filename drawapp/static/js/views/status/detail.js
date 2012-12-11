@@ -31,9 +31,13 @@
                 var result = this.model.get('project').get('tasks').create(task,{ wait : true ,
                     success : function(model) {
                         debugger;
-                        that.model.set('task', task.id);
-                        that.model.save();
-                        that.options.parentView.options.parentView.renderTask(task.get('id'));
+                        that.model.set();
+                        that.model.save({'task': task.id},{
+                            success : function(model){
+                                debugger;
+                                that.options.parentView.options.parentView.renderTask(task);
+                            }
+                        });                        
                     },
                     error : function(model, response){
                         that.errorView = new Flash();
@@ -83,9 +87,9 @@
             if(this.isLink(this.model.get('text'))) {
                 if(!this.model.get('dataResponse')){                    
                     var that = this;
-                    var widthVideo = $(window).width()/3.5;
+                    var widthVideo = $(window).width()/2.5;
                     $(this.el).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div>');
-                    $.embedly(this.model.get('text'), { key : "a3fa84e00cb84b0386bde0b7055c8bb4" , maxWidth: parseInt(widthVideo), maxHeight: 200,
+                    $.embedly(this.model.get('text'), { key : "a3fa84e00cb84b0386bde0b7055c8bb4" , 
                         success: function(oembed, dict) { 
                             console.log("Link fetched");
                             that.renderLink(oembed, dict);                            

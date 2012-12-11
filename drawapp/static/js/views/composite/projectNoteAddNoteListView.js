@@ -30,7 +30,11 @@
             this.noteListView.render();
             if(this.noteEditView){
                 this.noteEditView.render();
-            }            
+            }
+
+            debugger;
+            var views = views = this.noteListView.views;
+            $(views[views.length - 1].el).addClass("active")
 
             if(!app.userProfile.get('is_evernote_synced')){
                 this.errorView = new Flash({ el: "#flash"});

@@ -15,7 +15,18 @@
             status = this.model.get('status') === "TODO" ? "DONE" : "TODO"
             this.model.set('status', status)
             this.model.save();
-            this.options.parentView.moveToDoneOne(this.model.cid);
+            if(this.options.parentView.moveToDoneOne){
+                this.options.parentView.moveToDoneOne(this.model.cid);
+            }
+            else{
+                var taskGroup = $(this.el).find(".task-group");
+                if (taskGroup.hasClass("checked")){
+                    taskGroup.removeClass("checked");
+                }
+                else{
+                    taskGroup.addClass("checked");
+                }
+            }         
         },
         render: function(accordionOpen){
             var isDone, doneStatus;

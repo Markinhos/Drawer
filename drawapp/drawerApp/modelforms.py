@@ -34,3 +34,4 @@ class FileMetadataForm(ModelForm):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
+        exclude = ('tasks', 'notes')

@@ -9,9 +9,16 @@
                 collectionType: 'CommentCollection'
             },
             {
-                type: Backbone.HasOne,
-                key: 'task',
-                relatedModel: 'Task'
+                type: Backbone.HasMany,
+                key: 'tasks',
+                relatedModel: 'Task',
+                collectionType: 'TaskCollection'
+            },
+            {
+                type: Backbone.HasMany,
+                key: 'notes',
+                relatedModel: 'Note',
+                collectionType: 'NoteCollection'
             }
         ]
     });

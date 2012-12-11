@@ -1,4 +1,4 @@
-<div class="status-container span12">
+<!--<div class="status-container span12">
 	<div class="row-fluid well status-item" style="padding-right:0px;">
 			<blockquote>
 				<p>{{ text }}</p>
@@ -14,6 +14,31 @@
 	</div>	
 	<div class="comments-container" id="comments-container-{{ id }}">
 		<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none; diplay: none;">			
+		</ul>
+	</div>
+</div>-->
+<div class="status-container">
+	<div class="media-box row-fluid">
+		<div class="span12">
+			<div class="media row-fluid">
+				<div class="span11">
+					<blockquote>
+						<p>{{ text }}</p>
+						<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
+					</blockquote>
+				</div>
+			  	<div class="status-meta span1">
+					<ul style="list-style:none;">
+						<li><a href="#" rel="tooltip" title="Attach a task"><i class="icon-tasks"></i></a></li>
+						<li><a href="#" rel="tooltip" title="Attach a note"><i class="icon-file"></i></a></li>
+						<li><a href="#" rel="tooltip" title="Show comments"><i class="icon-comment"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>	
+	<div class="comments-container" id="comments-container-{{ id }}">
+		<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none;">			
 		</ul>
 	</div>
 </div>

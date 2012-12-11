@@ -16,14 +16,14 @@
     <script src="{{ STATIC_URL }}js/libs/backbone-tastypie.js"></script>
     <script src="{{ STATIC_URL }}js/libs/backbone-relational.js"></script>
     <script src="{{ STATIC_URL }}js/libs/ICanHaz.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.min.js"></script>
     <script src="{{ STATIC_URL }}js/libs/bootstrap-datepicker.js"></script>
     <script src="{{ STATIC_URL }}js/libs/bootstrap-timepicker.js"></script>
     
-    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}bootstrap3/less/bootstrap.less">
+    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css">
     
     <!--<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-journal.css">-->
-    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}bootstrap3/less/responsive.less">   
+    <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.css">   
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/datepicker.less">
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/timepicker.less">
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/styles.less">
@@ -64,6 +64,20 @@
     <style>
         body { padding-top: 60px; }
     </style>
+    <!--Google analytics-->
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-36911106-1']);
+      _gaq.push(['_setDomainName', 'herokuapp.com']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
     <!--<link href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.css" rel="stylesheet">-->
     <script type="text/javascript">
         (function () {

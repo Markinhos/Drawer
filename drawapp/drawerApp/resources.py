@@ -8,12 +8,13 @@ from datetime import datetime
 from tastypie.validation import FormValidation
 from django.contrib.auth.models import User
 from drawapp.tastypie_nonrel.resources import MongoResource, MongoListResource
-from drawapp.tastypie_nonrel.fields import EmbeddedCollection
+from drawapp.tastypie_nonrel.fields import EmbeddedCollection, ListField
 from drawerApp.utils import EvernoteHelper
 from bson.objectid import ObjectId
 from dropbox.session import DropboxSession
 from django.conf import settings
 from dropbox import session, client
+from django.core.exceptions import PermissionDenied
 
 class UserResource(MongoResource):
 
@@ -34,7 +35,8 @@ class CommentCollectionResource(MongoListResource):
     owner = fields.ForeignKey(UserResource, 'owner')
     owner_name = fields.CharField(readonly=True)
     comments = EmbeddedCollection(of = 'drawapp.drawerApp.resources.CommentCollectionResource', attribute = 'comments', null=True, blank=True, full=True)
-    task = fields.ForeignKey('drawapp.drawerApp.resources.TaskCollectionResource', 'task', null=True)
+    tasks = ListField()
+    comments = ListField()
 
     class Meta:
         object_class        =   Comment
@@ -44,6 +46,16 @@ class CommentCollectionResource(MongoListResource):
 
     def dehydrate_owner_name(self, bundle):
         return bundle.obj.owner.username
+
+
+    def hydrate_tasks(self, bundle):
+        #Hack to remove project
+        if 'tasks' in bundle.data and bundle.data['tasks'] is not None:
+            for t in bundle.data['tasks']:
+                if t['project'] is not None:
+                    del(t['project'])
+        return bundle
+
     def hydrate_comments(self, bundle):
         if 'comments' in bundle.data and len(bundle.data['comments']) > 0:
             import copy
@@ -168,6 +180,7 @@ class NoteCollectionResource(MongoListResource):
 
 class ProjectResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user')
+    description = fields.CharField(null=True, blank=True)
     tasks = EmbeddedCollection(of = TaskCollectionResource, attribute = 'tasks', null=True, blank=True, full=True)
     notes = EmbeddedCollection(of = NoteCollectionResource, attribute = 'notes', null=True, blank=True, full=True)
     statuses = EmbeddedCollection(of = CommentCollectionResource, attribute = 'statuses', null=True, blank=True, full=True)
@@ -197,7 +210,7 @@ class ProjectResource(MongoResource):
             object_list = Project.objects.filter(id__in=[ObjectId(x) for x in (set(user_profile.projects) & set(([p.id for p in object_list])))])
             return object_list
         else:
-            return []
+            raise PermissionDenied("Not authorized")
 
     def obj_delete(self, request=None, **kwargs):
         project = Project.objects.get(id=kwargs["pk"])

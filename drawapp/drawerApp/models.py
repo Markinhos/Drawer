@@ -133,7 +133,8 @@ class Comment(models.Model):
     modified = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
-    task = models.ForeignKey(Task, null=True)
+    tasks = ListField(models.CharField(max_length=150, null=True))
+    notes = ListField(models.CharField(max_length=150, null=True))
 
     def save(self):
         super(Comment, self).save()
@@ -259,7 +260,7 @@ class Project(models.Model):
     statuses = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
     files = EmbeddedModelListField(EmbeddedModelField('FileMetadata'), null=True, blank=True)
     title = models.CharField(max_length=200)
-    description = models.CharField(max_length=5000)
+    description = models.CharField(max_length=5000, null=True, blank=True)
     created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
     modified = models.DateTimeField(auto_now=True)
     members = ListField(models.ForeignKey(User), editable=False)

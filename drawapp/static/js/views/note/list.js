@@ -7,10 +7,6 @@
             this.views = [];
         },
 
-        changeEvent: function(){
-            alert('sync');
-        },
-
         addAll: function(){
             $(this.views).each(function(index){
                 this.remove();
