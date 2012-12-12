@@ -3,10 +3,11 @@
         events: {
             'click .icon-comment': 'toggleComments',
             'click .icon-tasks': 'createTask',
+            'click .icon-file': 'createNote',
             'click .preview': 'showVideo'
         },    
         initialize: function(){
-            _.bindAll();
+            _.bindAll(this);
             this.model.bind('change', this.render, this);
         },
     	toggleComments: function(e){
@@ -27,17 +28,33 @@
                 });
                 var that = this;
 
-                debugger;
                 var result = this.model.get('project').get('tasks').create(task,{ wait : true ,
                     success : function(model) {
                         debugger;
-                        that.model.set();
-                        that.model.save({'task': task.id},{
-                            success : function(model){
-                                debugger;
-                                that.options.parentView.options.parentView.renderTask(task);
-                            }
-                        });                        
+                        that.model.get('tasks').add(task);
+                        that.model.save();                        
+                    },
+                    error : function(model, response){
+                        that.errorView = new Flash();
+                        that.errorView.render("Sorry, there has been an error. :(", "error");
+                    }
+                });
+            }
+        },
+        createNote: function(e){
+            var content = this.model.get('text');
+            if (content) {                                    
+                var note = new Note({
+                    title: "Untitled",
+                    content: '<en-note>' + content + '</en-note>'
+                });
+                var that = this;
+
+                var result = this.model.get('project').get('notes').create(note,{ wait : true ,
+                    success : function(model) {
+                        debugger;
+                        that.model.get('notes').add(note);
+                        that.model.save();                        
                     },
                     error : function(model, response){
                         that.errorView = new Flash();
@@ -81,7 +98,7 @@
                 model: this.model
             });
             this.commentListView.render();
-            $(".status-comments-list", this.el).append(this.commentAddView.render().el);            
+            $(".status-comments-list", this.el).hide().append(this.commentAddView.render().el).fadeIn('slow');
         },
         render: function(){
             if(this.isLink(this.model.get('text'))) {
@@ -102,7 +119,7 @@
             }
             else
             {
-                $(this.el).html(ich.statusDetailTemplate(this.model.toJSON()));
+                $(this.el).html(ich.statusDetailTemplate(this.model.toJSON())).fadeIn('slow');
                 this.renderComments();
             }
             return this;

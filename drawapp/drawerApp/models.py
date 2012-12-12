@@ -133,8 +133,8 @@ class Comment(models.Model):
     modified = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
-    tasks = ListField(models.CharField(max_length=150, null=True))
-    notes = ListField(models.CharField(max_length=150, null=True))
+    tasks_ids = ListField(models.CharField(max_length=150, blank=True), blank=True, null=True)
+    notes_ids = ListField(models.CharField(max_length=150, null=True))
 
     def save(self):
         super(Comment, self).save()

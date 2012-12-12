@@ -4,8 +4,15 @@
         initialize: function(){
             _.bindAll(this, 'addOne', 'addAll');
 
-            this.collection.bind('reset', this.addAll, this);
+            this.collection.bind('reset', this.addAll, this);            
             this.views = [];
+            var self = this;
+            this.collection.on('add', function(task){
+                self.addOne(task);
+            });
+            this.collection.on('destroy', function(task){
+                self.deleteOne(task);
+            });
         },
 
         changeEvent: function(){
@@ -23,19 +30,17 @@
                 model: task
             });
             if(task.get('status') == "DONE"){
-                $(this.el).find("#task-list-recently-done").prepend(view.render().el);
+                $(this.el).find("#task-list-recently-done").hide().prepend(view.render().el).fadeIn('slow');
             }
             else{
-                $(this.el).find("#task-to-do").prepend(view.render().el);                
+                $(this.el).find("#task-to-do").hide().prepend(view.render().el).fadeIn('slow');                
             }
             this.views.push(view);
             view.bind('all', this.rethrow, this);
         },
 
-        deleteOne: function(cid){
-            var t = this.collection.getByCid(cid);
-            var v = this.views.filter(function(view) { return view.model == t })[0];
-            t.destroy();
+        deleteOne: function(task){
+            var v = this.views.filter(function(view) { return view.model == task })[0];
             v.remove();
             this.views.pop(v);
         },
@@ -45,10 +50,10 @@
             var view = this.views.filter(function(view) { return view.model == task })[0];
             $(view).detach();
             if(task.get('status') == "DONE"){
-                $(this.el).find("#task-list-recently-done").prepend(view.render().el);
+                $(this.el).find("#task-list-recently-done").prepend(view.render().el).fadeIn('slow');
             }
             else{
-                $(this.el).find("#task-to-do").prepend(view.render().el);                
+                $(this.el).find("#task-to-do").prepend(view.render().el).fadeIn('slow');                
             }
         },
 

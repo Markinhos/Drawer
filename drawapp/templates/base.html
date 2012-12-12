@@ -136,10 +136,12 @@
 <script src="{{ STATIC_URL }}js/views/task/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/add.js"></script>
+<script src="{{ STATIC_URL }}js/views/task/addContext.js"></script>
 <script src="{{ STATIC_URL }}js/views/people/add.js"></script>
 <script src="{{ STATIC_URL }}js/views/status/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/status/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/status/add.js"></script>
+<script src="{{ STATIC_URL }}js/views/status/context.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/add.js"></script>
@@ -178,6 +180,9 @@
 </script>
 <script id="statusAddTemplate" type="text/html">
     {% straight_include "status/statusAddTemplate.mustache" %}
+</script>
+<script id="statusContextTemplate" type="text/html">
+    {% straight_include "status/statusContextTemplate.mustache" %}
 </script>
 <script id="commentDetailTemplate" type="text/html">
     {% straight_include "comment/commentDetailTemplate.mustache" %}
@@ -317,7 +322,7 @@
             </script>
             <div id="column2" class="span10 column-joined">
                 <div class="well">
-                    <div id="app">
+                    <div id="app" class="row-fluid">
 
                     </div>
                 </div>

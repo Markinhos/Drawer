@@ -35,8 +35,9 @@ class CommentCollectionResource(MongoListResource):
     owner = fields.ForeignKey(UserResource, 'owner')
     owner_name = fields.CharField(readonly=True)
     comments = EmbeddedCollection(of = 'drawapp.drawerApp.resources.CommentCollectionResource', attribute = 'comments', null=True, blank=True, full=True)
-    tasks = ListField()
-    comments = ListField()
+    tasks_ids = ListField(attribute='tasks_ids', null=True, blank=True)
+    notes_ids = ListField(attribute='notes_ids', null=True, blank=True)
+
 
     class Meta:
         object_class        =   Comment
@@ -48,21 +49,24 @@ class CommentCollectionResource(MongoListResource):
         return bundle.obj.owner.username
 
 
-    def hydrate_tasks(self, bundle):
+    """def hydrate_tasks_ids(self, bundle):
         #Hack to remove project
-        if 'tasks' in bundle.data and bundle.data['tasks'] is not None:
-            for t in bundle.data['tasks']:
+        if 'tasks_ids' in bundle.data and bundle.data['tasks_ids'] is not None:
+            for t in bundle.data['tasks_ids']:
                 if t['project'] is not None:
                     del(t['project'])
-        return bundle
+        return bundle"""
 
     def hydrate_comments(self, bundle):
         if 'comments' in bundle.data and len(bundle.data['comments']) > 0:
             import copy
             bundle_copy = copy.deepcopy(bundle)
-            self.full_dehydrate(bundle_copy)
-            bundle_copy.data['comments'].append(bundle.data['comments'][-1])
-            bundle.data['comments'] = bundle_copy.data['comments']
+            #self.full_dehydrate(bundle_copy)
+            #[i.data for i in self.fields['comments'].dehydrate(bundle_copy)].append(bundle.data['comments'][-1])
+            #bundle_copy.data['comments'].append(bundle.data['comments'][-1])
+            comments_saved = [i.data for i in self.fields['comments'].dehydrate(bundle_copy)]
+            comments_saved.append(bundle.data['comments'][-1])
+            bundle.data['comments'] = comments_saved
         return bundle
 
 

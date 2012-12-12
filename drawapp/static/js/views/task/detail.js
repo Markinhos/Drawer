@@ -73,7 +73,7 @@
         },
         deleteTask: function(e){
             if(confirm("Are you sure do you want to delete the task?")){
-                this.options.parentView.deleteOne(this.model.cid);
+                this.model.destroy();
             }            
         },
         editDescription: function(e)

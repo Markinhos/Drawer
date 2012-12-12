@@ -24,7 +24,6 @@
                 var that = this;
                 var result = this.model.get('tasks').create(task,{ wait : true ,
                     success : function(model) {
-                        that.options.parentView.addOne(task);
                         this.$('#task-title').val('');
                     },
                     error : function(model, response){
@@ -32,7 +31,6 @@
                         that.errorView.render("Sorry, there has been an error. :(", "error");
                     }
                 });
-                //this.model.get('tasks').create(task);
             }
         },
 

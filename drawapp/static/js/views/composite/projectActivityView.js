@@ -25,21 +25,16 @@
                 el: this.$('#status-input'),
                 parentView: this.statusListView
             });
-
-            //this.noteAddView = new NoteAddView({
-                //model: this.model.get('notes'),
-                //el: $(".tool-list"),
-              //  parentView: this
-            //});
-
+            
+            this.statusContextView = new StatusContextView({
+                model: this.model.get('statuses').last(),
+                el: this.$('.tool-list'),
+                parentView: this
+            });
+            
             this.statusAddView.render();
             this.statusListView.render();
-
-            debugger;
-            lastStatus = this.model.get('statuses').last();
-            if (lastStatus.get('task')){
-                this.renderTask(lastStatus.get('task'));
-            }
+            this.statusContextView.render();
             
             //this.statusListView.collection.startLongPolling();
             this.statusListView.collection.on('reset', function(){ console.log('Comments fetched'); });
