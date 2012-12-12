@@ -14,10 +14,6 @@
             e.preventDefault();
     		$("#status-comments-list-" + this.model.get('id')).slideToggle();
     	},
-        isLink: function(link){
-            var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
-            return re.test(link);
-        },
         createTask: function(e){
             var title = this.model.get('text');
             if (title) {
@@ -80,6 +76,7 @@
             //this.dataResponse = res;
             this.model.set('dataResponse', res);
             data = this.model.toJSON();
+            data.parsed_text = this.replaceURLWithHTMLLinks(this.model.get('text'))
             $.extend(data, this.model.get('dataResponse'));
             if(this.model.get('dataResponse').type === "rich"){                
                 $(this.el).html(ich.statusDetailLinkRichTemplate(data));
@@ -101,12 +98,13 @@
             $(".status-comments-list", this.el).hide().append(this.commentAddView.render().el).fadeIn('slow');
         },
         render: function(){
-            if(this.isLink(this.model.get('text'))) {
+            debugger;
+            if(this.hasLink(this.model.get('text'))) {
                 if(!this.model.get('dataResponse')){                    
                     var that = this;
                     var widthVideo = $(window).width()/2.5;
                     $(this.el).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div>');
-                    $.embedly(this.model.get('text'), { key : "a3fa84e00cb84b0386bde0b7055c8bb4" , 
+                    $.embedly(this.getLink(this.model.get('text')), { key : "a3fa84e00cb84b0386bde0b7055c8bb4" , 
                         success: function(oembed, dict) { 
                             console.log("Link fetched");
                             that.renderLink(oembed, dict);                            
@@ -123,6 +121,30 @@
                 this.renderComments();
             }
             return this;
+        },
+        isLink: function(link){
+            var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
+            return re.test(link);
+        },
+        hasLink: function(text){
+            if (this.getLink(text)) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        },
+        getLink: function(text){
+            words = text.split(" ");
+            for(x in words){
+                if(this.isLink(words[x])){
+                    return words[x];
+                }
+            }
+        },
+        replaceURLWithHTMLLinks: function(text) {
+            var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            return text.replace(exp,'<a target="_blank" href="$1">$1</a>'); 
         },
         deleteStatus: function(){
             this.options.parentView.deleteOne(this.model.cid);
