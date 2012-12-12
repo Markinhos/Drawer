@@ -12,7 +12,7 @@ class TaskForm(ModelForm):
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        exclude = ('user')
+        exclude = 'user'
     def clean_description(self):
         data = self.cleaned_data['description']
         return data
