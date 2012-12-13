@@ -20,6 +20,17 @@
         },
         render: function(){
             $(this.el).html(ich.noteDetailTemplate(this.model.toJSON()));
+            var images = this.$el.find("img");
+            var self = this;
+            images.each( function(index) { 
+                $(this)
+                    .load(function() { console.log("loading image"); })
+                    .error(function() { 
+                        console.log("failed to load image");
+                        $(self.$el.find(".evernote-thumbnail")).remove();
+                        $(self.$el.find(".note-snipett")).removeClass("span10").addClass("span12")
+                    })
+            });
             return this;
         },
         showEditor: function(e){

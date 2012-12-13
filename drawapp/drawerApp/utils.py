@@ -124,8 +124,9 @@ class EvernoteHelper(object):
         local_note.title = evernote_note.title
         tree = etree.fromstring(evernote_note.content)
         local_note.content = etree.tostring(tree.xpath("//en-note")[0])
-        for r in evernote_note.resources:
-            local_note.resources[binascii.hexlify(r.data.bodyHash)] = r.guid
+        if evernote_note.resources is not None:
+            for r in evernote_note.resources:
+                local_note.resources[binascii.hexlify(r.data.bodyHash)] = r.guid
         local_note.evernote_guid = evernote_note.guid
         local_note.evernote_usn = evernote_note.updateSequenceNum
         return local_note
