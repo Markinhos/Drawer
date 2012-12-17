@@ -16,8 +16,7 @@
 
             this.statusListView = new StatusListView({
                 collection: this.model.get('statuses'),
-                el: this.$("#status-list"),
-                parentView: this
+                el: this.$("#status-list")
             });
 
             this.statusAddView = new StatusAddView({

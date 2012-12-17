@@ -1,23 +1,23 @@
-<div class="status-container">
-	<div class="media-box">
-		<div class="media row-fluid">
-			<div class="span11">
-				<blockquote>
-					<p>{{ text }}</p>
-					<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
-				</blockquote>
+<div class="row-fluid">
+	<div class="status-container span6">
+		<div class="media-box status-box">
+			<p><strong>{{ owner_name }}</strong></p>
+			<div class="media row-fluid">
+				<div class="span11">
+						<p>{{ text }}</p>
+				</div>
+			  	<div class="status-meta span1">
+					<ul style="list-style:none;" class="status-meta-list">
+						<li><a href="#" rel="tooltip" title="Attach a task"><i class="icon-tasks"></i></a></li>
+						<li><a href="#" rel="tooltip" title="Show comments"><i class="icon-comment"></i></a></li>
+					</ul>
+				</div>
 			</div>
-		  	<div class="status-meta span1">
-				<ul style="list-style:none;">
-					<li><a href="#" rel="tooltip" title="Attach a task"><i class="icon-tasks"></i></a></li>
-					<li><a href="#" rel="tooltip" title="Attach a note"><i class="icon-file"></i></a></li>
-					<li><a href="#" rel="tooltip" title="Show comments"><i class="icon-comment"></i></a></li>
-				</ul>
-			</div>
+		</div>	
+		<div class="comments-container" id="comments-container-{{ id }}">
+			<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none;">			
+			</ul>
 		</div>
-	</div>	
-	<div class="comments-container" id="comments-container-{{ id }}">
-		<ul id="status-comments-list-{{ id }}" class="status-comments-list" style="list-style-type: none;">			
-		</ul>
 	</div>
+	<div id="tool-list" class="tool-list pull-right span6" />
 </div>

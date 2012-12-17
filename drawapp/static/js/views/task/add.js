@@ -22,7 +22,7 @@
                     creator: '/api/v1/user/' + APP_GLOBAL.USER + '/'
                 });
                 var that = this;
-                var result = this.model.get('tasks').create(task,{ wait : true ,
+                var result = this.model.get('tasks').create(task,{
                     success : function(model) {
                         this.$('#task-title').val('');
                     },

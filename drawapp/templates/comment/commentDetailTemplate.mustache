@@ -1,4 +1,15 @@
-<blockquote class="comment-content">
-	<p>{{ text }}</p>
-	<small><cite title="bla"><a href="#">{{ owner_name }}</a></cite></small>
-</blockquote>		
+<div class="status-container">
+	<div class="media-box status-box">
+		<p><strong>{{ owner_name }}</strong></p>
+		<div class="media row-fluid">
+			<div class="span11">
+					<p>{{ text }}</p>
+			</div>
+		  	<div class="status-meta span1">
+				<ul style="list-style:none;" class="status-meta-list">
+					<li><a href="#" rel="tooltip" title="Attach a task"><i class="icon-tasks"></i></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

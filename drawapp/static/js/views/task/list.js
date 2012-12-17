@@ -1,11 +1,11 @@
 (function () {
     window.TaskListView = Backbone.View.extend({
         el: '#task-list',
-        initialize: function(){
+        initialize: function(arguments){
             _.bindAll(this, 'addOne', 'addAll');
-
             this.collection.bind('reset', this.addAll, this);            
             this.views = [];
+            
             var self = this;
             this.collection.on('add', function(task){
                 self.addOne(task);

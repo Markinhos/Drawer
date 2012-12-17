@@ -1,5 +1,8 @@
 (function () {
-    window.StatusContextView = Backbone.View.extend({ 
+    window.StatusContextView = Backbone.View.extend({
+        events: {
+            'click .add-note-context': 'addNote'
+        },
         initialize: function(){
             _.bindAll(this);
             //this.model.bind('change', this.render, this);
@@ -12,28 +15,38 @@
                 this.model.get('tasks').on('add', function(task){
                     self.addOneTask(task);
                 });
-                this.model.get('tasks').on('remove', function(task){
+                this.model.get('tasks').on('destroy', function(task){
                     self.deleteOneTask(task);
                 });
                 this.model.get('notes').on('add', function(note){
                     self.addOneNote(note);
                 });
-                this.model.get('notes').on('remove', function(note){
-                    self.deleteOneTask(note);
+                this.model.get('notes').on('destroy', function(note){
+                    self.deleteOneNote(note);
                 });
             }            
+        },
+        addNote: function(){
+            debugger;
+            this.noteAddContextView = new NoteAddContextView({
+                model: this.model,
+                el: $(".note-context-input"),
+                "class": "well",
+                parentView: this
+            });
+            this.noteAddContextView.render();
         },
         addAllTasks: function(){
             this.taskViews = [];
             this.model.get('tasks').each(this.addOneTask);
         },
         addOneTask: function(task){
-            var view = new TaskDetailView({
+            var view = new TaskDetailContextView({
                 parentView: this,
                 model: task
             });
             debugger;
-            $(this.el).find(".context-tasks").hide().prepend(view.render().el).fadeIn('slow');            
+            $(this.el).find(".context-tasks").hide().prepend(view.render().el).fadeIn();            
             this.taskViews.push(view);
             view.bind('all', this.rethrow, this);
         },
@@ -47,12 +60,11 @@
             this.model.get('notes').each(this.addOneNote);
         },
         addOneNote: function(note){
-            var view = new NoteDetailView({
+            var view = new NoteDetailContextView({
                 parentView: this,
                 model: note
             });
-            debugger;
-            $(this.el).find(".context-notes").hide().prepend(view.render().el).fadeIn('slow');            
+            $(this.el).find(".context-notes").hide().prepend(view.render().el).fadeIn();            
             this.noteViews.push(view);
             view.bind('all', this.rethrow, this);
         },
@@ -63,7 +75,7 @@
         },
         render: function(){
             if(this.model){                
-                $(this.el).html(ich.statusContextTemplate(this.model.toJSON())).fadeIn('slow');
+                $(this.el).html(ich.statusContextTemplate(this.model.toJSON())).fadeIn();
                 this.taskInputView = new InputContextView({
                     model: this.model,
                     el: this.$('.context-task-input'),

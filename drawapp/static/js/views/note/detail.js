@@ -7,8 +7,13 @@
             'click .caption'    : 'showModal',
             'click .tabbed-note' : 'showEditor'
         },
+        initialize: function(arguments){
+            this.model.bind('change', this.render, this);
+        },
         deleteNote: function(){
-        	this.options.parentView.deleteOne(this.model.cid);
+            if(confirm("Are you sure do you want to delete the note?")){
+                this.model.destroy();
+            }
         },
         showModal: function(){
             this.noteModalView = new NoteModalView({
@@ -19,14 +24,15 @@
             return this;
         },
         render: function(){
-            $(this.el).html(ich.noteDetailTemplate(this.model.toJSON()));
+            var data = this.model.toJSON();
+            data.snipett = data.content.replace(/<(?:.|\n)*?>/gm, '');
+            $(this.el).html(ich.noteDetailTemplate(data));
             var images = this.$el.find("img");
             var self = this;
             images.each( function(index) { 
                 $(this)
-                    .load(function() { console.log("loading image"); })
-                    .error(function() { 
-                        console.log("failed to load image");
+                    .load()
+                    .error(function() {
                         $(self.$el.find(".evernote-thumbnail")).remove();
                         $(self.$el.find(".note-snipett")).removeClass("span10").addClass("span12")
                     })

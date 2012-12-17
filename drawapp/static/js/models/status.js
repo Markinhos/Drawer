@@ -6,7 +6,11 @@
                 key: 'comments',
                 url: this.urlRoot + '/' + this.idAttribute + '/',
                 relatedModel: 'Comment',
-                collectionType: 'CommentCollection'
+                collectionType: 'CommentCollection',
+                reverseRelation: {
+                    key: 'status',
+                    includeInJSON: Backbone.Model.prototype.idAttribute
+                }
             },
             {
                 type: Backbone.HasMany,

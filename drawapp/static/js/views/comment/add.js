@@ -35,7 +35,6 @@
                         that.errorView.render("Sorry, there has been an error. :(", "error")
                     }
                 });
-                //this.model.get('comments').create(comment);
             }
         },
 

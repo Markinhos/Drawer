@@ -4,17 +4,34 @@
             'click .icon-comment': 'toggleComments',
             'click .icon-tasks': 'createTask',
             'click .icon-file': 'createNote',
-            'click .preview': 'showVideo'
+            'click .preview': 'showVideo',
+            'click .status-box': 'showContext'
         },    
         initialize: function(){
             _.bindAll(this);
             this.model.bind('change', this.render, this);
+            this.status = this.model;
         },
     	toggleComments: function(e){
             e.preventDefault();
     		$("#status-comments-list-" + this.model.get('id')).slideToggle();
     	},
+        showContext: function(e){
+            $(".tool-context:first-child").each(function(index){
+                $(this).remove().fadeOut("slow");
+            });
+            if(!this.statusContextView){
+                this.statusContextView = new StatusContextView({
+                    model: this.model,
+                    el: this.$('.tool-list')
+                });
+            }            
+
+            this.statusContextView.render();
+        },
         createTask: function(e){
+            e.preventDefault();
+            e.stopPropagation();            
             var title = this.model.get('text');
             if (title) {
                 var task = new Task({
@@ -24,11 +41,10 @@
                 });
                 var that = this;
 
-                var result = this.model.get('project').get('tasks').create(task,{ wait : true ,
+                var result = this.status.get('project').get('tasks').create(task,{
                     success : function(model) {
-                        debugger;
-                        that.model.get('tasks').add(task);
-                        that.model.save();                        
+                        that.status.get('tasks').add(task);
+                        that.status.save();                        
                     },
                     error : function(model, response){
                         that.errorView = new Flash();
@@ -36,21 +52,26 @@
                     }
                 });
             }
+            if(!this.statusContextView || this.statusContextView.$el.children().first().length == 0){
+                this.showContext();
+            } 
         },
         createNote: function(e){
-            var content = this.model.get('text');
-            if (content) {                                    
+            e.preventDefault();
+            e.stopPropagation();
+            var title = this.model.get('dataResponse').title;
+            var description = this.model.get('dataResponse').description;
+            if (title) {                                    
                 var note = new Note({
-                    title: "Untitled",
-                    content: '<en-note>' + content + '</en-note>'
+                    title: title,
+                    content: '<en-note>' + description + '</en-note>'
                 });
                 var that = this;
 
-                var result = this.model.get('project').get('notes').create(note,{ wait : true ,
+                var result = this.status.get('project').get('notes').create(note,{
                     success : function(model) {
-                        debugger;
-                        that.model.get('notes').add(note);
-                        that.model.save();                        
+                        that.status.get('notes').add(note);
+                        that.status.save();                        
                     },
                     error : function(model, response){
                         that.errorView = new Flash();
@@ -58,13 +79,14 @@
                     }
                 });
             }
+            if(!this.statusContextView || this.statusContextView.$el.children().first().length == 0){
+                this.showContext();
+            }            
         },
         showVideo: function(e){
             e.preventDefault();
             if (this.model.get('dataResponse') && this.model.get('dataResponse').type === "video"){
                 data = this.model.toJSON();
-                //var parsedHtml = $(this.dataResponse.html).removeAttr("width").removeAttr("height");
-                //this.dataResponse.html = parsedHtml;
                 $.extend(data, this.model.get('dataResponse'));
                 $(this.el).find(".link-content").replaceWith(ich.statusDetailLinkVideoTemplate(data));
             }
@@ -89,7 +111,8 @@
         renderComments: function(){
             this.commentListView = new CommentListView({
                 el : this.$(".status-comments-list"),
-                collection: this.model.get('comments')
+                collection: this.model.get('comments'),
+                statusView: this
             });
             this.commentAddView = new CommentAddView({
                 model: this.model
@@ -98,7 +121,6 @@
             $(".status-comments-list", this.el).hide().append(this.commentAddView.render().el).fadeIn('slow');
         },
         render: function(){
-            debugger;
             if(this.hasLink(this.model.get('text'))) {
                 if(!this.model.get('dataResponse')){                    
                     var that = this;

@@ -5,6 +5,14 @@
             _.bindAll(this, 'addOne', 'addAll');
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
+
+            var self = this;
+            this.collection.on('add', function(task){
+                self.addOne(task);
+            });
+            this.collection.on('destroy', function(task){
+                self.deleteOne(task);
+            });
         },
 
         addAll: function(){
@@ -25,11 +33,10 @@
             view.bind('all', this.rethrow, this);
         },
 
-        deleteOne: function(cid){
-            var t = this.collection.getByCid(cid);
-            var v = this.views.filter(function(view) { return view.model == t })[0];
-            t.destroy();
+        deleteOne: function(note){
+            var v = this.views.filter(function(view) { return view.model == note })[0];
             v.remove();
+            this.views.pop(v);
         },
 
         rethrow: function(){

@@ -2,7 +2,6 @@
     window.CommentListView = Backbone.View.extend({
         initialize: function(){
             _.bindAll(this, 'addOne', 'addAll');
-
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
 
@@ -19,10 +18,10 @@
 
         addOne: function(status){
             var view = new CommentDetailView({
-                parentView: this,
+                statusView: this.options.statusView,
                 model: status
             });
-            $(this.el).prepend(view.render().el);
+            $(this.el).append(view.render().el);
 
             this.views.push(view);
             view.bind('all', this.rethrow, this);

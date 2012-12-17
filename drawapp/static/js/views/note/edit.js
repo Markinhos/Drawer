@@ -9,10 +9,10 @@
             this.parentView = arguments.parentView;
         },
         deleteNote: function(e) {
-            if(confirm("Are you sure you want to delete this note?")){
-                this.options.parentView.noteListView.deleteOne(this.model.cid);
-                this.options.parentView.render();
-            }            
+            e.preventDefault();
+            if(confirm("Are you sure you want to delete the note?")){
+                this.model.destroy();
+            }          
         },
 
         saveNote: function (e) {
@@ -21,7 +21,8 @@
             if (contentEdited && titleEdited) {
                 //this.model.set({content : contentEdited, title: titleEdited });
                 var that = this;
-                var result = this.model.save({content : contentEdited, title: titleEdited}, {
+                var parsedContent = '<en-note>' + contentEdited + '</en-note>'
+                var result = this.model.save({content : parsedContent, title: titleEdited}, {
                     success : function(model) {
                         that.render();
                     },

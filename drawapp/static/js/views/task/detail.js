@@ -9,6 +9,9 @@
             'hover .task-description' : 'hoverTaskDescription',
             'hover .task-location' : 'hoverTaskDescription'
         },
+        initialize: function(){
+            this.template = ich.taskDetailTemplate;
+        },
         selectStatus: function(e){
             e.stopPropagation();
             var status;
@@ -57,7 +60,7 @@
                 data.locationHtml = '<input class="task-location editable" placeholder="Add a location" type="text"></input>';   
             }
 
-            $(this.el).html(ich.taskDetailTemplate(data));            
+            $(this.el).html(this.template(data));            
             $(this.el).find(".bootstrap-datepicker").datepicker({ format: 'dd-mm-yyyy' });
             $(this.el).find(".timepicker-default").timepicker({ showMeridian: false});
 
