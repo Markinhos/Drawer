@@ -29,6 +29,8 @@
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/styles.less">
     <script src="{{ STATIC_URL }}js/libs/less-1.3.0.min.js"></script>
 
+
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropbox.js" id="dropboxjs" data-app-key="8gvbfoxxb9f98ah"></script>
     <!--Editor wysihtml5-->
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-wysihtml5.css">
     <script src="{{ STATIC_URL }}js/libs/wysihtml5-0.3.0.js"></script>
@@ -105,35 +107,35 @@
     APP_GLOBAL.CSFR_TOKEN =  "{% csrf_token %}";
 </script>
 <!--Load backbone js models-->
-<script src="{{ STATIC_URL }}js/models/comment.js"></script>
 <script src="{{ STATIC_URL }}js/models/task.js"></script>
 <script src="{{ STATIC_URL }}js/models/status.js"></script>
+<script src="{{ STATIC_URL }}js/models/comment.js"></script>
 <script src="{{ STATIC_URL }}js/models/note.js"></script>
 <script src="{{ STATIC_URL }}js/models/file.js"></script>
 <script src="{{ STATIC_URL }}js/models/project.js"></script>
 <script src="{{ STATIC_URL }}js/models/userProfile.js"></script>
 <script src="{{ STATIC_URL }}js/models/invitation.js"></script>
 
-<script src="{{ STATIC_URL }}js/collections/comments.js"></script>
 <script src="{{ STATIC_URL }}js/collections/notes.js"></script>
 <script src="{{ STATIC_URL }}js/collections/files.js"></script>
 <script src="{{ STATIC_URL }}js/collections/tasks.js"></script>
 <script src="{{ STATIC_URL }}js/collections/statuses.js"></script>
+<script src="{{ STATIC_URL }}js/collections/comments.js"></script>
 <script src="{{ STATIC_URL }}js/collections/projects.js"></script>
 <script src="{{ STATIC_URL }}js/collections/invitations.js"></script>
 <!--Load backbone js views-->
-<script src="{{ STATIC_URL }}js/views/comment/detail.js"></script>
-<script src="{{ STATIC_URL }}js/views/comment/list.js"></script>
-<script src="{{ STATIC_URL }}js/views/comment/add.js"></script>
 <script src="{{ STATIC_URL }}js/views/note/detail.js"></script>
+<script src="{{ STATIC_URL }}js/views/note/detailContext.js"></script>
 <script src="{{ STATIC_URL }}js/views/note/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/note/add.js"></script>
+<script src="{{ STATIC_URL }}js/views/note/addContext.js"></script>
 <script src="{{ STATIC_URL }}js/views/note/edit.js"></script>
 <script src="{{ STATIC_URL }}js/views/note/modal.js"></script>
 <script src="{{ STATIC_URL }}js/views/file/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/file/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/file/add.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/detail.js"></script>
+<script src="{{ STATIC_URL }}js/views/task/detailContext.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/add.js"></script>
 <script src="{{ STATIC_URL }}js/views/task/addContext.js"></script>
@@ -142,6 +144,9 @@
 <script src="{{ STATIC_URL }}js/views/status/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/status/add.js"></script>
 <script src="{{ STATIC_URL }}js/views/status/context.js"></script>
+<script src="{{ STATIC_URL }}js/views/comment/detail.js"></script>
+<script src="{{ STATIC_URL }}js/views/comment/list.js"></script>
+<script src="{{ STATIC_URL }}js/views/comment/add.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/detail.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/project/add.js"></script>
@@ -162,6 +167,9 @@
 </script>
 <script id="taskDetailTemplate" type="text/html">
     {% straight_include "task/taskDetailTemplate.mustache" %}
+</script>
+<script id="taskDetailContextTemplate" type="text/html">
+    {% straight_include "task/taskDetailContextTemplate.mustache" %}
 </script>
 <script id="taskAddTemplate" type="text/html">
     {% straight_include "task/taskAddTemplate.mustache" %}
@@ -187,6 +195,12 @@
 <script id="commentDetailTemplate" type="text/html">
     {% straight_include "comment/commentDetailTemplate.mustache" %}
 </script>
+<script id="commentDetailLinkTemplate" type="text/html">
+    {% straight_include "comment/commentDetailLinkTemplate.mustache" %}
+</script>
+<script id="commentDetailLinkRichTemplate" type="text/html">
+    {% straight_include "comment/commentDetailLinkRichTemplate.mustache" %}
+</script>
 <script id="commentAddTemplate" type="text/html">
     {% straight_include "comment/commentAddTemplate.mustache" %}
 </script>
@@ -210,6 +224,9 @@
 </script>
 <script id="noteDetailTemplate" type="text/html">
     {% straight_include "note/noteDetailTemplate.mustache" %}
+</script>
+<script id="noteDetailContextTemplate" type="text/html">
+    {% straight_include "note/noteDetailContextTemplate.mustache" %}
 </script>
 <script id="noteAddTemplate" type="text/html">
     {% straight_include "note/noteAddTemplate.mustache" %}
@@ -322,6 +339,8 @@
             </script>
             <div id="column2" class="span10 column-joined">
                 <div class="well">
+                    
+        <input type="dropbox-chooser" name="selected-file" id="db-chooser"/>
                     <div id="app" class="row-fluid">
 
                     </div>
