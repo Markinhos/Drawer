@@ -234,8 +234,6 @@ class Note(models.Model):
         user_profile.save()
         return True
 
-    def __unicode__(self):
-        return self.title
 
 def update_user_profile_projects_create(sender, instance, created, **kwargs):
     if created:

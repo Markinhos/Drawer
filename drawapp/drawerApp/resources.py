@@ -2,6 +2,7 @@ from drawapp.drawerApp.models import Task, Project, UserProfile, Note, FileMetad
 from drawapp.drawerApp.modelforms import ProjectForm, TaskForm, NoteForm, FileMetadataForm, CommentForm
 from tastypie.authorization import Authorization
 from tastypie import fields, utils, http
+from tastypie.paginator import Paginator
 from tastypie.authorization import DjangoAuthorization
 from tastypie.authentication import BasicAuthentication, Authentication
 from datetime import datetime
@@ -42,7 +43,7 @@ class CommentCollectionResource(MongoListResource):
     class Meta:
         object_class        =   Comment
         queryset            =   Comment.objects.all()
-        resource_name       =   'comment'
+        resource_name       =   'project'
         authorization       =   Authorization()
 
     def dehydrate_owner_name(self, bundle):
@@ -77,7 +78,7 @@ class FileMetadataCollectionResource(MongoListResource):
     class Meta:
         object_class        =   FileMetadata
         queryset            =   FileMetadata.objects.all()
-        resource_name       =   'fileMetadata'
+        resource_name       =   'project'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=FileMetadataForm)
 
@@ -110,12 +111,15 @@ class TaskCollectionResource(MongoListResource):
     class Meta:
         object_class        =   Task
         queryset            =   Task.objects.all()
-        resource_name       =   'task'
+        resource_name       =   'project'
         authorization       =   Authorization()
+        #paginator_class     =   Paginator(request_data=request.GET, )d
         validation          =   FormValidation(form_class=TaskForm)
 
     def dehydrate_creator_name(self, bundle):
         return bundle.obj.creator.username
+
+
 
 class NoteCollectionResource(MongoListResource):
     title = fields.CharField(attribute= 'title', default='', blank = True)
@@ -123,7 +127,7 @@ class NoteCollectionResource(MongoListResource):
     evernote_guid = fields.CharField(null=True, blank=True)
     modified = fields.DateTimeField(default = datetime.now)
     created = fields.DateTimeField(default = datetime.now, null=True, blank=True)
-    snipett = fields.CharField(readonly=True)
+    #snipett = fields.CharField(readonly=True)
     comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
 
 
@@ -133,9 +137,10 @@ class NoteCollectionResource(MongoListResource):
         resource_name       =   'note'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=NoteForm)
+        excludes = ['resources']
 
-    def dehydrate_snipett(self, bundle):
-        return EvernoteHelper.create_snipett(bundle.obj.content)
+    """def dehydrate_snipett(self, bundle):
+        return EvernoteHelper.create_snipett(bundle.obj.content)"""
 
     def dehydrate_evernote_guid(self, bundle):
         return bundle.obj.evernote_guid
