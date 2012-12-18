@@ -27,7 +27,6 @@
             }            
         },
         addNote: function(){
-            debugger;
             this.noteAddContextView = new NoteAddContextView({
                 model: this.model,
                 el: $(".note-context-input"),
@@ -45,7 +44,6 @@
                 parentView: this,
                 model: task
             });
-            debugger;
             $(this.el).find(".context-tasks").hide().prepend(view.render().el).fadeIn();            
             this.taskViews.push(view);
             view.bind('all', this.rethrow, this);

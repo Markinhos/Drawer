@@ -1,4 +1,4 @@
 # Compiled python files #
 *.pyc
 *idea
-*local_settings.py
+-H

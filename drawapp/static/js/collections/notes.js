@@ -1,8 +1,8 @@
 (function(){
-    window.NoteCollection = Backbone.Collection.extend({
+    window.NoteCollection = PaginatedCollection.extend({
         model: Note,
         urlRoot: APP_GLOBAL.PROJECT_API,
-        url: function(){
+        baseUrl: function(){
             return this.project.id + 'notes/';
         },
         maybeFetch: function (options) {

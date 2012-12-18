@@ -4,7 +4,7 @@
         initialize: function(){
             _.bindAll(this, 'addOne', 'addAll');
 
-            //this.collection.bind('reset', this.addAll, this);
+            this.collection.bind('reset', this.addAll, this);
             this.views = [];
 
         },
@@ -27,13 +27,6 @@
 
             this.views.push(view);
             view.bind('all', this.rethrow, this);
-        },
-
-        deleteOne: function(cid){
-            var t = this.collection.getByCid(cid);
-            var v = this.views.filter(function(view) { return view.model == t })[0];
-            t.destroy();
-            v.remove();
         },
 
         rethrow: function(){

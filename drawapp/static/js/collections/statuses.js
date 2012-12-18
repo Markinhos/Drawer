@@ -1,5 +1,5 @@
 (function() {
-    window.StatusCollection = Backbone.Collection.extend({
+    window.StatusCollection = PaginatedCollection.extend({
         model: Status,
         longPolling : false,
         invervalSeconds : 120,
@@ -12,6 +12,7 @@
         },
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.
+            typeof(options) != 'undefined' || (options = {});
             if(this._fetched){
                 // If this has already been fetched, call the success, if it exists
                 options.success && options.success();
@@ -67,6 +68,12 @@
             if( this.longPolling ){
                 setTimeout(this.executeLongPolling, 1000 * this.invervalSeconds); // in order to update the view each N seconds
             }
+        },
+        parse: function(resp) {
+            this.offset = resp.meta.offset;
+            this.limit = resp.meta.limit;
+            this.total = resp.meta.total_count;
+            return resp.objects;
         }
     });
 })();

@@ -1,0 +1,7 @@
+<ul>
+	<li class="{{ hasPrevious }} prev"><a href="#">«</a></li>
+	{{#totalPages}}
+		<li class="page page{{.}}" page-num="{{ . }}"><a href="#">{{.}}</a></li>
+	{{/totalPages}}
+	<li class="{{ hasNext }} next"><a href="#">»</a></li>
+</ul>

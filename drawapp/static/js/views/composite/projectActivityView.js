@@ -3,6 +3,7 @@
         initialize: function(arguments){            
             this.el = arguments.el;
             this.model = arguments.project;
+            this.model.get('statuses').maybeFetch({});
         },
         renderTask: function(task){
             var view = new TaskDetailView({

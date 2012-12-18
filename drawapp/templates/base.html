@@ -116,6 +116,7 @@
 <script src="{{ STATIC_URL }}js/models/userProfile.js"></script>
 <script src="{{ STATIC_URL }}js/models/invitation.js"></script>
 
+<script src="{{ STATIC_URL }}js/collections/paginatedCollection.js"></script>
 <script src="{{ STATIC_URL }}js/collections/notes.js"></script>
 <script src="{{ STATIC_URL }}js/collections/files.js"></script>
 <script src="{{ STATIC_URL }}js/collections/tasks.js"></script>
@@ -154,6 +155,7 @@
 <script src="{{ STATIC_URL }}js/views/shared/menu.js"></script>
 <script src="{{ STATIC_URL }}js/views/shared/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/shared/flash.js"></script>
+<script src="{{ STATIC_URL }}js/views/shared/paginated.js"></script>
 <script src="{{ STATIC_URL }}js/views/composite/projectTaskAddTaskListView.js"></script>
 <script src="{{ STATIC_URL }}js/views/composite/projectNoteAddNoteListView.js"></script>
 <script src="{{ STATIC_URL }}js/views/composite/projectFileListView.js"></script>
@@ -209,6 +211,9 @@
 </script>
 <script id="menuView" type="text/html">
     {% straight_include "shared/menu.mustache" %}
+</script>
+<script id="paginated" type="text/html">
+    {% straight_include "shared/paginated.mustache" %}
 </script>
 <script id="projectTemplate" type="text/html">
     {% straight_include "project/projectTemplate.mustache" %}

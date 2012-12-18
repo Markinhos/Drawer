@@ -8,6 +8,7 @@
         initialize: function(arguments){            
             this.el = arguments.el;
             this.model = arguments.project;
+            this.model.get('notes').maybeFetch({});
         },
         render: function(){                      
             $(this.el).html(ich.projectNoteAddNoteListTemplate(this.model.toJSON()));
@@ -16,6 +17,11 @@
                 collection: this.model.get('notes'),
                 el: this.$("#note-list"),
                 parentView: this
+            });
+
+            this.paginatedView = new PaginatedView({
+                collection: this.model.get('notes'),
+                el: this.$('.pagination')
             });
             
             var that = this;
@@ -32,7 +38,7 @@
                 this.noteEditView.render();
             }
 
-            debugger;
+            this.paginatedView.render();    
             var views = views = this.noteListView.views;
             if (views.length > 0)
                 $(views[views.length - 1].el).addClass("active")

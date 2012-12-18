@@ -180,8 +180,7 @@ class MongoListResource(ModelResource):
             if hasattr(obj,'parent'):
                 kwargs['pk'] = obj.parent.pk
             else:
-                kwargs['pk'] = self.instance.pkapi_name = self._meta.api_name or self.parent._meta.api_name
-
+                kwargs['pk'] = self.instance.pk
 
         api_name = self._meta.api_name or self.parent._meta.api_name
         if api_name:
@@ -193,11 +192,9 @@ class MongoListResource(ModelResource):
         return ret
 
     def get_resource_list_uri(self):
-        """
-        Returns a URL specific to this resource's list endpoint.
-        """
+
         kwargs = {
-            'resource_name': self._meta.resource_name,
+            'resource_name': self.parent._meta.resource_name,
             'pk': self.instance.id,
             'subresource_name': self.attribute
         }

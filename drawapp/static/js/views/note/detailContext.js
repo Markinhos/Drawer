@@ -3,7 +3,6 @@
 		tagName: "div",
 		className: "accordion-group note-group",
         showEditor: function(e){
-            debugger;
             this.noteEditView = new NoteEditView({
                 model: this.model,
                 el: $(".editor-context"),

@@ -78,7 +78,7 @@ class FileMetadataCollectionResource(MongoListResource):
     class Meta:
         object_class        =   FileMetadata
         queryset            =   FileMetadata.objects.all()
-        resource_name       =   'project'
+        resource_name       =   'fileMetadata'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=FileMetadataForm)
 
@@ -111,9 +111,8 @@ class TaskCollectionResource(MongoListResource):
     class Meta:
         object_class        =   Task
         queryset            =   Task.objects.all()
-        resource_name       =   'project'
+        resource_name       =   'task'
         authorization       =   Authorization()
-        #paginator_class     =   Paginator(request_data=request.GET, )d
         validation          =   FormValidation(form_class=TaskForm)
 
     def dehydrate_creator_name(self, bundle):
@@ -191,8 +190,8 @@ class ProjectResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user')
     description = fields.CharField(null=True, blank=True)
     tasks = EmbeddedCollection(of = TaskCollectionResource, attribute = 'tasks', null=True, blank=True, full=True)
-    notes = EmbeddedCollection(of = NoteCollectionResource, attribute = 'notes', null=True, blank=True, full=True)
-    statuses = EmbeddedCollection(of = CommentCollectionResource, attribute = 'statuses', null=True, blank=True, full=True)
+    notes = EmbeddedCollection(of = NoteCollectionResource, attribute = 'notes', null=True, blank=True, full=False)
+    statuses = EmbeddedCollection(of = CommentCollectionResource, attribute = 'statuses', null=True, blank=True, full=False)
     files = EmbeddedCollection(of = FileMetadataCollectionResource, attribute = 'files', null=True, blank=True, full=True)
     created = fields.DateTimeField(default = datetime.now)
 

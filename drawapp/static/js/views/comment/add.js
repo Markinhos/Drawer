@@ -26,7 +26,6 @@
                 var that = this;
                 var result = this.model.save({ wait : true ,
                     success : function(model) {
-                        debugger;
                         that.options.parentView.addOne(comment);
                         that.$('#comment-text').val('');
                     },
