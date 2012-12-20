@@ -32,8 +32,8 @@ DATABASES = {
         'HOST': 'linus.mongohq.com',
         'PORT': 10087,
         'SUPPORTS_TRANSACTIONS': False,
-        },
-    }
+    },
+}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
