@@ -5,7 +5,7 @@
             'click .icon-tasks': 'createTask',
             'click .icon-file': 'createNote',
             'click .preview': 'showVideo',
-            'click .status-box': 'showContext'
+            'hover .media': 'showContext'
         },    
         initialize: function(){
             _.bindAll(this);
@@ -17,6 +17,8 @@
     		$("#status-comments-list-" + this.model.get('id')).slideToggle();
     	},
         showContext: function(e){
+            e.preventDefault();
+            e.stopPropagation();
             $(".tool-context:first-child").each(function(index){
                 $(this).remove().fadeOut("slow");
             });
@@ -102,7 +104,21 @@
             $.extend(data, this.model.get('dataResponse'));
             if(this.model.get('dataResponse').type === "rich"){                
                 $(this.el).html(ich.statusDetailLinkRichTemplate(data));
-            }            
+            }   
+            else if(this.model.get('dataResponse').type === "photo"){
+                $(this.el).html(ich.statusDetailLinkPhotoTemplate(data));
+                $(this.el).find(".embed>a").attr('title', this.model.get('text'));
+                $(this.el).find(".embed>a").fancybox({
+                    openEffect  : 'elastic',
+                    closeEffect : 'elastic',
+
+                    helpers : {
+                        title : {
+                            type : 'inside'
+                        }
+                    }
+                });
+            }
             else{
                 $(this.el).html(ich.statusDetailLinkTemplate(data));
             }

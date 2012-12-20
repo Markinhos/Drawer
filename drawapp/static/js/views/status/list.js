@@ -1,6 +1,5 @@
 (function () {
     window.StatusListView = Backbone.View.extend({
-        el: '#status-list',
         initialize: function(){
             _.bindAll(this, 'addOne', 'addAll');
 

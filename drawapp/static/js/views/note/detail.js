@@ -1,7 +1,7 @@
 (function () {
 	window.NoteDetailView = Backbone.View.extend({
 		tagName: "li",
-		className: "",
+		className: "note-tab-item",
 		events: {
             'click #delete-note': 'deleteNote',
             'click .caption'    : 'showModal',
@@ -40,7 +40,7 @@
             return this;
         },
         showEditor: function(e){
-            $(this.options.parentView.el).find("li.active").removeClass("active")
+            $(this.options.parentView.el).find("li.note-tab-item.active").removeClass("active")
             $(this.el).addClass("active");
             if(this.options.parentView.noteEditView){                
                 this.options.parentView.noteEditView.model = this.model;

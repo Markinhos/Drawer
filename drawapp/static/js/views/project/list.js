@@ -7,6 +7,10 @@
             this.collection.bind('add', this.addOne);
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
+
+            this.collection.on('destroy', function(project){
+                self.deleteOne(project);
+            });
         },
 
         addAll: function () {
@@ -30,11 +34,10 @@
             this.trigger.apply(this, arguments);
         },
 
-        deleteOne: function(cid){
-            var t = this.collection.getByCid(cid);
-            var v = this.views.filter(function(view) { return view.model == t })[0];
-            t.destroy();
+        deleteOne: function(project){            
+            var v = this.views.filter(function(view) { return view.model == file })[0];
             v.remove();
+            this.views.pop(v);
         }
 
 

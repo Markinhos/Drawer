@@ -2,9 +2,13 @@
     window.FileListView = Backbone.View.extend({
         el: '#file-list',
         initialize: function(){
-            _.bindAll(this, 'addOne', 'addAll');
+            _.bindAll(this);
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
+
+            this.collection.on('destroy', function(file){
+                self.deleteOne(file);
+            });
         },
 
         changeEvent: function(){
@@ -29,11 +33,10 @@
             view.bind('all', this.rethrow, this);
         },
 
-        deleteOne: function(cid){
-            var t = this.collection.getByCid(cid);
-            var v = this.views.filter(function(view) { return view.model == t })[0];
-            t.destroy();
+        deleteOne: function(file){
+            var v = this.views.filter(function(view) { return view.model == file })[0];
             v.remove();
+            this.views.pop(v);
         },
 
         rethrow: function(){

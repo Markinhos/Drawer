@@ -2,12 +2,17 @@
 (function() {
   window.PaginatedCollection = Backbone.Collection.extend({
     initialize: function() {
-      _.bindAll(this, 'parse', 'url', 'pageInfo', 'nextPage', 'previousPage', 'filtrate', 'sort_by');
+      _.bindAll(this);
       typeof(options) != 'undefined' || (options = {});
-      typeof(this.limit) != 'undefined' || (this.limit = 2);
+      typeof(this.limit) != 'undefined' || (this.limit = 20);
       typeof(this.offset) != 'undefined' || (this.offset = 0);
       typeof(this.filter_options) != 'undefined' || (this.filter_options = {});
-      typeof(this.sort_field) != 'undefined' || (this.sort_field = '');
+      typeof(this.order_field) != 'undefined' || (this.order_field = '');
+
+      var self = this;
+      this.on('add', function(model){
+          self.popLastItem();
+      });
     },
     fetch: function(options) {
       typeof(options) != 'undefined' || (options = {});
@@ -18,7 +23,6 @@
         //self.trigger("fetched");
         if(success) { success(self, resp); }
       };
-      debugger;
       return Backbone.Collection.prototype.fetch.call(this, options);
     },
     parse: function(resp) {
@@ -31,8 +35,8 @@
         debugger;
         urlparams = {offset: this.offset, limit: this.limit};
         urlparams = $.extend(urlparams, this.filter_options);
-        if (this.sort_field) {
-            urlparams = $.extend(urlparams, {sort_by: this.sort_field});
+        if (this.order_field) {
+            urlparams = $.extend(urlparams, {order_by: this.order_field});
         }
         return this.baseUrl() + '?' + $.param(urlparams);
     },
@@ -91,10 +95,15 @@
         this.offset = 0;
         return this.fetch();
     },
-    sort_by: function (field) {
-        this.sort_field = field;
+    order_by: function (field) {
+        this.order_field = field;
         this.offset = 0;
         return this.fetch();
+    },
+    popLastItem: function(){
+      if(this.length > this.limit){
+        this.remove(this.first());
+      }
     }
   });
 })();

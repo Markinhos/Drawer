@@ -7,12 +7,12 @@
             this.views = [];
 
             var self = this;
-            this.collection.on('add', function(task){
-                self.addOne(task);
-            });
-            this.collection.on('destroy', function(task){
-                self.deleteOne(task);
-            });
+            /*this.collection.on('add', function(task){
+                self.addAll();
+            });*/
+            /*this.collection.on('destroy', function(task){
+                self.addAll();
+            });*/
         },
 
         addAll: function(){

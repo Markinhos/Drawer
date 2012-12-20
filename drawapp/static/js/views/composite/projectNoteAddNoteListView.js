@@ -5,12 +5,34 @@
             'click .evernote-refresher': 'refreshNotes'
         },
 
-        initialize: function(arguments){            
+        initialize: function(arguments){
+            _.bindAll(this);
             this.el = arguments.el;
             this.model = arguments.project;
+            this.model.get('notes').comparator = function(note1, note2) { 
+                var modified1 = note1.get('modified');
+                var modified2 = note2.get('modified');
+                if (modified1 > modified2){
+                    return 1;
+                }
+                else if(modified2 > modified1){
+                    return -1;
+                }
+                else
+                    return 0;
+            };
             this.model.get('notes').maybeFetch({});
+
+            var self = this;
+            this.model.get('notes').on('add', function(){
+                self.render();
+            });
+            this.model.get('notes').on('destroy', function(){
+                self.render();
+            });
         },
-        render: function(){                      
+        render: function(){
+            debugger;           
             $(this.el).html(ich.projectNoteAddNoteListTemplate(this.model.toJSON()));
 
             this.noteListView = new NoteListView({
@@ -31,15 +53,18 @@
                     el: $(".editor-side"),
                     parentView: that
                 });
-            }            
+            }
                     
             this.noteListView.render();
             if(this.noteEditView){
                 this.noteEditView.render();
             }
 
-            this.paginatedView.render();    
-            var views = views = this.noteListView.views;
+            if(this.model.get('notes').pageInfo().pages > 1){
+                this.paginatedView.render();    
+            }
+            
+            var views = this.noteListView.views;
             if (views.length > 0)
                 $(views[views.length - 1].el).addClass("active")
 
@@ -52,7 +77,8 @@
             return this;
         },
 
-        addNote: function(){
+        addNote: function(e){
+            e.preventDefault();
             if( this.noteEditView ) {this.noteEditView.undelegateEvents();}
             this.noteAddView = new NoteAddView({
                 model: this.model.get('notes'),
@@ -63,6 +89,7 @@
         },
 
         refreshNotes: function(e){
+            e.preventDefault();
             var elem = $(e.target);
             elem.addClass('icon-large');
             this.model.get('notes').fetch({

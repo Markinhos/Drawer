@@ -17,12 +17,12 @@
 
             this.statusListView = new StatusListView({
                 collection: this.model.get('statuses'),
-                el: this.$("#status-list")
+                el: this.$('.status-list')
             });
 
             this.statusAddView = new StatusAddView({
                 model: this.model,
-                el: this.$('#status-input'),
+                el: this.$('.status-input'),
                 parentView: this.statusListView
             });
             
@@ -32,6 +32,7 @@
                 parentView: this
             });
             
+            debugger;
             this.statusAddView.render();
             this.statusListView.render();
             this.statusContextView.render();

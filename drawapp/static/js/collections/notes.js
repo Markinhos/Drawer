@@ -2,6 +2,8 @@
     window.NoteCollection = PaginatedCollection.extend({
         model: Note,
         urlRoot: APP_GLOBAL.PROJECT_API,
+        order_field: '-modified',
+        limit: 10,
         baseUrl: function(){
             return this.project.id + 'notes/';
         },

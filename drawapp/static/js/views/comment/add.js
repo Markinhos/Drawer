@@ -18,10 +18,11 @@
         createComment: function () {
             var text = this.$('#comment-text').val();
             if (text) {
-                var comment = {
+                var comment = new Comment({
                     text: text,
-                    owner: '/api/v1/user/' + APP_GLOBAL.USER + '/'
-                };
+                    owner: '/api/v1/user/' + APP_GLOBAL.USER + '/',
+                    owner_name: app.userProfile.get('user').username
+                });
                 this.model.get('comments').push(comment);
                 var that = this;
                 var result = this.model.save({ wait : true ,

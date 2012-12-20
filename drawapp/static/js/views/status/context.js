@@ -26,6 +26,7 @@
                 });
             }            
         },
+
         addNote: function(){
             this.noteAddContextView = new NoteAddContextView({
                 model: this.model,
