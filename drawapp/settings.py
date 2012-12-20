@@ -12,7 +12,7 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django_mongodb_engine', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'heroku_app5558288',                      # Or path to database file if using sqlite3.
@@ -22,7 +22,18 @@ DATABASES = {
         'PORT': 33907,
         'SUPPORTS_TRANSACTIONS': False,
     },
-}
+}"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django_mongodb_engine', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'app5558288',                      # Or path to database file if using sqlite3.
+        'USER': 'heroku',
+        'PASSWORD': '647aeb87f87fd0a2ba2437619dc13222',
+        'HOST': 'linus.mongohq.com',
+        'PORT': 10087,
+        'SUPPORTS_TRANSACTIONS': False,
+        },
+    }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

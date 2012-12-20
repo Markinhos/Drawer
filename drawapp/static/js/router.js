@@ -54,7 +54,7 @@
 
         project_detail_activity: function(id) {
             //fetch or get cached projects            
-            app.projects.fetch({
+            app.projects.maybeFetch({
                 //if success render sidebar and detail app
                 success: function() {
                     app.sidebar.render(id);
