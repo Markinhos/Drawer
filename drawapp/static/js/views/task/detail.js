@@ -19,7 +19,7 @@
             this.model.set('status', status)
             this.model.save();
             if(this.options.parentView.moveToDoneOne){
-                this.options.parentView.moveToDoneOne(this.model.cid);
+                //this.options.parentView.moveToDoneOne(this.model.cid);
             }
             else{
                 var taskGroup = $(this.el).find(".task-group");
@@ -29,7 +29,7 @@
                 else{
                     taskGroup.addClass("checked");
                 }
-            }         
+            }       
         },
         render: function(accordionOpen){
             var isDone, doneStatus;
@@ -41,10 +41,14 @@
                 data.opacity = "checked";
             }
             if(accordionOpen) { data.accordionOpen = "in"; }
+            debugger;
             if (this.model.get('duedate')){
                 var duedate = new Date(this.model.get('duedate'));
-                data.duedateDate = duedate.getDay() + '-' + duedate.getMonth() + '-' + duedate.getFullYear();
-                data.duedateTime = duedate.getHours() + ':' + duedate.getMinutes();
+                var daydate = duedate.getDate();
+                data.duedateDate = ((daydate > 9) ? daydate : "0" + daydate) + '-' + (duedate.getMonth() + 1) + '-' + duedate.getFullYear();
+                debugger;
+                var timedate = duedate.toLocaleTimeString().split(":")
+                data.duedateTime = timedate[0] + ':' + timedate[1];
             }
             if (this.model.get('description')){
                 data.descriptionHtml = '<span class="task-description">' + this.model.get('description') + '</span>';
@@ -62,7 +66,7 @@
 
             $(this.el).html(this.template(data));            
             $(this.el).find(".bootstrap-datepicker").datepicker({ format: 'dd-mm-yyyy' });
-            $(this.el).find(".timepicker-default").timepicker({ showMeridian: false});
+            $(this.el).find(".timepicker-default").timepicker({ showMeridian: false, defaultTime: data.duedateTime});
 
             $('.fancybox-media').fancybox({
                 openEffect  : 'none',
@@ -129,8 +133,8 @@
                 if(parent.find('.task-time').val()){
                     time = parent.find('.task-time').val().match(/(\d+)/g);
                 }
-                d = new Date(date[2], date[1] - 1, date[0], time[1], time[0]);
-                this.model.set({ duedate: d.toLocaleString()});
+                d = new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
+                this.model.set({ duedate: d.toISOString()});
             }
 
             this.model.save();

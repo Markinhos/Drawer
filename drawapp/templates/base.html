@@ -29,8 +29,7 @@
     <link rel="stylesheet/less" type="text/css" href="{{ STATIC_URL }}css/styles.less">
     <script src="{{ STATIC_URL }}js/libs/less-1.3.0.min.js"></script>
 
-
-    <script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropbox.js" id="dropboxjs" data-app-key="8gvbfoxxb9f98ah"></script>
+    
     <!--Editor wysihtml5-->
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/bootstrap-wysihtml5.css">
     <script src="{{ STATIC_URL }}js/libs/wysihtml5-0.3.0.js"></script>
@@ -181,6 +180,9 @@
 </script>
 <script id="statusDetailLinkTemplate" type="text/html">
     {% straight_include "status/statusDetailLinkTemplate.mustache" %}
+</script>
+<script id="statusDetailLinkPhotoTemplate" type="text/html">
+    {% straight_include "status/statusDetailLinkPhotoTemplate.mustache" %}
 </script>
 <script id="statusDetailLinkRichTemplate" type="text/html">
     {% straight_include "status/statusDetailLinkRichTemplate.mustache" %}
@@ -345,7 +347,6 @@
             <div id="column2" class="span10 column-joined">
                 <div class="well">
                     
-        <input type="dropbox-chooser" name="selected-file" id="db-chooser"/>
                     <div id="app" class="row-fluid">
 
                     </div>

@@ -3,17 +3,27 @@
 		<div class="media-box status-box">
 			<p><strong>{{ owner_name }}</strong>: {{& parsed_text }}</p>
 			<div class="media row-fluid">
-				<div class="link-content span11">
-					<div class="span5">
-					  <a class="pull-left preview" href="#">
-					    <img class="media-object img-polaroid" src="{{ thumbnail_url }}" alt="{{ title }}">
-					  </a>
+				{{# thumbnail_url }}
+					<div class="link-content span11">
+						<div class="span5">
+						  <a class="pull-left preview" href="#">
+						    <img class="media-object img-polaroid" src="{{ thumbnail_url }}" alt="{{ title }}">
+						  </a>
+						</div>
+						<div class="media-body span7">
+					    	<h4 class="media-heading">{{ title }}</h4>
+					    	<p>{{ description }}</p>			
+						</div>
 					</div>
-					<div class="media-body span7">
-				    	<h4 class="media-heading">{{ title }}</h4>
-				    	<p>{{ description }}</p>			
+				{{/ thumbnail_url }}
+				{{^ thumbnail_url }}
+					<div class="link-content span11">
+						<div class="media-body span12">
+					    	<h4 class="media-heading">{{ title }}</h4>
+					    	<p>{{ description }}</p>			
+						</div>
 					</div>
-				</div>
+				{{/ thumbnail_url }}
 			  	<div class="status-meta span1">
 					<ul style="list-style:none;" class="status-meta-list">						
 						<li><a href="#" rel="tooltip" title="Attach a note"><i class="icon-file"></i></a></li>						

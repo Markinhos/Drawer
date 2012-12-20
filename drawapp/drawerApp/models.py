@@ -124,7 +124,7 @@ class Task(models.Model):
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
     description = models.CharField(max_length=5000, null=True, blank=True)
     creator = models.OneToOneField(User)
-    duedate = models.DateField(null=True,blank=True)
+    duedate = models.DateTimeField(null=True,blank=True)
     location = models.CharField(max_length=500, null=True, blank=True)
 
 class Comment(models.Model):
@@ -142,8 +142,8 @@ class Comment(models.Model):
 class Note(models.Model):
     title = models.CharField(max_length=200, default='', blank= True)
     content = models.TextField(max_length=5000)
-    created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
-    modified = models.DateTimeField(auto_now=True, null=True)
+    created = models.DateTimeField()
+    modified = models.DateTimeField()
     evernote_usn = models.IntegerField(default=0, blank=True)
     evernote_guid = models.CharField(max_length=200, null=True, blank=True)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)

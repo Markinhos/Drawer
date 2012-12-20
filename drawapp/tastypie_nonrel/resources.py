@@ -1,13 +1,16 @@
 from django.conf.urls.defaults import url
+import warnings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+from tastypie.exceptions import NotFound, InvalidSortError, ImmediateHttpResponse
 from tastypie.resources import ModelResource
 from tastypie.http import *
 from tastypie.utils import trailing_slash, dict_strip_unicode_keys
-from tastypie.exceptions import ImmediateHttpResponse, NotFound
 from tastypie.bundle import Bundle
 from fields import EmbeddedCollection
+from django.db.models.sql.constants import LOOKUP_SEP
 from django.core.urlresolvers import NoReverseMatch
+from operator import attrgetter
 
 class MongoResource(ModelResource):
     """Minor enhancements to the stock ModelResource to allow subresources."""
@@ -207,3 +210,63 @@ class MongoListResource(ModelResource):
             return self._build_reverse_url("api_dispatch_subresource_list", kwargs=kwargs)
         except NoReverseMatch:
             return None
+
+    def apply_sorting(self, obj_list, options=None):
+        """
+        Given a dictionary of options, apply some ORM-level sorting to the
+        provided ``QuerySet``.
+
+        Looks for the ``order_by`` key and handles either ascending (just the
+        field name) or descending (the field name with a ``-`` in front).
+
+        The field name should be the resource field, **NOT** model field.
+        """
+        if options is None:
+            options = {}
+
+        parameter_name = 'order_by'
+
+        if not 'order_by' in options:
+            if not 'sort_by' in options:
+                # Nothing to alter the order. Return what we've got.
+                return obj_list
+            else:
+                warnings.warn("'sort_by' is a deprecated parameter. Please use 'order_by' instead.")
+                parameter_name = 'sort_by'
+
+        order_by_args = []
+
+        if hasattr(options, 'getlist'):
+            order_bits = options.getlist(parameter_name)
+        else:
+            order_bits = options.get(parameter_name)
+
+            if not isinstance(order_bits, (list, tuple)):
+                order_bits = [order_bits]
+
+        for order_by in order_bits:
+            order_by_bits = order_by.split(LOOKUP_SEP)
+
+            field_name = order_by_bits[0]
+            order = ''
+
+            if order_by_bits[0].startswith('-'):
+                field_name = order_by_bits[0][1:]
+                order = '-'
+
+            if not field_name in self.fields:
+                # It's not a field we know about. Move along citizen.
+                raise InvalidSortError("No matching '%s' field for ordering on." % field_name)
+
+            if not field_name in self._meta.ordering:
+                raise InvalidSortError("The '%s' field does not allow ordering." % field_name)
+
+            if self.fields[field_name].attribute is None:
+                raise InvalidSortError("The '%s' field has no 'attribute' for ordering with." % field_name)
+
+            order_by_args.append("%s%s" % (order, LOOKUP_SEP.join([self.fields[field_name].attribute] + order_by_bits[1:])))
+
+        reverse = False
+        if order == '-': reverse = True
+        ordered_list = sorted(obj_list, key= attrgetter(field_name), reverse=reverse)
+        return ordered_list

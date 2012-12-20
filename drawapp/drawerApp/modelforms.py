@@ -25,7 +25,7 @@ class ProjectForm(ModelForm):
 class NoteForm(ModelForm):
     class Meta:
         model = Note
-        exclude = ('created', 'resources')
+        exclude = ('created', 'resources', 'modified')
 
 class FileMetadataForm(ModelForm):
     class Meta:

@@ -12,6 +12,9 @@
             });
             this.collection.on('destroy', function(task){
                 self.deleteOne(task);
+            });            
+            this.collection.on('change:status', function(task){
+                self.moveToDoneOne(task);
             });
         },
 
@@ -45,8 +48,7 @@
             this.views.pop(v);
         },
 
-        moveToDoneOne: function(cid){
-            var task = this.collection.getByCid(cid);
+        moveToDoneOne: function(task){
             var view = this.views.filter(function(view) { return view.model == task })[0];
             $(view).detach();
             if(task.get('status') == "DONE"){

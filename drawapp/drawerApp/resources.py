@@ -107,6 +107,7 @@ class TaskCollectionResource(MongoListResource):
     comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
     creator = fields.ForeignKey(UserResource, 'creator')
     creator_name = fields.CharField(readonly=True)
+    duedate = fields.DateTimeField(attribute='duedate', null=True,blank=True)
 
     class Meta:
         object_class        =   Task
@@ -118,17 +119,14 @@ class TaskCollectionResource(MongoListResource):
     def dehydrate_creator_name(self, bundle):
         return bundle.obj.creator.username
 
-
-
 class NoteCollectionResource(MongoListResource):
     title = fields.CharField(attribute= 'title', default='', blank = True)
     evernote_usn = fields.IntegerField(default=0, blank=True, null=True)
     evernote_guid = fields.CharField(null=True, blank=True)
-    modified = fields.DateTimeField(default = datetime.now)
-    created = fields.DateTimeField(default = datetime.now, null=True, blank=True)
+    modified = fields.DateTimeField(attribute='modified', null=True, blank=True)
+    created = fields.DateTimeField(attribute='created', null=True, blank=True)
     #snipett = fields.CharField(readonly=True)
     comments = EmbeddedCollection(of = CommentCollectionResource, attribute = 'comments', null=True, blank=True, full=True)
-
 
     class Meta:
         object_class        =   Note
@@ -136,13 +134,18 @@ class NoteCollectionResource(MongoListResource):
         resource_name       =   'note'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=NoteForm)
-        excludes = ['resources']
+        excludes            =   ['resources']
+        ordering            =   ['modified']
 
-    """def dehydrate_snipett(self, bundle):
-        return EvernoteHelper.create_snipett(bundle.obj.content)"""
+
+    def hydrate_modified(self, bundle):
+        #TO-DO created date can be tampered
+        bundle.data['modified'] = datetime.now().isoformat()
+        return bundle
 
     def dehydrate_evernote_guid(self, bundle):
         return bundle.obj.evernote_guid
+
     def dehydrate_content(self, bundle):
         if hasattr(bundle.request, 'user'):
 
@@ -151,17 +154,12 @@ class NoteCollectionResource(MongoListResource):
             if user_profile.is_evernote_synced:
                 ev_h = EvernoteHelper(user_profile.evernote_profile)
 
-                """urlconf = settings.ROOT_URLCONF
-                urlresolvers.set_urlconf(urlconf)
-                resolver = urlresolvers.RegexURLResolver(r'^/', urlconf)
-                callback, callback_args, callback_kwargs = resolver.resolve(
-                    bundle.request.path_info)"""
-
                 return ev_h.replace_images(bundle.obj.content, bundle.obj.evernote_guid)
             else:
                 return bundle.obj.content
 
     def obj_create(self, bundle, request=None, **kwargs):
+        bundle.data['created'] = datetime.now().isoformat()
         bundle = super(NoteCollectionResource, self).obj_create(bundle,request, **kwargs)
         #Check if evernote accout is set up
         user_profile = UserProfile.objects.get(user = request.user)
