@@ -41,12 +41,10 @@
                 data.opacity = "checked";
             }
             if(accordionOpen) { data.accordionOpen = "in"; }
-            debugger;
             if (this.model.get('duedate')){
                 var duedate = new Date(this.model.get('duedate'));
                 var daydate = duedate.getDate();
-                data.duedateDate = ((daydate > 9) ? daydate : "0" + daydate) + '-' + (duedate.getMonth() + 1) + '-' + duedate.getFullYear();
-                debugger;
+                data.duedateDate = ((daydate > 9) ? daydate : "0" + daydate) + '-' + (duedate.getMonth() + 1) + '-' + duedate.getFullYear();                
                 var timedate = duedate.toLocaleTimeString().split(":")
                 data.duedateTime = timedate[0] + ':' + timedate[1];
             }

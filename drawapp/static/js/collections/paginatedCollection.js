@@ -1,7 +1,7 @@
 // includes bindings for fetching/fetched
 (function() {
   window.PaginatedCollection = Backbone.Collection.extend({
-    initialize: function() {
+    baseInitialize: function() {
       _.bindAll(this);
       typeof(options) != 'undefined' || (options = {});
       typeof(this.limit) != 'undefined' || (this.limit = 20);
@@ -32,7 +32,6 @@
       return resp.objects;
     },
     url: function() {
-        debugger;
         urlparams = {offset: this.offset, limit: this.limit};
         urlparams = $.extend(urlparams, this.filter_options);
         if (this.order_field) {
@@ -75,6 +74,13 @@
       this.offset = this.offset + this.limit;
       return this.fetch();
     },
+    loadMore: function() {
+      if (!this.pageInfo().next) {
+        return false;
+      }
+      this.offset = this.offset + this.limit;
+      return this.fetch({update: true, remove: false});
+    },
     previousPage: function() {
       if (!this.pageInfo().prev) {
         return false;
@@ -86,7 +92,6 @@
       if(this.pageInfo().pages < page || page < 1){
         return false;
       }
-      debugger;
       this.offset = (this.limit * (page - 1));
       return this.fetch();
     },

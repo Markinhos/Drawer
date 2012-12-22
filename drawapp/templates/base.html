@@ -42,6 +42,7 @@
     <!--<link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" rel="stylesheet">-->
 
     <!--Fancybox-->
+    <script type="text/javascript" src="{{ STATIC_URL }}js/libs/dropbox-chooser.js" id="dropboxjs" data-app-key="8gvbfoxxb9f98ah"></script>
 
     <!-- Add mousewheel plugin (this is optional) -->
     <script type="text/javascript" src="{{ STATIC_URL }}/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
@@ -155,6 +156,7 @@
 <script src="{{ STATIC_URL }}js/views/shared/list.js"></script>
 <script src="{{ STATIC_URL }}js/views/shared/flash.js"></script>
 <script src="{{ STATIC_URL }}js/views/shared/paginated.js"></script>
+<script src="{{ STATIC_URL }}js/views/shared/loadMore.js"></script>
 <script src="{{ STATIC_URL }}js/views/composite/projectTaskAddTaskListView.js"></script>
 <script src="{{ STATIC_URL }}js/views/composite/projectNoteAddNoteListView.js"></script>
 <script src="{{ STATIC_URL }}js/views/composite/projectFileListView.js"></script>
@@ -205,6 +207,9 @@
 <script id="commentDetailLinkRichTemplate" type="text/html">
     {% straight_include "comment/commentDetailLinkRichTemplate.mustache" %}
 </script>
+<script id="commentDetailLinkPhotoTemplate" type="text/html">
+    {% straight_include "comment/commentDetailLinkPhotoTemplate.mustache" %}
+</script>
 <script id="commentAddTemplate" type="text/html">
     {% straight_include "comment/commentAddTemplate.mustache" %}
 </script>
@@ -216,6 +221,9 @@
 </script>
 <script id="paginated" type="text/html">
     {% straight_include "shared/paginated.mustache" %}
+</script>
+<script id="loadMore" type="text/html">
+    {% straight_include "shared/loadMore.mustache" %}
 </script>
 <script id="projectTemplate" type="text/html">
     {% straight_include "project/projectTemplate.mustache" %}

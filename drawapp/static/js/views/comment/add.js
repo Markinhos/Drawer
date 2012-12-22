@@ -1,10 +1,7 @@
 (function () {
     window.CommentAddView = Backbone.View.extend({
-        tagName: "li",
-        className: "well",
         events: {
-            'click .commentInput': 'createComment',
-            'keypress #comment-text': 'createOnEnter'
+            'keypress .comment-input-text': 'createOnEnter'
         },
 
         createOnEnter: function (e) {
@@ -16,7 +13,7 @@
         },
 
         createComment: function () {
-            var text = this.$('#comment-text').val();
+            var text = this.$('.comment-input-text').val();
             if (text) {
                 var comment = new Comment({
                     text: text,
@@ -27,8 +24,8 @@
                 var that = this;
                 var result = this.model.save({ wait : true ,
                     success : function(model) {
-                        that.options.parentView.addOne(comment);
-                        that.$('#comment-text').val('');
+                        //that.options.parentView.addOne(comment);
+                        that.$('.comment-input-text').val('');
                     },
                     error : function(model, response){
                         that.errorView = new Flash({el : "#flash"}),

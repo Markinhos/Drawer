@@ -31,8 +31,7 @@
                 self.render();
             });
         },
-        render: function(){
-            debugger;           
+        render: function(){     
             $(this.el).html(ich.projectNoteAddNoteListTemplate(this.model.toJSON()));
 
             this.noteListView = new NoteListView({

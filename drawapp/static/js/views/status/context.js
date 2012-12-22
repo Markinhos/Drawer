@@ -24,9 +24,15 @@
                 this.model.get('notes').on('destroy', function(note){
                     self.deleteOneNote(note);
                 });
+                this.model.on('change:dropbox_link', function(note){
+                    self.render(true);
+                });
             }            
         },
 
+        /*showContext: function(e){
+            this.$el.find(".tool-context").removeClass("showContext");
+        },*/
         addNote: function(){
             this.noteAddContextView = new NoteAddContextView({
                 model: this.model,
@@ -72,9 +78,15 @@
             v.remove();
             this.noteViews.pop(v);
         },
-        render: function(){
-            if(this.model){                
-                $(this.el).html(ich.statusContextTemplate(this.model.toJSON())).fadeIn();
+        render: function(showContext){
+            if(this.model){
+                var data = this.model.toJSON();
+                if (!showContext){
+                    data.showContext = "context-hidden";
+                }
+
+                var contextHtml = ich.statusContextTemplate(data);
+                $(this.el).html(contextHtml).fadeIn();
                 this.taskInputView = new InputContextView({
                     model: this.model,
                     el: this.$('.context-task-input'),
@@ -83,12 +95,37 @@
 
                 this.taskInputView.render();
                 this.addAllTasks();
-                this.addAllNotes();                
+                this.addAllNotes();
+
+                //Dropbox.load();
+
+                //var dbId = "db-chooser-" + this.model.get('id');
+                var el = contextHtml.find(".db-input")[0];
+                Dropbox.loadElement(el);
+
+                var self = this;
+                el.addEventListener("DbxChooserSuccess",
+                    function(e) {
+                        console.log("Here's the chosen file: " + e.files[0].link);
+                        self.setDbLink(e.files[0].link);
+                    }, false);
+
             }
             return this;
         },
         rethrow: function(){
             this.trigger.apply(this, arguments);
+        },
+
+        setDbLink: function(link){
+            this.model.set('dropbox_link', link);
+            this.model.save();
+        },
+        dropboxChoose: function(e){
+            var self = this;
+            Dropbox.choose({linkType: 'preview', success: function(files){
+                self.model.set('dropbox_link', files[0].link);
+            }});
         }
     });
 })();

@@ -38,6 +38,8 @@ class CommentCollectionResource(MongoListResource):
     comments = EmbeddedCollection(of = 'drawapp.drawerApp.resources.CommentCollectionResource', attribute = 'comments', null=True, blank=True, full=True)
     tasks_ids = ListField(attribute='tasks_ids', null=True, blank=True)
     notes_ids = ListField(attribute='notes_ids', null=True, blank=True)
+    modified = fields.DateTimeField(attribute='modified', null=True, blank=True)
+    created = fields.DateTimeField(attribute='created', null=True, blank=True)
 
 
     class Meta:
@@ -45,11 +47,15 @@ class CommentCollectionResource(MongoListResource):
         queryset            =   Comment.objects.all()
         resource_name       =   'project'
         authorization       =   Authorization()
+        ordering            =   ['modified', 'created']
 
     def dehydrate_owner_name(self, bundle):
         return bundle.obj.owner.username
 
-
+    def hydrate_modified(self, bundle):
+        #TO-DO created date can be tampered
+        bundle.data['modified'] = datetime.now().isoformat()
+        return bundle
     """def hydrate_tasks_ids(self, bundle):
         #Hack to remove project
         if 'tasks_ids' in bundle.data and bundle.data['tasks_ids'] is not None:
@@ -68,6 +74,11 @@ class CommentCollectionResource(MongoListResource):
             comments_saved = [i.data for i in self.fields['comments'].dehydrate(bundle_copy)]
             comments_saved.append(bundle.data['comments'][-1])
             bundle.data['comments'] = comments_saved
+        return bundle
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        bundle.data['created'] = datetime.now().isoformat()
+        bundle = super(CommentCollectionResource, self).obj_create(bundle,request, **kwargs)
         return bundle
 
 

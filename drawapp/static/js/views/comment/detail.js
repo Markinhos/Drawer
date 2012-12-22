@@ -3,7 +3,7 @@
         tagName: "li",    
         initialize: function(){
             _.bindAll(this);
-            this.model.bind('change', this.render, this);
+            //this.model.bind('change', this.render, this);
             this.status = this.model.get('status');
         },
         render: function(){
@@ -16,6 +16,20 @@
                         success: function(oembed, dict) { 
                             console.log("Link fetched");
                             that.renderLink(oembed, dict);                            
+                        }
+                    });
+                }   
+                else if(this.model.get('dataResponse').type === "photo"){
+                    $(this.el).html(ich.commentDetailLinkPhotoTemplate(data));
+                    $(this.el).find(".embed>a").attr('title', this.model.get('text'));
+                    $(this.el).find(".embed>a").fancybox({
+                        openEffect  : 'elastic',
+                        closeEffect : 'elastic',
+
+                        helpers : {
+                            title : {
+                                type : 'inside'
+                            }
                         }
                     });
                 }
@@ -35,7 +49,7 @@
             data.parsed_text = this.replaceURLWithHTMLLinks(this.model.get('text'))
             $.extend(data, this.model.get('dataResponse'));
             if(this.model.get('dataResponse').type === "rich"){                
-                $(this.el).html(ich.statusDetailLinkRichTemplate(data));
+                $(this.el).html(ich.commentDetailLinkRichTemplate(data));
             }            
             else{
                 $(this.el).html(ich.commentDetailLinkTemplate(data));

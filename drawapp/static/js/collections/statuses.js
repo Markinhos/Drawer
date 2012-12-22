@@ -3,12 +3,15 @@
         model: Status,
         longPolling : false,
         invervalSeconds : 120,
+        order_field: '-created',
+        limit: 10,
         urlRoot: APP_GLOBAL.PROJECT_API,
-        url: function(){
+        baseUrl: function(){
             return this.project.id + 'statuses/';
         },
         initialize : function(){
-            _.bindAll(this);
+            _.bindAll(this);            
+            this.baseInitialize();
         },
         maybeFetch: function(options){
             // Helper function to fetch only if this collection has not been fetched before.

@@ -7,6 +7,9 @@
         baseUrl: function(){
             return this.project.id + 'notes/';
         },
+        initialize : function(){
+            this.baseInitialize();
+        },
         maybeFetch: function (options) {
             // Helper function to fetch only if this collection has not been fetched before.
             if (this._fetched){

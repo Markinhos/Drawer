@@ -18,12 +18,12 @@
             if (text) {
                 var status = new Status({
                     text: text,
-                    owner: '/api/v1/user/' + APP_GLOBAL.USER + '/'
+                    owner: '/api/v1/user/' + APP_GLOBAL.USER + '/',
+                    owner_name: app.userProfile.get('user').username
                 });
                 var that = this;
-                var result = this.model.get('statuses').create(status,{ wait : true ,
+                var result = this.model.get('statuses').create(status,{
                     success : function(model) {
-                        that.options.parentView.addOne(status);
                         this.$('#status-text').val('');
                     },
                     error : function(model, response){

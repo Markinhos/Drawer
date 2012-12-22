@@ -1,8 +1,12 @@
-<div class="tool-context">
+<div class="tool-context {{ showContext }}">
 	<div class="media-box">
+		<div class="context-drobox-tools">			
+			<input class="db-input" type="dropbox-chooser" name="selected-file" style="visibility: hidden;margin-bottom: 20px"/>
+			<p><a href="{{ dropbox_link }}" target="_blank">{{ dropbox_link }}</a></p>
+		</div>	
 		<div class="context-notes-tools">
 			<div clas="row-fluid context-notes-input" style="margin-bottom: 20px">
-				<button class="btn btn-primary add-note-context" type="button"><i class="icon-plus"></i> Create Note</button>
+				<button class="btn add-note-context" type="button"><i class="icon-plus"></i> Create Note</button>
 			</div>
 			<div class="note-context-input" />
 			<div class="accordion context-notes" id="note-accordion">

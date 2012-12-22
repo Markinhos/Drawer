@@ -21,8 +21,18 @@
 		}
 	}
 }
+
+.context-hidden{
+	visibility: hidden;
+	opacity: 0;
+	-webkit-transition: visibility 0s 0.4s, opacity 0.4s linear;
+}
 .status-meta-list {
 	margin-left: 15px;
+}
+
+.status-comment-input{
+	margin-left: 25px;
 }
 .media-box {
 	margin-bottom: 19px;
@@ -39,7 +49,7 @@
 
 .status-box{
 	&:hover{
-		cursor: pointer;
+		
 	}
 }
 .task-group.checked

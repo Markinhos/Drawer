@@ -6,6 +6,11 @@
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
 
+            var self = this;
+            this.collection.on("add", function(status){
+                self.addOne(status);
+            });
+
         },
 
         changeEvent: function(){
@@ -22,7 +27,12 @@
                 parentView: this,
                 model: status
             });
-            $(this.el).prepend(view.render().el);
+            if(status.isNew()){
+                $(this.el).prepend(view.render().el);
+            }
+            else{
+                $(this.el).append(view.render().el);
+            }            
 
             this.views.push(view);
             view.bind('all', this.rethrow, this);

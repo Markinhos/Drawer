@@ -9,7 +9,7 @@
         },    
         initialize: function(){
             _.bindAll(this);
-            this.model.bind('change', this.render, this);
+            this.model.bind('change:dropbox_link', this.showContext, this);
             this.status = this.model;
         },
     	toggleComments: function(e){
@@ -17,19 +17,22 @@
     		$("#status-comments-list-" + this.model.get('id')).slideToggle();
     	},
         showContext: function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            $(".tool-context:first-child").each(function(index){
-                $(this).remove().fadeOut("slow");
+            /*e.preventDefault();
+            e.stopPropagation();*/
+            $(".tool-context").each(function(index){
+                $(this).addClass("context-hidden");
             });
-            if(!this.statusContextView){
+            if(this.$el.find(".tool-context").hasClass("context-hidden")){
+                this.$el.find(".tool-context").removeClass("context-hidden");
+            }            
+            /*if(!this.statusContextView){
                 this.statusContextView = new StatusContextView({
                     model: this.model,
                     el: this.$('.tool-list')
                 });
-            }            
+            }*/            
 
-            this.statusContextView.render();
+            //this.statusContextView.render();
         },
         createTask: function(e){
             e.preventDefault();
@@ -123,6 +126,12 @@
                 $(this.el).html(ich.statusDetailLinkTemplate(data));
             }
             this.renderComments();
+
+            this.statusContextView = new StatusContextView({
+                model: this.model,
+                el: this.$('.tool-list')
+            });
+            this.statusContextView.render();
         },        
         renderComments: function(){
             this.commentListView = new CommentListView({
@@ -131,12 +140,15 @@
                 statusView: this
             });
             this.commentAddView = new CommentAddView({
+                el : this.$(".status-comment-input"),
                 model: this.model
             });
             this.commentListView.render();
-            $(".status-comments-list", this.el).hide().append(this.commentAddView.render().el).fadeIn('slow');
+            this.commentAddView.render();
+            //$(".status-comment-input", this.el).hide().append(this.commentAddView.render().el).fadeIn('slow');
         },
         render: function(){
+            
             if(this.hasLink(this.model.get('text'))) {
                 if(!this.model.get('dataResponse')){                    
                     var that = this;
@@ -154,10 +166,17 @@
                 }                
             }
             else
-            {
+            {                
                 $(this.el).html(ich.statusDetailTemplate(this.model.toJSON())).fadeIn('slow');
                 this.renderComments();
+
+                this.statusContextView = new StatusContextView({
+                    model: this.model,
+                    el: this.$('.tool-list')
+                });
+                this.statusContextView.render();
             }
+                        
             return this;
         },
         isLink: function(link){

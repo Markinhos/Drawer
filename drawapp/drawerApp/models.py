@@ -129,12 +129,13 @@ class Task(models.Model):
 
 class Comment(models.Model):
     text = models.CharField(max_length=1000)
-    created = models.DateTimeField(default=datetime.now())
-    modified = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField()
+    modified = models.DateTimeField()
     owner = models.ForeignKey(User)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
     tasks_ids = ListField(models.CharField(max_length=150, blank=True), blank=True, null=True)
     notes_ids = ListField(models.CharField(max_length=150, null=True))
+    dropbox_link = models.SlugField(max_length=100)
 
     def save(self):
         super(Comment, self).save()

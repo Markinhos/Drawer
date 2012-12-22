@@ -4,6 +4,8 @@
             this.el = arguments.el;
             this.model = arguments.project;
             this.model.get('statuses').maybeFetch({});
+
+            
         },
         renderTask: function(task){
             var view = new TaskDetailView({
@@ -31,11 +33,14 @@
                 el: this.$('.tool-list'),
                 parentView: this
             });
-            
-            debugger;
+
+            this.loadMoreView = new LoadMoreView({
+                collection: this.model.get('statuses'),
+                el: ".load-more-status"
+            });
+                        
             this.statusAddView.render();
             this.statusListView.render();
-            this.statusContextView.render();
             
             //this.statusListView.collection.startLongPolling();
             this.statusListView.collection.on('reset', function(){ console.log('Comments fetched'); });
