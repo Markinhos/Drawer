@@ -65,9 +65,9 @@ def get_evernote_auth_url(request):
 
 def get_dropbox_auth_url(request):
     if request.method == 'GET':
-        if user_profile.dropbox_profile is None:
-            user_profile.dropbox_profile = DropboxProfile()
         user_profile = UserProfile.objects.get(user = request.user)
+        if user_profile.dropbox_profile is None:
+            user_profile.dropbox_profile = DropboxProfile()       
         callback_url = request.GET.get('callback_url')
         sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
         request_token = sess.obtain_request_token()
