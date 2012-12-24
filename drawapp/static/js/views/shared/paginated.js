@@ -9,7 +9,7 @@ PaginatedView = Backbone.View.extend({
     'click .page': 'goToPage'
   },
   render: function() {
-    data = this.collection.pageInfo();
+    var data = this.collection.pageInfo();
     data.totalPages = _.range(1, data.pages + 1);
     if(!data.next){
       data.hasNext = 'disabled'

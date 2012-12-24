@@ -10,7 +10,7 @@
         render: function(){            
             //If user is not logged to dropbox prompt not logged view
             if(!app.userProfile.get('is_dropbox_synced')){
-                data = this.model.toJSON();
+                var data = this.model.toJSON();
                 data.host = location.protocol + '//' + window.location.host;
                 $(this.el).html(ich.projectFileListNoDropboxLoggingTemplate(data));
             }

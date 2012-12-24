@@ -5,7 +5,7 @@
         },
 		tagName: "tr",
         render: function(){
-            data = this.model.toJSON();
+            var data = this.model.toJSON();
             data.file_name = this.model.get('filename');
             d = new Date(this.model.get('modified'));
             data.localetime = d.toDateString() + ' ' + d.toLocaleTimeString();

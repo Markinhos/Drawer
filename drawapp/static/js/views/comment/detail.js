@@ -3,7 +3,7 @@
         tagName: "li",    
         initialize: function(){
             _.bindAll(this);
-            //this.model.bind('change', this.render, this);
+            this.model.bind('change', this.render, this);
             this.status = this.model.get('status');
         },
         render: function(){
@@ -45,7 +45,7 @@
         },
         renderLink: function(res, dict){
             this.model.set('dataResponse', res);
-            data = this.model.toJSON();
+            var data = this.model.toJSON();
             data.parsed_text = this.replaceURLWithHTMLLinks(this.model.get('text'))
             $.extend(data, this.model.get('dataResponse'));
             if(this.model.get('dataResponse').type === "rich"){                
@@ -56,17 +56,12 @@
             }
         },
         showContext: function(e){
-            $(".tool-context:first-child").each(function(index){
-                $(this).remove().fadeOut("slow");
+            $(".tool-context").each(function(index){
+                $(this).addClass("context-hidden");
             });
-            if(!this.options.statusView.statusContextView){
-                this.options.statusView.statusContextView = new StatusContextView({
-                    model: this.model.get('status'),
-                    el: this.options.statusView.$('.tool-list')
-                });
-            }            
-
-            this.options.statusView.statusContextView.render();
+            if(this.$el.find(".tool-context").hasClass("context-hidden")){
+                this.$el.find(".tool-context").removeClass("context-hidden");
+            }  
         }
     });
 })();

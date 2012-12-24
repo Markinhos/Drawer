@@ -22,7 +22,7 @@
                 });
                 this.model.get('comments').push(comment);
                 var that = this;
-                var result = this.model.save({ wait : true ,
+                var result = this.model.save({
                     success : function(model) {
                         //that.options.parentView.addOne(comment);
                         that.$('.comment-input-text').val('');

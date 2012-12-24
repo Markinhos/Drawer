@@ -14,6 +14,7 @@ from dropbox.session import DropboxSession
 import urllib2, cgi, datetime
 from drawerApp.utils import EvernoteHelper
 from urllib import urlencode
+from django.utils import simplejson
 
 def index(request):
     context = {}
@@ -133,6 +134,93 @@ def upload_dropbox_file(request):
         dest_path = result['path']
 
         return redirect("/project/{0}/files/".format(request.POST.get('project_id')))
+
+def multiuploader(request):
+    """
+    Main Multiuploader module.
+    Parses data from jQuery plugin and makes database changes.
+    """
+    if request.method == 'POST':
+
+        user_profile = UserProfile.objects.get(user = request.user)
+        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+        drop_client = client.DropboxClient(sess)
+
+        file = request.FILES[u'files[]']
+        #folder = Project.objects.get(id=request.POST['project_id']).title
+        folder = 'Brr'
+        result = drop_client.put_file('/' + folder + '/' + file.name, file.file)
+
+
+        #if request.FILES == None:
+        #    return HttpResponseBadRequest('Must have files attached!')
+
+        #getting file data for farther manipulations
+        """file = request.FILES[u'files[]']
+        wrapped_file = UploadedFile(file)
+        filename = wrapped_file.name
+        file_size = wrapped_file.file.size
+
+        #writing file manually into model
+        #because we don't need form of any type.
+        image = MultiuploaderImage()
+        image.filename=str(filename)
+        image.image=file
+        image.key_data = image.key_generate
+        image.save()
+
+        #getting thumbnail url using sorl-thumbnail
+        if 'image' in file.content_type.lower():
+            im = get_thumbnail(image, "80x80", quality=50)
+            thumb_url = im.url
+        else:
+            thumb_url = ''
+
+        #settings imports
+        try:
+            file_delete_url = settings.MULTI_FILE_DELETE_URL+'/'
+            file_url = settings.MULTI_IMAGE_URL+'/'+image.key_data+'/'
+        except AttributeError:
+            file_delete_url = 'multi_delete/'
+            file_url = 'multi_image/'+image.key_data+'/'"""
+
+        #generating json response array
+        result = []
+        """result.append({"name":filename, 
+                       "size":file_size, 
+                       "url":file_url,
+                       "delete_url":file_delete_url+str(image.pk)+'/', 
+                       "delete_type":"POST",})"""
+        result.append({"files": [
+          {
+            "name": "picture1.jpg",
+            "size": 902604,
+            "url": "http:\/\/example.org\/files\/picture1.jpg",
+            "thumbnail_url": "http:\/\/example.org\/files\/thumbnail\/picture1.jpg",
+            "delete_url": "http:\/\/example.org\/files\/picture1.jpg",
+            "delete_type": "DELETE"
+          },
+          {
+            "name": "picture2.jpg",
+            "size": 841946,
+            "url": "http:\/\/example.org\/files\/picture2.jpg",
+            "thumbnail_url": "http:\/\/example.org\/files\/thumbnail\/picture2.jpg",
+            "delete_url": "http:\/\/example.org\/files\/picture2.jpg",
+            "delete_type": "DELETE"
+          }
+        ]})
+        response_data = simplejson.dumps(result)
+        
+        #checking for json data type
+        #big thanks to Guy Shapiro
+        if "application/json" in request.META['HTTP_ACCEPT_ENCODING']:
+            mimetype = 'application/json'
+        else:
+            mimetype = 'text/plain'
+        return HttpResponse(response_data, mimetype=mimetype)
+    else: #GET
+        return HttpResponse('Only POST accepted')
 
 def get_evernote_image(request):
     if request.method == 'GET':

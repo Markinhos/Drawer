@@ -35,7 +35,7 @@
             var isDone, doneStatus;
             isTodo = this.model.get('status') === "TODO";
             isTodo ? doneStatus = '' : doneStatus = 'checked';
-            data = this.model.toJSON();
+            var data = this.model.toJSON();
             data.doneStatus = doneStatus; 
             if(!isTodo){
                 data.opacity = "checked";

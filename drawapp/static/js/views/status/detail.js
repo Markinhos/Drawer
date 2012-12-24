@@ -91,7 +91,7 @@
         showVideo: function(e){
             e.preventDefault();
             if (this.model.get('dataResponse') && this.model.get('dataResponse').type === "video"){
-                data = this.model.toJSON();
+                var data = this.model.toJSON();
                 $.extend(data, this.model.get('dataResponse'));
                 $(this.el).find(".link-content").replaceWith(ich.statusDetailLinkVideoTemplate(data));
             }
@@ -102,7 +102,7 @@
         renderLink: function(res, dict){
             //this.dataResponse = res;
             this.model.set('dataResponse', res);
-            data = this.model.toJSON();
+            var data = this.model.toJSON();
             data.parsed_text = this.replaceURLWithHTMLLinks(this.model.get('text'))
             $.extend(data, this.model.get('dataResponse'));
             if(this.model.get('dataResponse').type === "rich"){                

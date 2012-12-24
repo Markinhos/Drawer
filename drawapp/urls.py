@@ -14,13 +14,6 @@ v1.register(UserProfileResource())
 
 urlpatterns = staticfiles_urlpatterns()
 urlpatterns += patterns('',
-    # Examples:
-    # url(r'^$', 'Drawer.views.home', name='home'),
-    # url(r'^Drawer/', include('Drawer.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/', 'django.contrib.auth.views.login', { 'template_name': 'registration/loginTemplate.html'}, name="login"),
     url(r'^logout/', 'django.contrib.auth.views.logout_then_login', name="logout"),
@@ -30,6 +23,7 @@ urlpatterns += patterns('',
     url(r'^dropbox-access-token/', 'drawerApp.views.get_dropbox_access_token'),
     url(r'^evernote-access-token/', 'drawerApp.views.get_evernote_access_token'),
     url(r'^upload-dropbox-file/', 'drawerApp.views.upload_dropbox_file'),
+    url(r'^upload-dropbox-files/', 'drawerApp.views.multiuploader'),
     url(r'^get-evernote-image/', 'drawerApp.views.get_evernote_image'),
     url(r'^get-evernote-thumbnail/', 'drawerApp.views.get_evernote_thumbnail'),
     url(r'^get-dropbox-file/', 'drawerApp.views.get_dropbox_file'),
