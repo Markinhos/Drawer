@@ -1,0 +1,31 @@
+<div class="item overview-story col1">
+	<div class="status-box">
+		<p><strong>{{ owner_name }}</strong></p>
+		<div class="media row-fluid">
+			{{# thumbnail_url }}
+			<div class="span12">
+				<div class="row-fluid">
+					<div class="link-content">
+					    <a class="preview" href="#">
+					    	<img class="media-object img-polaroid" src="{{ thumbnail_url }}" alt="{{ title }}">
+					    </a>
+					</div>				
+				</div>
+				<div class="row-fluid">
+					<div class="media-body">
+			    		<p>{{ description }}</p>			
+					</div>
+				</div>
+			</div>
+			{{/ thumbnail_url }}
+			{{^ thumbnail_url }}
+				<div class="link-content span12">
+					<div class="media-body">
+				    	<h4 class="media-heading">{{ title }}</h4>
+				    	<p>{{ description }}</p>			
+					</div>
+				</div>
+			{{/ thumbnail_url }}
+		</div>
+	</div>	
+</div>

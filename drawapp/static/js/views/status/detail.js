@@ -17,22 +17,12 @@
     		$("#status-comments-list-" + this.model.get('id')).slideToggle();
     	},
         showContext: function(e){
-            /*e.preventDefault();
-            e.stopPropagation();*/
             $(".tool-context").each(function(index){
                 $(this).addClass("context-hidden");
             });
             if(this.$el.find(".tool-context").hasClass("context-hidden")){
                 this.$el.find(".tool-context").removeClass("context-hidden");
-            }            
-            /*if(!this.statusContextView){
-                this.statusContextView = new StatusContextView({
-                    model: this.model,
-                    el: this.$('.tool-list')
-                });
-            }*/            
-
-            //this.statusContextView.render();
+            }
         },
         createTask: function(e){
             e.preventDefault();
@@ -40,7 +30,7 @@
             var title = this.model.get('text');
             if (title) {
                 var task = new Task({
-                    title: title,
+                    title: title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"),
                     status : 'TODO',
                     creator: '/api/v1/user/' + APP_GLOBAL.USER + '/'
                 });
@@ -68,8 +58,8 @@
             var description = this.model.get('dataResponse').description;
             if (title) {                                    
                 var note = new Note({
-                    title: title,
-                    content: '<en-note>' + description + '</en-note>'
+                    title: title.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"),
+                    content: '<en-note>' + description.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + '</en-note>'
                 });
                 var that = this;
 
@@ -145,14 +135,12 @@
             });
             this.commentListView.render();
             this.commentAddView.render();
-            //$(".status-comment-input", this.el).hide().append(this.commentAddView.render().el).fadeIn('slow');
         },
         render: function(){
             
             if(this.hasLink(this.model.get('text'))) {
                 if(!this.model.get('dataResponse')){                    
                     var that = this;
-                    var widthVideo = $(window).width()/2.5;
                     $(this.el).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div>');
                     $.embedly(this.getLink(this.model.get('text')), { key : "a3fa84e00cb84b0386bde0b7055c8bb4" , 
                         success: function(oembed, dict) { 

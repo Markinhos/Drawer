@@ -151,71 +151,21 @@ def multiuploader(request):
 
         file = request.FILES[u'files[]']
         #folder = Project.objects.get(id=request.POST['project_id']).title
-        folder = 'Brr'
-        result = drop_client.put_file('/' + folder + '/' + file.name, file.file)
-
-
-        #if request.FILES == None:
-        #    return HttpResponseBadRequest('Must have files attached!')
-
-        #getting file data for farther manipulations
-        """file = request.FILES[u'files[]']
-        wrapped_file = UploadedFile(file)
-        filename = wrapped_file.name
-        file_size = wrapped_file.file.size
-
-        #writing file manually into model
-        #because we don't need form of any type.
-        image = MultiuploaderImage()
-        image.filename=str(filename)
-        image.image=file
-        image.key_data = image.key_generate
-        image.save()
-
-        #getting thumbnail url using sorl-thumbnail
-        if 'image' in file.content_type.lower():
-            im = get_thumbnail(image, "80x80", quality=50)
-            thumb_url = im.url
-        else:
-            thumb_url = ''
-
-        #settings imports
-        try:
-            file_delete_url = settings.MULTI_FILE_DELETE_URL+'/'
-            file_url = settings.MULTI_IMAGE_URL+'/'+image.key_data+'/'
-        except AttributeError:
-            file_delete_url = 'multi_delete/'
-            file_url = 'multi_image/'+image.key_data+'/'"""
+        folder = Project.objects.get(id=request.POST['project_id']).title
+        result_db = drop_client.put_file('/' + folder + '/' + file.name, file.file)
 
         #generating json response array
         result = []
-        """result.append({"name":filename, 
-                       "size":file_size, 
-                       "url":file_url,
-                       "delete_url":file_delete_url+str(image.pk)+'/', 
-                       "delete_type":"POST",})"""
         result.append({"files": [
           {
-            "name": "picture1.jpg",
-            "size": 902604,
-            "url": "http:\/\/example.org\/files\/picture1.jpg",
-            "thumbnail_url": "http:\/\/example.org\/files\/thumbnail\/picture1.jpg",
-            "delete_url": "http:\/\/example.org\/files\/picture1.jpg",
-            "delete_type": "DELETE"
-          },
-          {
-            "name": "picture2.jpg",
-            "size": 841946,
-            "url": "http:\/\/example.org\/files\/picture2.jpg",
-            "thumbnail_url": "http:\/\/example.org\/files\/thumbnail\/picture2.jpg",
-            "delete_url": "http:\/\/example.org\/files\/picture2.jpg",
-            "delete_type": "DELETE"
+            "name": result_db['path'][result_db['path'].rfind('/') + 1:],
+            "size": result_db['bytes'],
+            "mime": result_db['mime_type']
           }
         ]})
         response_data = simplejson.dumps(result)
         
         #checking for json data type
-        #big thanks to Guy Shapiro
         if "application/json" in request.META['HTTP_ACCEPT_ENCODING']:
             mimetype = 'application/json'
         else:
@@ -239,16 +189,17 @@ def get_evernote_thumbnail(request):
     if request.method == 'GET':
         user_profile = UserProfile.objects.get(user = request.user)
 
-        evernote_url = 'https://sandbox.evernote.com/shard/s1/thm/note/'
-        evernote_guid = request.GET.get('evernote-guid')
-        data = dict(auth = user_profile.evernote_profile.auth_token)
+        if user_profile.evernote_profile is not None:
+            evernote_url = 'https://sandbox.evernote.com/shard/s1/thm/note/'
+            evernote_guid = request.GET.get('evernote-guid')
+            data = dict(auth = user_profile.evernote_profile.auth_token)
 
-        req = urllib2.Request(evernote_url + evernote_guid)
-        req = urllib2.urlopen(req, data=urlencode(data))
-        thum = req.read()
+            req = urllib2.Request(evernote_url + evernote_guid)
+            req = urllib2.urlopen(req, data=urlencode(data))
+            thum = req.read()
 
-        res = _setCacheHeaders(thum,req.headers.type)
-        return res
+            res = _setCacheHeaders(thum,req.headers.type)
+            return res
 
 def get_dropbox_file(request):
     if request.method == 'GET':
@@ -274,6 +225,64 @@ def get_dropbox_share(request):
 
         res = drop_client.share(request.GET.get('path'))
         return redirect(res[u'url'])
+
+def change_user_settings(request):
+    if request.method == 'POST':
+        user_profile = UserProfile.objects.get(user = request.user)
+        user = user_profile.user
+
+
+        if "application/json" in request.META['HTTP_ACCEPT_ENCODING']:
+            mimetype = 'application/json'
+        else:
+            mimetype = 'text/plain'
+
+
+        if request.POST.has_key('username'):
+            username = request.POST.get('username')
+            if User.objects.filter(username=username).exclude(pk = user.pk).count() > 0:
+                result = {
+                    'fields' : ['username'],
+                    'message': 'The username is already taken'
+                }
+                result_error = simplejson.dumps(result)
+                return HttpResponse(result_error, status=400, mimetype=mimetype)
+            else:
+                user.username = username
+
+        if request.POST.has_key('email'):
+            email = request.POST.get('email')
+            if User.objects.filter(email=email).exclude(pk = user.pk).count() > 0:
+                result = {
+                    'fields' : ['email'],
+                    'message': 'The email is already taken'
+                }
+                result_error = simplejson.dumps(result)
+                return HttpResponse(result_error, status=400, mimetype=mimetype)
+            else:
+                user.email = email
+
+        if request.POST.has_key('currentpass') and len(request.POST.get('currentpass')) > 0:
+            if user.check_password(request.POST.get('currentpass')):
+                if request.POST.has_key('newpass') and request.POST.has_key('newrepeatpass') and len(request.POST.get('newpass')) > 0 and request.POST.get('newpass') == request.POST.get('newrepeatpass'):
+                    user.set_password(request.POST.get('newpass'))
+                else:
+                    result = {
+                        'fields' : ['new-pass', 'new-repeat-pass'],
+                        'message': 'Passwords do not match'
+                    }
+                    result_error = simplejson.dumps(result)
+                    return HttpResponse(result_error, status=400, mimetype=mimetype)
+            else:
+                result = {
+                    'fields' : ['current-pass'],
+                    'message': 'Passwords is wrong'
+                }
+                result_error = simplejson.dumps(result)
+                return HttpResponse(result_error, status=400, mimetype=mimetype)
+
+        user.save()
+        return HttpResponse(status=201)
 
 def _setCacheHeaders(body, type):
     res = HttpResponse()

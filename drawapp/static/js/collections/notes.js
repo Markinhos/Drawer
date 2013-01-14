@@ -27,7 +27,7 @@
                 };
             };
             options.success = successWrapper(options.success);
-            this.fetch(options);
+            return this.fetch(options);
         },
 
         getOrFetch: function(id, options){

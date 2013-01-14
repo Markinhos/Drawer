@@ -7,6 +7,7 @@
 
 <form id="fileupload" action="/upload-dropbox-files/" method="POST" enctype="multipart/form-data">
 	{{& csfr_input }}
+    <input type="hidden" name="project_id" value="{{ project_id }}" >
     <!-- Redirect browsers with JavaScript disabled to the origin page -->
      <noscript><input type="hidden" name="redirect" value="http://blueimp.github.com/jQuery-File-Upload/"></noscript>
     <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
@@ -22,15 +23,10 @@
                 <i class="icon-upload icon-white"></i>
                 <span>Start upload</span>
             </button>
-            <button type="reset" class="btn btn-warning cancel">
+            <button type="reset" class="btn btn-warning cancel-all">
                 <i class="icon-ban-circle icon-white"></i>
                 <span>Cancel upload</span>
             </button>
-            <button type="button" class="btn btn-danger delete">
-                <i class="icon-trash icon-white"></i>
-                <span>Delete</span>
-            </button>
-            <input type="checkbox" class="toggle">
         </div>
         <!-- The global progress information -->
         <div class="span5 fileupload-progress fade">

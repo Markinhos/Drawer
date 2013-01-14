@@ -1,0 +1,21 @@
+<div class="item overview-story col2">
+	<div class="status-box">
+		<div class="row-fluid">
+			<h4 class="media-heading">{{ title }}</h4>
+		</div>
+		<div class="media row-fluid">
+			<div class="span12 video-containter">
+			  {{& html }}
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="media-body span12">		    	
+		    	<p>{{ description }}</p>			
+			</div>
+			
+			{{# comments }}
+				<small>{{ owner_name }} -</small><p><em>{{ text }}</em></p>							
+			{{/ comments}}
+		</div>
+	</div>
+</div>

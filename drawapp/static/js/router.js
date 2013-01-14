@@ -9,7 +9,9 @@
             'project/:id/notes/': 'project_detail_notes',
             'project/:id/activity/': 'project_detail_activity',
             'project/:id/files/': 'project_detail_files',
-            'project/:id/people/': 'project_detail_people'
+            'project/:id/people/': 'project_detail_people',
+            'project/:id/overview/': 'project_detail_overview',
+            'user-settings/': 'user_settings'
         },
         navigate_to: function (model) {
             var path = (model && model.get('id') + '/') || '';
@@ -103,6 +105,45 @@
                         userProfile: userProfile,
                         project: project,
                         el: $("#content")
+                    });
+                    app.detail.render();
+                }
+            });
+        },
+
+        project_detail_overview: function(id) {
+            //fetch or get cached projects            
+            app.projects.maybeFetch({
+                //if success render sidebar and detail app
+                success: function() {
+                    app.sidebar.render(id);
+                    app.userProfile.fetch();        
+                    var userProfile = app.userProfile;
+                    var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    app.menu.model = project;
+                    app.menu.render({ "overview-active" : "active"});
+                    app.detail = new ProjectOverviewView({
+                        userProfile: userProfile,
+                        model: project,
+                        el: $("#content")
+                    });
+                    app.detail.render();
+                }
+            });
+        },
+
+        user_settings: function() {
+            //fetch or get cached projects          
+            app.projects.maybeFetch({
+                //if success render sidebar and detail app
+                success: function() {
+                    app.sidebar.render();       
+                    var userProfile = app.userProfile;
+                    //app.menu.model = project;
+                    //app.menu.render({ "people-active" : "active"});
+                    app.detail = new UserSettingsView({
+                        model: userProfile,
+                        el: $("#app")
                     });
                     app.detail.render();
                 }

@@ -35,7 +35,7 @@
         },
 
         deleteOne: function(project){            
-            var v = this.views.filter(function(view) { return view.model == file })[0];
+            var v = this.views.filter(function(view) { return view.model == project })[0];
             v.remove();
             this.views.pop(v);
         }

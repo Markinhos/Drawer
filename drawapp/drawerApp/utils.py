@@ -131,17 +131,6 @@ class EvernoteHelper(object):
         local_note.evernote_usn = evernote_note.updateSequenceNum
         return local_note
 
-    """@classmethod
-    def create_snipett(cls, content):
-        snipett = ""
-        try:
-            tree = etree.fromstring(content)
-        except:
-            tree = etree.fromstring('<div>' + content + '</div>')
-        snipett_list = tree.xpath('//text()')
-        for chunk in list(snipett_list):
-            snipett += chunk + " "
-        return snipett.strip()"""
 
     def replace_images(self, content, note_guid):
         tree = etree.fromstring(content)

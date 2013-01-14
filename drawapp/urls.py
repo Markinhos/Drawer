@@ -28,6 +28,7 @@ urlpatterns += patterns('',
     url(r'^get-evernote-thumbnail/', 'drawerApp.views.get_evernote_thumbnail'),
     url(r'^get-dropbox-file/', 'drawerApp.views.get_dropbox_file'),
     url(r'^get-dropbox-share/', 'drawerApp.views.get_dropbox_share'),
+    url(r'^change-settings/', 'drawerApp.views.change_user_settings'),
     url(r'^api/', include(v1.urls)),
     url(r'^.*$', 'drawerApp.views.index', name="Home"
     ),

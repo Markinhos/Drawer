@@ -1,0 +1,13 @@
+<div class="item overview-story col1">
+	<div class="status-box">
+		<p><strong>{{ owner_name }}</strong></p>
+		<div class="media row-fluid">
+			<div class="link-content span11">
+				{{& code}}
+			</div>
+			{{# comments }}
+				<small>{{ owner_name }} -</small><p><em>{{ text }}</em></p>							
+			{{/ comments}}
+		</div>
+	</div>	
+</div>

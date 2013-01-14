@@ -56,7 +56,7 @@
             }
 
             if(this.model.get('location')){
-                data.locationHtml = '<a class="fancybox-media span1" href="https://maps.google.com/maps?q=' + this.model.get('location') +'"><i class="icon-globe"></i></a><div class="span4 task-location">' + this.model.get('location') + '</div>';
+                data.locationHtml = '<a class="fancybox-media span1" href="https://maps.google.com/maps?q=' + this.model.get('location') +'"><i class="icon-map-marker"></i></a><div class="span4 task-location">' + this.model.get('location') + '</div>';
             }
             else {
                 data.locationHtml = '<input class="task-location editable" placeholder="Add a location" type="text"></input>';   

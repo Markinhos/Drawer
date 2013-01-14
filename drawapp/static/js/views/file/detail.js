@@ -10,6 +10,8 @@
             d = new Date(this.model.get('modified'));
             data.localetime = d.toDateString() + ' ' + d.toLocaleTimeString();
             if(this.model.get('thumb_exists')) {
+                var exp = /(size=(.)*\b)/;
+                data.thumb_url = data.thumb_url.replace(exp, 'size=xs');
                 $(this.el).html(ich.fileDetailThumbnailTemplate(data));
             }
             else if (this.model.get('is_dir')){
@@ -30,7 +32,7 @@
         },
         deleteFile: function(e){
             if(confirm("Are you sure do you want to delete the file?")){
-                this.options.parentView.deleteOne(this.model.cid);
+                this.model.destroy();
             }            
         }
     });

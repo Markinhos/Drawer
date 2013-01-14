@@ -1,5 +1,8 @@
 (function () {
 	window.SidebarApp = Backbone.View.extend({
+        events: {
+            'click #userSettings' : 'navigateToUserSettings'
+        },
         el: "#sidebar",
         rethrow: function () {
             this.trigger.apply(this, arguments);
@@ -15,6 +18,10 @@
                 collection: this.collection,
                 el: $('#projectModal')
             });
+        },
+        navigateToUserSettings: function(e){
+            e.preventDefault();
+            app.router.navigate('user-settings/', {trigger: true});
         }
     });
 })();
