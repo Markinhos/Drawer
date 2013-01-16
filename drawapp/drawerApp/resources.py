@@ -130,6 +130,26 @@ class TaskCollectionResource(MongoListResource):
     def dehydrate_creator_name(self, bundle):
         return bundle.obj.creator.username
 
+    def obj_delete(self, request=None, **kwargs):
+        result = super(TaskCollectionResource, self).obj_delete(request, **kwargs)
+
+        #statuses with a link to the task to be deleted
+        statuses = [i for i  in self.instance.statuses if request.path in i.tasks_ids]
+        for s in statuses:
+            s.tasks_ids.remove(request.path)
+
+        #and now updates all the tasks links within the project statuses :(
+        for s in self.instance.statuses:
+            for n in s.tasks_ids:
+                splitted = n.split('/')
+                if splitted[-2] > kwargs['index']:
+                    splitted[-2] = str(int(splitted[-2]) - 1)
+                    index = s.tasks_ids.index(n)
+                    n = '/'.join(splitted)
+                    s.tasks_ids[index] = n
+        self.instance.save()
+        return result
+
 class NoteCollectionResource(MongoListResource):
     title = fields.CharField(attribute= 'title', default='', blank = True)
     evernote_usn = fields.IntegerField(default=0, blank=True, null=True)
@@ -184,7 +204,24 @@ class NoteCollectionResource(MongoListResource):
         user_profile = UserProfile.objects.get(user = request.user)
         if user_profile.is_evernote_synced:
             self.instance.notes[int(kwargs['index'])].delete_note_evernote(user_profile)
-        return super(NoteCollectionResource, self).obj_delete(request, **kwargs)
+        result = super(NoteCollectionResource, self).obj_delete(request, **kwargs)
+
+        #statuses with a link to the note to be deleted
+        statuses = [i for i  in self.instance.statuses if request.path in i.notes_ids]
+        for s in statuses:
+            s.notes_ids.remove(request.path)
+
+        #and now updates all the notes links within the project statuses :(
+        for s in self.instance.statuses:
+            for n in s.notes_ids:
+                splitted = n.split('/')
+                if splitted[-2] > kwargs['index']:
+                    splitted[-2] = str(int(splitted[-2]) - 1)
+                    index = s.notes_ids.index(n)
+                    n = '/'.join(splitted)
+                    s.notes_ids[index] = n
+        self.instance.save()
+        return result
 
 
     def get_list(self, request, **kwargs):
