@@ -127,6 +127,16 @@ PIPELINE_JS = {
     }
 }
 
+PIPELINE_CSS = {
+    'styles_c': {
+        'source_filenames': (
+          'css/*.css',
+          'fancybox/source/jquery.fancybox.css',
+        ),
+        'output_filename': 'css/styles_compressed.css',
+    },
+}
+
 PIPELINE_TEMPLATE_EXT = '.mustache'
 
 # Additional locations of static files
