@@ -14,7 +14,6 @@
 if (!window.FileUploader) window.FileUploader = {};
 $(function () {
 
-    debugger;
     FileUploader.load = function(){
         'use strict';
 

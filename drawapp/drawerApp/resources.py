@@ -9,7 +9,7 @@ from datetime import datetime
 from tastypie.validation import FormValidation
 from django.contrib.auth.models import User
 from drawapp.tastypie_nonrel.resources import MongoResource, MongoListResource
-from drawapp.tastypie_nonrel.fields import EmbeddedCollection, ListField
+from drawapp.tastypie_nonrel.fields import EmbeddedCollection, ListField, DictField
 from drawerApp.utils import EvernoteHelper
 from bson.objectid import ObjectId
 from dropbox.session import DropboxSession
@@ -40,7 +40,7 @@ class CommentCollectionResource(MongoListResource):
     notes_ids = ListField(attribute='notes_ids', null=True, blank=True)
     modified = fields.DateTimeField(attribute='modified', null=True, blank=True)
     created = fields.DateTimeField(attribute='created', null=True, blank=True)
-
+    dataResponse = DictField()
 
     class Meta:
         object_class        =   Comment
@@ -56,6 +56,15 @@ class CommentCollectionResource(MongoListResource):
         #TO-DO created date can be tampered
         bundle.data['modified'] = datetime.now().isoformat()
         return bundle
+
+    def dehydrate_dataResponse(self, bundle):
+        return bundle.obj.dataResponse
+        
+    def hydrate_dataResponse(self, bundle):
+        if 'dataResponse' in bundle.data:
+            d = bundle.data['dataResponse']
+        return bundle
+
     """def hydrate_tasks_ids(self, bundle):
         #Hack to remove project
         if 'tasks_ids' in bundle.data and bundle.data['tasks_ids'] is not None:

@@ -34,4 +34,4 @@ class FileMetadataForm(ModelForm):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        exclude = ('tasks_ids', 'notes_ids')
+        exclude = ('tasks_ids', 'notes_ids', 'dataResponse')

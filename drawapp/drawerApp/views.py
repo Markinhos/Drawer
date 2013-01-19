@@ -56,7 +56,7 @@ def signup(request):
 def get_evernote_auth_url(request):
 
     if request.method == 'GET':
-        user_profile = UserProfile.objects.get(user = request.user)
+        user_profile = UserProfile.objects.get(user = request.user)        
         callback_url = request.GET.get('callback_url')
         project_id = request.GET.get('project_id')
         url_evernote = "https://sandbox.evernote.com/oauth?oauth_consumer_key=" + settings.EVERNOTE_AUTH_KEY + "&oauth_signature=" + settings.EVERNOTE_AUTH_SECRET +"&oauth_signature_method=PLAINTEXT&oauth_timestamp=1288364369&oauth_nonce=d3d9446802a44259&oauth_callback=http%3A%2F%2F" + request.get_host() + "%2Fevernote-access-token%2F%3Faction%3DoauthCallback%3Fproject%3D"+project_id
@@ -87,6 +87,8 @@ def get_evernote_access_token(request):
         token_credentials = urllib2.unquote(token_credentials)
         list_answer = token_credentials.split('&')
 
+    if user_profile.evernote_profile is None:
+            user_profile.evernote_profile = EvernoteProfile() 
         project_id = request.GET.get('action').split('?')[1].split('=')[1]
         dict_answer = cgi.parse_qs(token_credentials)
         user_profile.evernote_profile.auth_token = dict_answer['oauth_token'].pop()

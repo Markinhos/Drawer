@@ -21,10 +21,8 @@
             });
     	},
         cancelAll: function(e){
-            debugger;
             var that = this;    
             _.each(this.uploadsActive, function(key, value){ 
-                debugger;
                 if(key.abort){
                     key.abort();
                 }
@@ -50,7 +48,6 @@
             e.preventDefault();
             e.stopPropagation();
             var selector = $(e.target).parents('tr').attr('class');
-            debugger;
             delete this.uploadsActive[selector];
             $("[class="+selector+"]").remove();
         },

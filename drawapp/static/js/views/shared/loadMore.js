@@ -7,7 +7,6 @@ LoadMoreView = Backbone.View.extend({
     'click .load': 'loadMore'
   },
   render: function() {
-    debugger;
     if(this.collection.pageInfo().next)
       this.$el.html(ich.loadMore());
     else

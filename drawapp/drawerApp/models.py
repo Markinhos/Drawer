@@ -136,6 +136,7 @@ class Comment(models.Model):
     tasks_ids = ListField(models.CharField(max_length=150, blank=True), blank=True, null=True)
     notes_ids = ListField(models.CharField(max_length=150, null=True))
     dropbox_link = models.SlugField(max_length=100)
+    dataResponse = DictField()
 
     def save(self):
         super(Comment, self).save()
@@ -148,7 +149,7 @@ class Note(models.Model):
     evernote_usn = models.IntegerField(default=0, blank=True)
     evernote_guid = models.CharField(max_length=200, null=True, blank=True)
     comments = EmbeddedModelListField(EmbeddedModelField('Comment'), null=True, blank=True)
-    resources = DictField()
+    resources = DictField(blank=True, null=True)
 
     def save(self):
         super(Note, self).save()

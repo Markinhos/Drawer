@@ -135,17 +135,25 @@
             });
             this.commentListView.render();
             this.commentAddView.render();
+        }, 
+        isEmpty: function(map){
+            for(var key in map){
+                if (map.hasOwnProperty(key)) {
+                    return false;
+                }
+            }
+           return true;
         },
         render: function(){
             
             if(this.hasLink(this.model.get('text'))) {
-                if(!this.model.get('dataResponse')){                    
+                if(!this.model.get('dataResponse') || this.isEmpty(this.model.get('dataResponse'))){
                     var that = this;
                     $(this.el).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div>');
                     $.embedly(this.getLink(this.model.get('text')), { key : "a3fa84e00cb84b0386bde0b7055c8bb4" , 
                         success: function(oembed, dict) { 
                             console.log("Link fetched");
-                            that.renderLink(oembed, dict);                            
+                            that.renderLink(oembed, dict);                    
                         }
                     });
                 }
@@ -167,6 +175,7 @@
                         
             return this;
         },
+       
         isLink: function(link){
             var re = /^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/;
             return re.test(link);
