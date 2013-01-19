@@ -3,7 +3,7 @@ import os
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -71,30 +71,77 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = '/home/marcos/statictests/'
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
-STATIC_URL = '/static/'
+if not DEBUG:
+    STATIC_URL = 'http://d3g4axnvhzewfv.cloudfront.net/'
+else:
+    STATIC_URL = '/static/'
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
+STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+
+PIPELINE = not DEBUG
+
+PIPELINE_JS = {
+    'scripts': {
+        'source_filenames': (
+          'js/libs/backbone-tastypie.js',
+          'js/libs/bootstrap-wysihtml5.js',
+          'js/libs/bootstrap-timepicker.js',
+          'js/libs/jquery.iframe-transport.js',          
+          'js/libs/vendor/jquery.ui.widget.js', 
+          'js/libs/jquery.fileupload*.js',          
+          'js/libs/masonry.min.js',
+          'fancybox/lib/jquery.mousewheel-3.0.6.pack.js',
+          'fancybox/source/jquery.fancybox.pack.js',
+          'fancybox/source/helpers/jquery.fancybox-media.js',
+          'js/models/*.js',
+          'js/collections/*.js',          
+          'js/views/shared/*.js',
+
+          'js/views/status/add.js',
+          'js/views/status/context.js',
+          'js/views/status/list.js',
+          'js/views/status/detail.js',
+          'js/views/status/detailOverview.js',
+
+          'js/views/*/add.js',
+          'js/views/*/addContext.js',
+          'js/views/*/list.js',
+          'js/views/*/edit.js',
+          'js/views/*/detail.js',
+          'js/views/*/detailContext.js',
+          'js/views/*/detailOverview.js',
+          'js/views/composite/*.js',
+          'js/router.js',
+          'js/app.js',
+        ),
+        'output_filename': 'js/scripts.js',
+    }
+}
+
+PIPELINE_TEMPLATE_EXT = '.mustache'
+
 # Additional locations of static files
 STATICFILES_DIRS = (
 # Put strings here, like "/home/html/static" or "C:/www/django/static".
 # Always use forward slashes, even on Windows.
 # Don't forget to use absolute paths, not relative paths.
-    os.path.join(PROJECT_ROOT, 'static/'),
+    os.path.join(PROJECT_ROOT, 'static/'),    
 )
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'staticfiles.finders.FileSystemFinder',
+    'staticfiles.finders.AppDirectoriesFinder',
     #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
     )
 
@@ -106,7 +153,7 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
     #     'django.template.loaders.eggs.Loader',
-    )
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -114,7 +161,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    )
+    'django.middleware.gzip.GZipMiddleware',
+)
 
 AUTHENTICATION_BACKENDS = (
     'permission_backend_nonrel.backends.NonrelPermissionBackend',
@@ -141,19 +189,18 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'staticfiles',
     'gunicorn',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     'djangotoolbox',
     'permission_backend_nonrel',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
     'django_mongodb_engine',
     'tastypie',
     'django_extensions',
-    'drawerApp'
-    )
+    'drawerApp',
+    'pipeline'
+    #'storages'
+)
 
 
 # A sample logging configuration. The only tangible logging
@@ -191,7 +238,6 @@ DROPBOX_AUTH_KEY = '8gvbfoxxb9f98ah'
 DROPBOX_AUTH_SECRET = 'xciu5lbxmiiboju'
 
 DROPBOX_ACCESS_TYPE = 'app_folder'
-
 
 try:
     from local_settings import *

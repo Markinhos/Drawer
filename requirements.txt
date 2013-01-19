@@ -7,8 +7,11 @@ certifi==0.0.8
 chardet==1.0.1
 distribute==0.6.24
 dj-database-url==0.2.1
+django-appconf==0.5
 django-extensions==0.8
 django-mongodb-engine==0.4.0
+django-pipeline==1.2.24
+django-staticfiles==1.2.1
 django-tastypie==0.9.11
 djangotoolbox==0.9.2
 gunicorn==0.14.2

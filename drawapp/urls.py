@@ -4,6 +4,7 @@ from drawerApp.resources import ProjectResource, UserResource, UserProfileResour
 from tastypie.api import Api
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from django.conf import settings
 admin.autodiscover()
 
 

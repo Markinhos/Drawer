@@ -1,0 +1,170 @@
+.task-item {
+  height: 20px;
+  margin-bottom: 1px;
+  padding: 10px 10px 10px 10px;
+}
+.task-item .task-content {
+  width: 80%;
+  margin-right: 30px;
+}
+.task-item .task-check {
+  width: 5%;
+  float: left;
+}
+.task-item .task-meta {
+  width: 15%;
+  padding-top: 2px;
+  float: right;
+}
+.task-item .task-meta:hover {
+  cursor: pointer;
+}
+#tumblelog .col1 {
+  width: 220px;
+}
+#tumblelog .col2 {
+  width: 460px;
+}
+#tumblelog .col3 {
+  width: 700px;
+}
+.overview-story {
+  margin: 10px;
+  border-top: 4px solid #DCB;
+  padding-top: 10px;
+  background: white;
+  float: left;
+}
+.paragraph {
+  border-bottom: 1px solid #EEE;
+  margin-bottom: 10px;
+}
+.context-hidden {
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: visibility 0s 0.4s, opacity 0.4s linear;
+}
+.status-meta-list {
+  margin-left: 15px;
+}
+.status-comment-input {
+  margin-left: 25px;
+}
+.media-box {
+  margin-bottom: 19px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+.video-containter {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+}
+.video-containter iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.task-group.checked {
+  opacity: 0.6;
+}
+.bordered {
+  border: 1px solid black;
+}
+.status-item .status-owner {
+  float: left;
+}
+.status-item .status-content {
+  word-wrap: break-word;
+  float: left;
+}
+.status-item .status-meta {
+  float: right;
+}
+.status-item .status-meta:hover {
+  cursor: pointer;
+}
+.note-modal .modal-header .note-modal-title {
+  width: 90%;
+}
+.note-modal .modal-header .note-modal-actions {
+  width: 10%;
+  float: right;
+}
+.editor-note-area {
+  width: 100%;
+}
+.evernote-refresher:hover,
+.dropbox-refresher:hover {
+  cursor: pointer;
+}
+.column-joined {
+  margin-left: 0%;
+}
+.project-detail > .project-tool > i {
+  visibility: hidden;
+}
+.project-detail:hover > .project-tool > i {
+  visibility: visible;
+}
+div.project-tool-popover {
+  width: auto;
+}
+div#loaderDiv {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  z-index: 1000;
+}
+div#ajaxloader {
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border: 8px solid #08c;
+  border-right-color: transparent;
+  border-radius: 50%;
+  box-shadow: 0 0 25px 2px #eee;
+  -webkit-animation: spin 1s linear infinite;
+  -moz-animation: spin 1s linear infinite;
+  -ms-animation: spin 1s linear infinite;
+  -o-animation: spin 1s linear infinite;
+}
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    opacity: 0.2;
+  }
+  50% {
+    -webkit-transform: rotate(180deg);
+    opacity: 1;
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    opacity: 0.2;
+  }
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+    opacity: 0.2;
+  }
+  50% {
+    transform: rotate(180deg);
+    opacity: 1;
+  }
+  to {
+    transform: rotate(360deg);
+    opacity: 0.2;
+  }
+}
