@@ -3,7 +3,7 @@ import os
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -90,7 +90,7 @@ STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 PIPELINE = not DEBUG
 
 PIPELINE_JS = {
-    'scripts': {
+    'scripts_c': {
         'source_filenames': (
           'js/libs/backbone-tastypie.js',
           'js/libs/bootstrap-wysihtml5.js',
@@ -123,7 +123,7 @@ PIPELINE_JS = {
           'js/router.js',
           'js/app.js',
         ),
-        'output_filename': 'js/scripts.js',
+        'output_filename': 'js/scripts_compressed.js',
     }
 }
 
@@ -134,6 +134,9 @@ PIPELINE_CSS = {
           'fancybox/source/jquery.fancybox.css',
         ),
         'output_filename': 'css/styles_compressed.css',
+        'extra_context': {
+            'media': 'screen',
+        },
     },
 }
 
