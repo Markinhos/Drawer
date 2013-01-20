@@ -16,6 +16,8 @@ from dropbox.session import DropboxSession
 from django.conf import settings
 from dropbox import session, client
 from django.core.exceptions import PermissionDenied
+from tastypie.exceptions import ImmediateHttpResponse
+from tastypie.http import HttpNotFound
 
 class UserResource(MongoResource):
 
@@ -308,4 +310,6 @@ class InvitationResource(MongoListResource):
             project_shared.save()
             user_profile_receiver.projects.append(project_shared.id)
             user_profile_receiver.save()
-        return super(InvitationResource,self).obj_create(bundle, request, **kwargs)
+            return super(InvitationResource,self).obj_create(bundle, request, **kwargs)
+        else:
+            raise ImmediateHttpResponse(HttpNotFound('No email was found'))

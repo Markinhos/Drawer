@@ -30,13 +30,18 @@
                 var that = this;
                 var result = this.model.get('invitations').create(invitation,{ wait : true ,
                     success : function(model) {
-                        that.errorView = new Flash({el : "#flash"}),
-                        that.errorView.render("The invitation has been sent successfully :)", "success")
+                        that.errorView = new Flash({el : "#flash"});
+                        that.errorView.render("The invitation has been sent successfully :)", "success");
                         this.$('#email-receiver').val('');
                     },
                     error : function(model, response){
-                        that.errorView = new Flash({el : "#flash"}),
-                        that.errorView.render("Sorry, there has been an error. :(", "error")
+                        that.errorView = new Flash({el : "#flash"});
+                        if (response.status == 404){
+                            that.errorView.render("Sorry, the email was not found", "error");    
+                        }
+                        else{
+                            that.errorView.render("Sorry, there has been an error. :(", "error");
+                        }                        
                     }
                 });
             }
