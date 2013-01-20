@@ -87,7 +87,7 @@ def get_evernote_access_token(request):
         token_credentials = urllib2.unquote(token_credentials)
         list_answer = token_credentials.split('&')
 
-    if user_profile.evernote_profile is None:
+        if user_profile.evernote_profile is None:
             user_profile.evernote_profile = EvernoteProfile() 
         project_id = request.GET.get('action').split('?')[1].split('=')[1]
         dict_answer = cgi.parse_qs(token_credentials)

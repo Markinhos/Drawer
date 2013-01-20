@@ -166,10 +166,10 @@ class Note(models.Model):
             new_notes = evernote_helper.get_metadata_notes(evernote_profile, parent_project)
 
             #Look for removed notes
-            guid_new_notes = [en.guid for en in new_notes.notes]
+            """guid_new_notes = [en.guid for en in new_notes.notes]
             removed_notes = [n for n in parent_project.notes if n.evernote_guid not in guid_new_notes]
             for f in removed_notes:
-                parent_project.notes.remove(f)
+                parent_project.notes.remove(f)"""
 
             for metadata_note in new_notes.notes:
                 #look for note in db
@@ -204,8 +204,8 @@ class Note(models.Model):
             return None
         except Errors.EDAMNotFoundException as e:
             return None
-        except:
-            return None
+        except Exception as e:
+            raise e
 
         #If note is synced fine the usn is updated
         user_profile.evernote_profile.latest_update_count = created_note.updateSequenceNum
