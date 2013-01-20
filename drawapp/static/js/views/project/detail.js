@@ -1,5 +1,11 @@
 (function () {
     window.ProjectView = Backbone.View.extend({
+
+        initialize: function () {
+            _.bindAll(this, 'projectDetail');
+            //this.model.bind('change:id', this.projectDetail);
+        },
+
         events: {
             'click .project-tool' : 'deleteProject',
             'click .project-detail': 'projectDetail'            
@@ -16,7 +22,7 @@
         deleteProject: function(e){
             e.stopPropagation();
             if(confirm("Are you sure you want to delete this project?")){            
-                this.options.parentView.deleteOne(this.model.cid);
+                this.model.destroy();
             }
         }
     });

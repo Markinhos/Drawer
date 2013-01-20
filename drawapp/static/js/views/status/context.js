@@ -36,7 +36,7 @@
         addNote: function(){
             this.noteAddContextView = new NoteAddContextView({
                 model: this.model,
-                el: $(".note-context-input"),
+                el: this.$el.find(".note-context-input"),
                 "class": "well",
                 parentView: this
             });

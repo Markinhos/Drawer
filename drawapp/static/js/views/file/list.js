@@ -6,6 +6,7 @@
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
 
+            var self = this;
             this.collection.on('destroy', function(file){
                 self.deleteOne(file);
             });

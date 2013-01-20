@@ -1,8 +1,6 @@
 (function () {
     window.ProjectActivityView = Backbone.View.extend({
-        initialize: function(arguments){            
-            this.el = arguments.el;
-            this.model = arguments.project;
+        initialize: function(arguments){
             this.model.get('statuses').maybeFetch({});
             //this.model.get('notes').bind('reset', this.render, this);
             

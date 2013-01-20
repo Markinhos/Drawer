@@ -59,12 +59,12 @@
             app.projects.maybeFetch({
                 //if success render sidebar and detail app
                 success: function() {
-                    app.sidebar.render(id);
+                    app.sidebar.render(id); 
                     var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
                     app.menu.model = project;
                     app.menu.render({ "activity-active" : "active"});
                     app.detail = new ProjectActivityView({
-                        project: project,
+                        model: project,
                         el: $("#content")
                     });
                     app.detail.render();

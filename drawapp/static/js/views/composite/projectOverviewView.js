@@ -61,6 +61,8 @@
                 columnWidth: 240
               });
             });
+
+            $(".fancybox").fancybox();
             return this;
         }
     });

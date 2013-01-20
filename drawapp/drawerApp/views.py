@@ -191,12 +191,12 @@ def get_evernote_thumbnail(request):
     if request.method == 'GET':
         user_profile = UserProfile.objects.get(user = request.user)
 
-        if user_profile.evernote_profile is not None:
+        if user_profile.is_evernote_synced:
             evernote_url = 'https://sandbox.evernote.com/shard/s1/thm/note/'
             evernote_guid = request.GET.get('evernote-guid')
             data = dict(auth = user_profile.evernote_profile.auth_token)
 
-            req = urllib2.Request(evernote_url + evernote_guid)
+            req = urllib2.Request(evernote_url + evernote_guid + '?size=75')
             req = urllib2.urlopen(req, data=urlencode(data))
             thum = req.read()
 

@@ -8,14 +8,15 @@
             this.collection.bind('reset', this.addAll, this);
             this.views = [];
 
+            var self = this;
             this.collection.on('destroy', function(project){
                 self.deleteOne(project);
             });
         },
-
+       
         addAll: function () {
             this.views = [];
-            this.collection.each(this.addOne);
+            this.collection.each(this.addOne);            
         },
 
         addOne: function (thisModel) {
