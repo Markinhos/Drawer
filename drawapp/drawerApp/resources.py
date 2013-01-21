@@ -18,21 +18,24 @@ from dropbox import session, client
 from django.core.exceptions import PermissionDenied
 from tastypie.exceptions import ImmediateHttpResponse
 from tastypie.http import HttpNotFound
+from tastypie.cache import SimpleCache
 
 class UserResource(MongoResource):
 
     class Meta:
-        queryset = User.objects.all()
-        resource_name = 'user'
+        queryset            =   User.objects.all()
+        resource_name       =   'user'
+        cache               =   SimpleCache()
         
 class UserProfileResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user', full=True)
     invitations = EmbeddedCollection(of='drawapp.drawerApp.resources.InvitationResource', attribute='invitations', null=True, full='True')
     class Meta:
-        queryset = UserProfile.objects.all()
-        resource_name = 'userProfile'
-        authorization = Authorization()
-        excludes = ['dropbox_profile', 'evernote_profile']
+        queryset            =   UserProfile.objects.all()
+        resource_name       =   'userProfile'
+        authorization       =   Authorization()
+        excludes            =   ['dropbox_profile', 'evernote_profile']
+        cache               =   SimpleCache()
 
 class CommentCollectionResource(MongoListResource):
     owner = fields.ForeignKey(UserResource, 'owner')
@@ -50,6 +53,7 @@ class CommentCollectionResource(MongoListResource):
         resource_name       =   'project'
         authorization       =   Authorization()
         ordering            =   ['modified', 'created']
+        cache               =   SimpleCache()
 
     def dehydrate_owner_name(self, bundle):
         return bundle.obj.owner.username
@@ -103,6 +107,7 @@ class FileMetadataCollectionResource(MongoListResource):
         resource_name       =   'fileMetadata'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=FileMetadataForm)
+        cache               =   SimpleCache()
 
     def dehydrate_filename(self, bundle):
         path = bundle.obj.path
@@ -137,6 +142,7 @@ class TaskCollectionResource(MongoListResource):
         resource_name       =   'task'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=TaskForm)
+        cache               =   SimpleCache()
 
     def dehydrate_creator_name(self, bundle):
         return bundle.obj.creator.username
@@ -178,6 +184,7 @@ class NoteCollectionResource(MongoListResource):
         validation          =   FormValidation(form_class=NoteForm)
         excludes            =   ['resources']
         ordering            =   ['modified']
+        cache               =   SimpleCache()
 
 
     def hydrate_modified(self, bundle):
@@ -259,6 +266,7 @@ class ProjectResource(MongoResource):
         authentication      =    Authentication()
         allowed_methods     =    ['get', 'post', 'put', 'delete']
         validation          =    FormValidation(form_class=ProjectForm)
+        cache               =   SimpleCache()
 
     def obj_create(self, bundle, request=None, **kwargs):
         response =  super(ProjectResource, self).obj_create(bundle, request, **kwargs)
@@ -290,6 +298,9 @@ class ProjectResource(MongoResource):
             return http.HttpNoContent
         else:
             return super(ProjectResource, self).obj_delete(request, **kwargs)
+
+    def get_list(self, request, **kwargs):
+        return super(ProjectResource, self).get_list(request, **kwargs)
 
 class InvitationResource(MongoListResource):
     project = fields.ForeignKey(ProjectResource, 'project', full=False)

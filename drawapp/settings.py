@@ -277,6 +277,8 @@ def get_cache():
 
 CACHES = get_cache()
 
+CACHE_BACKEND = CACHES
+
 try:
     from local_settings import *
 except ImportError:
