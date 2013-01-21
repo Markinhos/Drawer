@@ -6,12 +6,7 @@
 				<div class="link-content span11">
 					{{& code}}
 				</div>
-			  	<div class="status-meta span1">
-					<ul style="list-style:none;" class="status-meta-list">						
-						<li><a href="#" rel="tooltip" title="Attach a note"><i class="icon-file"></i></a></li>						
-						<li><a href="#" rel="tooltip" title="Show comments"><i class="icon-comment"></i></a></li>
-					</ul>
-				</div>
+			  	{{> statusMeta }}
 			</div>
 		</div>	
 		<div class="comments-container" id="comments-container-{{ id }}">

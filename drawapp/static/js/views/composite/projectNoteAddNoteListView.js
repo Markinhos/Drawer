@@ -90,10 +90,10 @@
         refreshNotes: function(e){
             e.preventDefault();
             var elem = $(e.target);
-            elem.addClass('icon-large');
+            elem.addClass('icon-spin');
             this.model.get('notes').fetch({
                 success : function(){
-                    elem.removeClass('icon-large')
+                    elem.removeClass('icon-spin')
                 }
             });
         }

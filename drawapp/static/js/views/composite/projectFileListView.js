@@ -39,10 +39,10 @@
 
         refreshFiles: function(e){
             var elem = $(e.target);
-            elem.addClass('icon-large');
+            elem.addClass('icon-spin');
             this.model.get('files').fetch({
                 success : function(){
-                    elem.removeClass('icon-large')
+                    elem.removeClass('icon-spin')
                 }
             });
         }

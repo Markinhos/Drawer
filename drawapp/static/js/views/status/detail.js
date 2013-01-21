@@ -1,7 +1,7 @@
 (function () {
     window.StatusDetailView = Backbone.View.extend({
         events: {
-            'click .icon-comment': 'toggleComments',
+            'click .toggle-comments': 'toggleComments',
             'click .icon-tasks': 'createTask',
             'click .icon-file': 'createNote',
             'click .preview': 'showVideo',
@@ -94,6 +94,7 @@
             this.model.set('dataResponse', res);
             var data = this.model.toJSON();
             data.parsed_text = this.replaceURLWithHTMLLinks(this.model.get('text'))
+            data.num_comments = this.model.get('comments').length
             $.extend(data, this.model.get('dataResponse'));
             if(this.model.get('dataResponse').type === "rich"){                
                 $(this.el).html(ich.statusDetailLinkRichTemplate(data));
@@ -163,7 +164,9 @@
             }
             else
             {                
-                $(this.el).html(ich.statusDetailTemplate(this.model.toJSON())).fadeIn('slow');
+                data = this.model.toJSON()
+                data.num_comments = this.model.get('comments').length
+                $(this.el).html(ich.statusDetailTemplate(data)).fadeIn('slow');
                 this.renderComments();
 
                 this.statusContextView = new StatusContextView({
