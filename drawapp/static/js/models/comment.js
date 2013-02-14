@@ -1,6 +1,6 @@
 (function () {
     window.Comment = Backbone.RelationalModel.extend({
-    	idAttribute : "_id",
+    	idAttribute : "custom_id",
         toJSON: function(){
             json = _.clone(this.attributes);
             delete json.status;

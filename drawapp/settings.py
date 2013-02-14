@@ -94,6 +94,7 @@ PIPELINE = not DEBUG
 PIPELINE_JS = {
     'scripts_c': {
         'source_filenames': (
+          #'js/libs/Backbone.js',
           'js/libs/backbone-tastypie.js',
           'js/libs/bootstrap-wysihtml5.js',
           'js/libs/bootstrap-timepicker.js',
@@ -101,10 +102,13 @@ PIPELINE_JS = {
           'js/libs/vendor/jquery.ui.widget.js', 
           'js/libs/jquery.fileupload*.js',          
           'js/libs/masonry.min.js',
+          #'template/js/*.js',
           'fancybox/lib/jquery.mousewheel-3.0.6.pack.js',
           'fancybox/source/jquery.fancybox.pack.js',
           'fancybox/source/helpers/jquery.fancybox-media.js',
           'js/models/*.js',
+          'js/collections/pollingCollection.js',          
+          'js/collections/paginatedCollection.js',          
           'js/collections/*.js',          
           'js/views/shared/*.js',
 
@@ -132,6 +136,7 @@ PIPELINE_JS = {
 PIPELINE_CSS = {
     'styles_c': {
         'source_filenames': (
+          #'template/css/*.css',
           'css/*.css',
           'fancybox/source/jquery.fancybox.css',
         ),

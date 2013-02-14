@@ -32,8 +32,11 @@
   margin: 10px;
   border-top: 4px solid #DCB;
   padding-top: 10px;
-  background: white;
+  background: #2a333c;
   float: left;
+}
+.well{
+  border: 1px solid white;
 }
 .paragraph {
   border-bottom: 1px solid #EEE;
@@ -122,12 +125,14 @@ div.project-tool-popover {
   width: auto;
 }
 div#loaderDiv {
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 30%;
   z-index: 1000;
 }
-div#ajaxloader {
+div#ajaxloader{
+}
+div#ajaxloaderold {
   left: 50%;
   width: 20px;
   height: 20px;

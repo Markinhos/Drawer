@@ -25,7 +25,7 @@ class UserResource(MongoResource):
     class Meta:
         queryset            =   User.objects.all()
         resource_name       =   'user'
-        cache               =   SimpleCache()
+        #cache               =   SimpleCache()
         
 class UserProfileResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user', full=True)
@@ -35,7 +35,7 @@ class UserProfileResource(MongoResource):
         resource_name       =   'userProfile'
         authorization       =   Authorization()
         excludes            =   ['dropbox_profile', 'evernote_profile']
-        cache               =   SimpleCache()
+        #cache               =   SimpleCache()
 
 class CommentCollectionResource(MongoListResource):
     owner = fields.ForeignKey(UserResource, 'owner')
@@ -45,6 +45,7 @@ class CommentCollectionResource(MongoListResource):
     notes_ids = ListField(attribute='notes_ids', null=True, blank=True)
     modified = fields.DateTimeField(attribute='modified', null=True, blank=True)
     created = fields.DateTimeField(attribute='created', null=True, blank=True)
+    custom_id = fields.CharField(readonly=True)
     dataResponse = DictField()
 
     class Meta:
@@ -53,10 +54,16 @@ class CommentCollectionResource(MongoListResource):
         resource_name       =   'project'
         authorization       =   Authorization()
         ordering            =   ['modified', 'created']
-        cache               =   SimpleCache()
+        #cache               =   SimpleCache()
 
     def dehydrate_owner_name(self, bundle):
         return bundle.obj.owner.username
+
+    def dehydrate_custom_id(self, bundle):
+        if hasattr(bundle.obj, 'parent'):
+            return str(bundle.obj.parent.id) + str(bundle.obj.id)
+        else:
+            return str(bundle.obj.id)
 
     def hydrate_modified(self, bundle):
         #TO-DO created date can be tampered
@@ -80,7 +87,7 @@ class CommentCollectionResource(MongoListResource):
         return bundle"""
 
     def hydrate_comments(self, bundle):
-        if 'comments' in bundle.data and len(bundle.data['comments']) > 0:
+        if 'comments' in bundle.data and len(bundle.data['comments']) > 0 and 'id' not in bundle.data['comments'][-1]:
             import copy
             bundle_copy = copy.deepcopy(bundle)
             #self.full_dehydrate(bundle_copy)
@@ -107,7 +114,7 @@ class FileMetadataCollectionResource(MongoListResource):
         resource_name       =   'fileMetadata'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=FileMetadataForm)
-        cache               =   SimpleCache()
+        #cache               =   SimpleCache()
 
     def dehydrate_filename(self, bundle):
         path = bundle.obj.path
@@ -142,7 +149,7 @@ class TaskCollectionResource(MongoListResource):
         resource_name       =   'task'
         authorization       =   Authorization()
         validation          =   FormValidation(form_class=TaskForm)
-        cache               =   SimpleCache()
+        #cache               =   SimpleCache()
 
     def dehydrate_creator_name(self, bundle):
         return bundle.obj.creator.username
@@ -266,7 +273,7 @@ class ProjectResource(MongoResource):
         authentication      =    Authentication()
         allowed_methods     =    ['get', 'post', 'put', 'delete']
         validation          =    FormValidation(form_class=ProjectForm)
-        cache               =   SimpleCache()
+        #cache               =   SimpleCache()
 
     def obj_create(self, bundle, request=None, **kwargs):
         response =  super(ProjectResource, self).obj_create(bundle, request, **kwargs)

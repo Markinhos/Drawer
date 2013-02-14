@@ -36,8 +36,9 @@
 
         deleteOne: function(file){
             var v = this.views.filter(function(view) { return view.model == file })[0];
+            var index = this.views.indexOf(v);
+            this.views.splice(index, 1);
             v.remove();
-            this.views.pop(v);
         },
 
         rethrow: function(){

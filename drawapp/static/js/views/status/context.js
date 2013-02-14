@@ -15,11 +15,17 @@
                 this.model.get('tasks').on('add', function(task){
                     self.addOneTask(task);
                 });
+                this.model.get('tasks').on('remove', function(task){
+                    self.deleteOneTask(task);
+                });
                 this.model.get('tasks').on('destroy', function(task){
                     self.deleteOneTask(task);
                 });
                 this.model.get('notes').on('add', function(note){
                     self.addOneNote(note);
+                });
+                this.model.get('notes').on('remove', function(note){
+                    self.deleteOneNote(note);
                 });
                 this.model.get('notes').on('destroy', function(note){
                     self.deleteOneNote(note);
@@ -57,8 +63,9 @@
         },
         deleteOneTask: function(task){
             var v = this.taskViews.filter(function(view) { return view.model == task })[0];
+            var index = this.taskViews.indexOf(v);
+            this.taskViews.splice(index, 1);
             v.remove();
-            this.taskViews.pop(v);
         },
         addAllNotes: function(){
             this.noteViews = [];
@@ -75,8 +82,9 @@
         },
         deleteOneNote: function(note){
             var v = this.noteViews.filter(function(view) { return view.model == note })[0];
+            var index = this.noteViews.indexOf(v);
+            this.noteViews.splice(index, 1);
             v.remove();
-            this.noteViews.pop(v);
         },
         render: function(showContext){
             if(this.model){

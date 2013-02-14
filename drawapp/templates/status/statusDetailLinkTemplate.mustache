@@ -1,13 +1,15 @@
 <div class="row-fluid">
 	<div class="status-container span6">
-		<div class="media-box status-box">
+		<div class="well status-box">
 			<p style="overflow: hidden; text-overflow: ellipsis"><strong>{{ owner_name }}</strong>: {{& parsed_text }}</p>
 			<div class="media row-fluid">
 				{{# thumbnail_url }}
 					<div class="link-content span11">
-						<div class="span5">
-						  <a class="pull-left preview" href="#">
-						    <img class="media-object img-polaroid" src="{{ thumbnail_url }}" alt="{{ title }}">
+						<div class="span5 thumb">
+							<div class="">
+						  		<a class="pull-left preview" href="#" class="mask">
+						    	<img class="media-object img-polaroid" src="{{ thumbnail_url }}" alt="{{ title }}">
+							</div>
 						  </a>
 						</div>
 						<div class="media-body span7">

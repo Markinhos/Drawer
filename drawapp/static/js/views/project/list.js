@@ -37,10 +37,9 @@
 
         deleteOne: function(project){            
             var v = this.views.filter(function(view) { return view.model == project })[0];
-            v.remove();
-            this.views.pop(v);
+            var index = this.views.indexOf(v);
+            this.views.splice(index, 1);
+            v.remove();        
         }
-
-
     });
 })();

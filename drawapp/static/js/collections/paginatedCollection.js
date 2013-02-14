@@ -1,6 +1,6 @@
 // includes bindings for fetching/fetched
 (function() {
-  window.PaginatedCollection = Backbone.Collection.extend({
+  window.PaginatedCollection = PollingCollection.extend({
     baseInitialize: function() {
       _.bindAll(this);
       typeof(options) != 'undefined' || (options = {});

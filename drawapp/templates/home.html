@@ -6,9 +6,10 @@
 
     {% include '_mustache_templates.html' %}
     <div id="loaderDiv" style="display: none">    
-        <div class="alert alert-info">
+        <div class="">
             <div>
-                <div id="ajaxloader"> 
+                <div id="ajaxloader" class="">
+                    <i class="icon-spinner icon-spin icon-2x"></i>
                 </div>
             </div>
         </div>
@@ -74,7 +75,6 @@
                 </div>
         </div>
         <footer>
-            <p>&copy; Bad Company 2012</p>
         </footer>
          <div id="projectModal" class="modal hide fade">
             <div class="modal-header">
@@ -111,8 +111,10 @@
 
         
         <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.3/underscore-min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.9/backbone-min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/backbone-relational/0.7.0/backbone-relational.min.js"></script>
+        <!--<script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.10/backbone-min.js"></script>-->
+        <script src="{{ STATIC_URL }}js/libs/Backbone.js"></script>
+        <script src="{{ STATIC_URL }}js/libs/backbone-relational.js"></script>
+        <!--<script src="//cdnjs.cloudflare.com/ajax/libs/backbone-relational/0.7.0/backbone-relational.min.js"></script>-->
         <script src="//cdnjs.cloudflare.com/ajax/libs/wysihtml5/0.3.0/wysihtml5.min.js"></script>
         <script src="http://scripts.embed.ly/jquery.embedly.min.js"></script>
         <script src="{{ STATIC_URL }}js/libs/ICanHaz.min.js"></script>

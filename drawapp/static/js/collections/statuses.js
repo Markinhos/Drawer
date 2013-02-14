@@ -2,7 +2,7 @@
     window.StatusCollection = PaginatedCollection.extend({
         model: Status,
         longPolling : false,
-        invervalSeconds : 120,
+        invervalSeconds : 20,
         order_field: '-created',
         limit: 10,
         urlRoot: APP_GLOBAL.PROJECT_API,
@@ -48,35 +48,6 @@
             });
 
             model.fetch(options);
-        },        
-        startLongPolling : function(invervalSeconds){
-            this.longPolling = true;
-            if( invervalSeconds ){
-                this.invervalSeconds = invervalSeconds;
-            }
-            this.executeLongPolling();
-        },
-        stopLongPolling : function(){
-            this.longPolling = false;
-        },
-        executeLongPolling : function(){
-            var that = this;
-            this.fetch({
-                success : function(collection, response, options) {
-                    that.onFetch();
-                }
-            });
-        },
-        onFetch : function () {
-            if( this.longPolling ){
-                setTimeout(this.executeLongPolling, 1000 * this.invervalSeconds); // in order to update the view each N seconds
-            }
-        },
-        parse: function(resp) {
-            this.offset = resp.meta.offset;
-            this.limit = resp.meta.limit;
-            this.total = resp.meta.total_count;
-            return resp.objects;
         }
     });
 })();

@@ -25,6 +25,7 @@
                 success: function() {
                     app.sidebar.render(id);                                
                     var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    //var project = app.projects.get(id);
                     app.menu.model = project;
                     app.menu.render({ "task-active" : "active"});
                     app.detail = new ProjectTaskAddTaskListView({
@@ -43,6 +44,7 @@
                 success: function() {
                     app.sidebar.render(id);
                     var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    //var project = app.projects.get(id);
                     app.menu.model = project;
                     app.menu.render({ "note-active" : "active"});
                     app.detail = new ProjectNoteAddNoteListView({
@@ -61,6 +63,7 @@
                 success: function() {
                     app.sidebar.render(id); 
                     var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    //var project = app.projects.get(id);
                     app.menu.model = project;
                     app.menu.render({ "activity-active" : "active"});
                     app.detail = new ProjectActivityView({
@@ -79,6 +82,7 @@
                 success: function() {
                     app.sidebar.render(id);
                     var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    //var project = app.projects.get(id);
                     app.menu.model = project;
                     app.menu.render({ "file-active" : "active"});
                     app.detail = new ProjectFileListView({
@@ -99,6 +103,7 @@
                     app.userProfile.fetch();        
                     var userProfile = app.userProfile;
                     var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    //var project = app.projects.get(id);
                     app.menu.model = project;
                     app.menu.render({ "people-active" : "active"});
                     app.detail = new ProjectPeopleView({
@@ -120,6 +125,7 @@
                     app.userProfile.fetch();        
                     var userProfile = app.userProfile;
                     var project = app.projects.get(APP_GLOBAL.PROJECT_API + id + '/');
+                    //var project = app.projects.get(id);
                     app.menu.model = project;
                     app.menu.render({ "overview-active" : "active"});
                     app.detail = new ProjectOverviewView({

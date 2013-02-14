@@ -1,7 +1,7 @@
 (function () {
     window.ProjectActivityView = Backbone.View.extend({
         initialize: function(arguments){
-            this.model.get('statuses').maybeFetch({});
+            //this.model.get('statuses').maybeFetch({});
             //this.model.get('notes').bind('reset', this.render, this);
             
             this.model.get('notes').maybeFetch({});
@@ -43,7 +43,7 @@
             this.statusAddView.render();
             this.statusListView.render();
             
-            //this.statusListView.collection.startLongPolling();
+            this.statusListView.collection.startLongPolling();
             this.statusListView.collection.on('reset', function(){ console.log('Comments fetched'); });
             return this;
         }

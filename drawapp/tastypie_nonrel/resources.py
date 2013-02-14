@@ -112,6 +112,10 @@ class MongoListResource(ModelResource):
         bundle.obj.pk = index"""
 
         object_list = getattr(self.instance, self.attribute)
+
+        #Other hack
+        if object_list is None:
+            object_list = []
         object_list.append(bundle.obj)
         bundle.obj.pk = unicode(len(object_list) - 1)
         self.instance.save()
@@ -162,7 +166,7 @@ class MongoListResource(ModelResource):
         try:
             updated_bundle = self.obj_update(bundle, request=request, **kwargs)
             return HttpAccepted()
-        except:
+        except Exception as e:
             updated_bundle = self.obj_create(bundle, request=request, **kwargs)
             return HttpCreated(location=self.get_resource_uri(updated_bundle))
 

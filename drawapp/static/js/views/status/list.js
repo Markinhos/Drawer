@@ -1,20 +1,20 @@
 (function () {
     window.StatusListView = Backbone.View.extend({
         initialize: function(){
-            _.bindAll(this, 'addOne', 'addAll');
-
-            this.collection.bind('reset', this.addAll, this);
+            _.bindAll(this);
+            
             this.views = [];
 
+            //this.collection.bind('reset', this.addAll, this);
             var self = this;
-            this.collection.on("add", function(status){
+            this.collection.on("add", function(status, collection, options){
                 self.addOne(status);
             });
 
-        },
 
-        changeEvent: function(){
-            alert('sync');
+            //this.collection.startLongPolling();
+            //this.collection.on('reset', function(){ console.log('Statuses fetched'); });
+
         },
 
         addAll: function(){
@@ -35,7 +35,7 @@
             }            
 
             this.views.push(view);
-            view.bind('all', this.rethrow, this);
+            //view.bind('all', this.rethrow, this);
         },
 
         rethrow: function(){

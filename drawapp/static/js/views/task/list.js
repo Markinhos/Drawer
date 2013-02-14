@@ -10,6 +10,7 @@
             this.collection.on('add', function(task){
                 self.addOne(task);
             });
+            
             this.collection.on('destroy', function(task){
                 self.deleteOne(task);
             });            
@@ -44,8 +45,9 @@
 
         deleteOne: function(task){
             var v = this.views.filter(function(view) { return view.model == task })[0];
+            var index = this.views.indexOf(v);
+            this.views.splice(index, 1);
             v.remove();
-            this.views.pop(v);
         },
 
         moveToDoneOne: function(task){
