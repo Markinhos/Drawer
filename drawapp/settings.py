@@ -137,6 +137,7 @@ PIPELINE_CSS = {
     'styles_c': {
         'source_filenames': (
           #'template/css/*.css',
+          'bootstrap/css/bootstrap.css',
           'css/*.css',
           'fancybox/source/jquery.fancybox.css',
         ),

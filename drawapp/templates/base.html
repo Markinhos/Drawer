@@ -5,7 +5,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>{% block title %}Draw{% endblock %}</title>
+        <title>{% block title %}Drawer{% endblock %}</title>
         <meta name="description" content="Draw project">
         <meta name="author" content="Marcos Arranz Mateo">
         <!—[if lt IE 9]>
@@ -14,7 +14,7 @@
         
         
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.no-icons.min.css" rel="stylesheet">
-        <link href="//netdna.bootstrapcdn.com/bootswatch/2.1.1/superhero/bootstrap.min.css" rel="stylesheet">        
+        <!--<link href="//netdna.bootstrapcdn.com/bootswatch/2.1.1/simplex/bootstrap.min.css" rel="stylesheet">        -->
         <link href="//netdna.bootstrapcdn.com/font-awesome/3.0/css/font-awesome.css" rel="stylesheet">
         <!--<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">-->
         
@@ -30,8 +30,8 @@
         </style>
         
     </head>
-    <body>        
-        <script type="text/javascript">    
+    <body>
+        <script type="text/javascript">
             var APP_GLOBAL = {};
             APP_GLOBAL.PROJECT_API = "{% url api_dispatch_list api_name="v1" resource_name="project" %}";
             APP_GLOBAL.USER_PROFILE_API = "{% url api_dispatch_list api_name="v1" resource_name="userProfile" %}";

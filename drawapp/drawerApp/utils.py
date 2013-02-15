@@ -101,6 +101,8 @@ class EvernoteHelper(object):
         note.title = title if (title is not None and len(title)  > 0) else 'No title'
         note.title = note.title.encode('utf-8')
 
+
+
         # The content of an Evernote note is represented using Evernote Markup Language
         # (ENML). The full ENML specification can be found in the Evernote API Overview
         # at http://dev.evernote.com/documentation/cloud/chapters/ENML.php

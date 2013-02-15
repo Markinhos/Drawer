@@ -16,12 +16,15 @@ from drawerApp.utils import EvernoteHelper
 from urllib import urlencode
 from django.utils import simplejson
 
-def index(request):
+def index(request):    
     context = {}
-    if request.user.id is not None:
-        user_profile = UserProfile.objects.get(user = request.user)
-        context = {'user_profile': user_profile,}
-    return render(request, 'home.html', context)
+    if request.user.is_authenticated():
+        if request.user.id is not None:
+            user_profile = UserProfile.objects.get(user = request.user)
+            context = {'user_profile': user_profile,}
+        return render(request, 'home.html', context)
+    else:
+        return render(request, 'landing.html', context)
 
 def signup(request):
     if request.method == 'POST':

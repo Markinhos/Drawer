@@ -2,7 +2,7 @@
     window.StatusCollection = PaginatedCollection.extend({
         model: Status,
         longPolling : false,
-        invervalSeconds : 20,
+        invervalSeconds : 90,
         order_field: '-created',
         limit: 10,
         urlRoot: APP_GLOBAL.PROJECT_API,

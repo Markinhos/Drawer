@@ -194,6 +194,10 @@ class NoteCollectionResource(MongoListResource):
         cache               =   SimpleCache()
 
 
+    def hydrate_content(self, bundle):
+        bundle.data['content'] = bundle.data['content'].replace('<br>', '<br />')
+        return bundle
+
     def hydrate_modified(self, bundle):
         #TO-DO created date can be tampered
         bundle.data['modified'] = datetime.now().isoformat()
