@@ -94,8 +94,9 @@ PIPELINE = not DEBUG
 PIPELINE_JS = {
     'scripts_c': {
         'source_filenames': (
-          #'js/libs/Backbone.js',
+          'js/libs/Backbone.js',
           'js/libs/backbone-tastypie.js',
+          'js/libs/backbone-relational.js',
           'js/libs/bootstrap-wysihtml5.js',
           'js/libs/bootstrap-timepicker.js',
           'js/libs/jquery.iframe-transport.js',          
