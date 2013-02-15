@@ -78,7 +78,7 @@ STATIC_ROOT = '/home/marcos/statictests/'
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 if not DEBUG:
-    STATIC_URL = 'http://d3g4axnvhzewfv.cloudfront.net/'
+    STATIC_URL = 'http://s3-eu-west-1.amazonaws.com/boards2013/'
 else:
     STATIC_URL = '/static/'
 
