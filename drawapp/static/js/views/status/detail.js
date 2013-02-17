@@ -2,6 +2,7 @@
     window.StatusDetailView = Backbone.View.extend({
         events: {
             'click .toggle-comments': 'toggleComments',
+            'click .delete-status': 'deleteStatus',
             'click .icon-tasks': 'createTask',
             'click .icon-file': 'createNote',
             'click .preview': 'showVideo',
@@ -23,6 +24,11 @@
             if(this.$el.find(".tool-context").hasClass("context-hidden")){
                 this.$el.find(".tool-context").removeClass("context-hidden");
             }
+        },
+        deleteStatus: function(e){
+            if(confirm("Are you sure do you want to delete the entry?")){
+                this.model.destroy();
+            }            
         },
         createTask: function(e){
             e.preventDefault();
@@ -202,9 +208,6 @@
         replaceURLWithHTMLLinks: function(text) {
             var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
             return text.replace(exp,'<a target="_blank" href="$1">$1</a>'); 
-        },
-        deleteStatus: function(){
-            this.options.parentView.deleteOne(this.model.cid);
         }
 
     });

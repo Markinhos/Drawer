@@ -10,13 +10,22 @@
             this.collection.on("add", function(status, collection, options){
                 self.addOne(status);
             });
-
+            this.collection.on('destroy', function(task){
+                self.deleteOne(task);
+            }); 
 
             //this.collection.startLongPolling();
             //this.collection.on('reset', function(){ console.log('Statuses fetched'); });
 
         },
 
+        deleteOne: function(task){
+            var v = this.views.filter(function(view) { return view.model == task })[0];
+            var index = this.views.indexOf(v);
+            this.views.splice(index, 1);
+            v.remove();
+        },
+        
         addAll: function(){
             this.views = [];
             this.collection.each(this.addOne);

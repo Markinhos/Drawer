@@ -1,7 +1,8 @@
 <div class="row-fluid">
 	<div class="status-container span6">
 		<div class="well status-box">
-			<p style="overflow: hidden; text-overflow: ellipsis"><strong>{{ owner_name }}</strong>: {{& parsed_text }}</p>
+			<p class="pull-left" style="overflow: hidden; text-overflow: ellipsis"><strong>{{ owner_name }}</strong>: {{& parsed_text }}</p>
+			<button class="close pull-right delete-status">&times;</button>
 			<div class="media row-fluid">
 				{{# thumbnail_url }}
 					<div class="link-content span11">
