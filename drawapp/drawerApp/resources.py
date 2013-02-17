@@ -29,7 +29,7 @@ class UserResource(MongoResource):
         
 class UserProfileResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user', full=True)
-    invitations = EmbeddedCollection(of='drawapp.drawerApp.resources.InvitationResource', attribute='invitations', null=True, full='True')
+    invitations = EmbeddedCollection(of='drawapp.drawerApp.resources.InvitationResource', attribute='invitations', null=True, blank= True, full='True')
     class Meta:
         queryset            =   UserProfile.objects.all()
         resource_name       =   'userProfile'
