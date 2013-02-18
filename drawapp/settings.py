@@ -3,7 +3,7 @@ import os
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = False
+DEBUG = False  
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -255,11 +255,11 @@ EVERNOTE_AUTH_KEY = 'markinhosx'
 EVERNOTE_AUTH_SECRET = '3162dc9e83f2f16e'
 
 
-DROPBOX_AUTH_KEY = '8gvbfoxxb9f98ah'
+DROPBOX_AUTH_KEY = 'tcpxyrxgx50vyso'
 
-DROPBOX_AUTH_SECRET = 'xciu5lbxmiiboju'
+DROPBOX_AUTH_SECRET = 'ud3yedrc1dc1ghv'
 
-DROPBOX_ACCESS_TYPE = 'app_folder'
+DROPBOX_ACCESS_TYPE = 'dropbox'
 
 def get_cache():
   import os

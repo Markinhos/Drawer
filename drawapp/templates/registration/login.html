@@ -1,38 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Login motherfucker</title>
-    <meta name="description" content="Login">
-    <meta name="author" content="Marcos Arranz Mateo">
-    <!—[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]—>
-    <style>
-        body { padding-top: 60px; }
-    </style>
-    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" rel="stylesheet">
-    <style>
-        body { padding-top: 60px; }
-    </style>
-    <link href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-</head>
-<body>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
-    {% load url from future %}
-    <div class="login" style="width: 400px; margin-left: auto; margin-right: auto">
-        <form class="well" method="post" action="{% url 'django.contrib.auth.views.login' %}">
-            {% csrf_token %}
-            <h1>Login motherfucker</h1>
-            <p>Do you login?</p>
-            <label>Username:</label>
-            {{ form.username }}
-            <label>Password:</label>
-            {{ form.password }}
-            <input type="submit" value="login" />
-            <input type="hidden" name="next" value="{{ next }}" />
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block content %}
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <a class="brand" href="/">Drawer</a>
+            </div>
+        </div>
+    </div>
+    <div style="position:fixed; left:0; right:0 ;z-index:2000;">
+        <div class="alert alert-error" style="width:500px; position:relative; margin: 0 auto;">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <span style="display: block; text-align:center">Incorrect username or password.</span>
+        </div>
+    </div>
+    <div class="container well" style="width:408px; margin-top:47px;">
+        <form action="{% url login %}" method="post">
+            <h2 class="form-signin-heading">Please sign in</h2>
+            <fieldset class="textbox">
+                {% csrf_token %}
+                <label class="username js-username">
+                    <span>Username</span>
+                     <input id="id_username" type="text" name="username" maxlength="30">
+                </label>
+                <label class="password js-password">
+                    <span>Password </span>
+                    <input type="password" name="password" id="id_password">
+                </label>
+                <span style="text-size: 0.8em">*Both fields are case sensitive</span><br />
+                <button type="submit" class="btn submit">Sign in</button>
+            </fieldset>
         </form>
     </div>
-</body>
-</html>
+{% endblock %}

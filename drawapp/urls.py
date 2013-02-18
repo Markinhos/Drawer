@@ -16,7 +16,7 @@ v1.register(UserProfileResource())
 urlpatterns = staticfiles_urlpatterns()
 urlpatterns += patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/', 'django.contrib.auth.views.login', { 'template_name': 'registration/loginTemplate.html'}, name="login"),
+    url(r'^login/', 'django.contrib.auth.views.login', { 'template_name': 'registration/login.html'}, name="login"),
     url(r'^logout/', 'django.contrib.auth.views.logout_then_login', name="logout"),
     url(r'^signup/', 'drawerApp.views.signup', name="signup"),
     url(r'^evernote-url/', 'drawerApp.views.get_evernote_auth_url'),

@@ -24,6 +24,8 @@ def index(request):
             context = {'user_profile': user_profile,}
         return render(request, 'home.html', context)
     else:
+        if 'error' in request.GET:
+            context = {'error': request.GET.get('error')}
         return render(request, 'landing.html', context)
 
 def signup(request):
@@ -31,6 +33,11 @@ def signup(request):
         user_name = request.POST.get('username', None)
         user_password = request.POST.get('userpassword', None)
         user_mail = request.POST.get('usermail', None)
+
+        if User.objects.filter(email=user_mail).exists():
+            return redirect("/?error=email")
+        if User.objects.filter(username=user_name).exists():
+            return redirect("/?error=username")
 
         user = User.objects.create_user(user_name, user_mail, user_password)
 
