@@ -3,7 +3,7 @@ import os
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
-DEBUG = False  
+DEBUG = True  
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -12,29 +12,28 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django_mongodb_engine', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'heroku_app5558288',                      # Or path to database file if using sqlite3.
-        'USER': 'heroku_app5558288',
-        'PASSWORD': 'ret24bau7j83dhpou08jsqni7v',
-        'HOST': 'ds033907.mongolab.com',
-        'PORT': 33907,
-        'SUPPORTS_TRANSACTIONS': False,
-    },
-}
-"""DATABASES = {
-    'default': {
-        'ENGINE': 'django_mongodb_engine', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'app5558288',                      # Or path to database file if using sqlite3.
-        'USER': 'heroku',
-        'PASSWORD': '647aeb87f87fd0a2ba2437619dc13222',
-        'HOST': 'linus.mongohq.com',
-        'PORT': 10087,
-        'SUPPORTS_TRANSACTIONS': False,
-    },
-}"""
+import re
 
+
+mongolab_uri = os.environ.get('MONGOLAB_URI')
+
+if mongolab_uri:
+
+  import re
+
+  sp = re.findall(r"[\w\.]+", mongolab_uri)
+
+  DATABASES = {
+    'default': {
+        'ENGINE': 'django_mongodb_engine', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': sp[1],                      # Or path to database file if using sqlite3.
+        'USER': sp[5],
+        'PASSWORD': sp[2],
+        'HOST': sp[3],
+        'PORT': sp[4],
+        'SUPPORTS_TRANSACTIONS': False,
+    },
+  }
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -88,6 +87,12 @@ else:
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
 
 PIPELINE = not DEBUG
 
@@ -285,8 +290,3 @@ def get_cache():
 CACHES = get_cache()
 
 CACHE_BACKEND = CACHES
-
-try:
-    from local_settings import *
-except ImportError:
-    pass

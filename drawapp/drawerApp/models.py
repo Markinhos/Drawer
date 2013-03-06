@@ -264,7 +264,6 @@ class Project(models.Model):
     created = models.DateTimeField(default=datetime.now(), null=True, blank=True)
     modified = models.DateTimeField(auto_now=True)
     members = ListField(models.ForeignKey(User), editable=False)
-    objects = MongoDBManager()
 
     def save(self):
         return super(Project, self).save()
@@ -284,4 +283,3 @@ class UserProfile(models.Model):
     dropbox_profile = EmbeddedModelField(model = DropboxProfile, null= True)
     projects = ListField(models.CharField(max_length=24))
     invitations = EmbeddedModelListField(EmbeddedModelField('Invitation'), null=True, blank=True)
-    objects = MongoDBManager()

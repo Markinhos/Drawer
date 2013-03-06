@@ -36,7 +36,7 @@
                     },
                     error : function(model, response){
                         that.errorView = new Flash({el : "#flash"});
-                        if (response.status == 404){
+                        if (response.status === 404){
                             that.errorView.render("Sorry, the email was not found", "error");    
                         }
                         else{

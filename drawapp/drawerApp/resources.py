@@ -26,7 +26,30 @@ class UserResource(MongoResource):
         queryset            =   User.objects.all()
         resource_name       =   'user'
         #cache               =   SimpleCache()
-        
+
+class InvitationResource(MongoListResource):
+    project = fields.ForeignKey('drawapp.drawerApp.resources.ProjectResource', 'project', full=False)
+    receiver = fields.CharField()
+
+    class Meta:
+        queryset = Invitation.objects.all()
+        resource_name = 'invitation'
+        authorization = Authorization()
+
+    def obj_create(self, bundle, request=None, **kwargs):
+        #find user
+        if User.objects.filter(email=bundle.data["receiver"]).exists():
+            """user_receiver = User.objects.get(email=bundle.data["receiver"])
+            user_profile_receiver = UserProfile.objects.get(user=user_receiver)
+            project_shared = Project.objects.get(id=ObjectId(bundle.data["project_id"]))
+            project_shared.members.append(user_profile_receiver.id)
+            project_shared.save()
+            user_profile_receiver.projects.append(project_shared.id)
+            user_profile_receiver.save()"""
+            return super(InvitationResource,self).obj_create(bundle, request, **kwargs)
+        else:
+            raise ImmediateHttpResponse(HttpNotFound('No email was found'))
+
 class UserProfileResource(MongoResource):
     user = fields.ForeignKey(UserResource, 'user', full=True)
     invitations = EmbeddedCollection(of='drawapp.drawerApp.resources.InvitationResource', attribute='invitations', null=True, blank= True, full='True')
@@ -191,7 +214,7 @@ class NoteCollectionResource(MongoListResource):
         validation          =   FormValidation(form_class=NoteForm)
         excludes            =   ['resources']
         ordering            =   ['modified']
-        cache               =   SimpleCache()
+        #cache               =   SimpleCache()
 
 
     def hydrate_content(self, bundle):
@@ -313,25 +336,3 @@ class ProjectResource(MongoResource):
     def get_list(self, request, **kwargs):
         return super(ProjectResource, self).get_list(request, **kwargs)
 
-class InvitationResource(MongoListResource):
-    project = fields.ForeignKey(ProjectResource, 'project', full=False)
-    receiver = fields.CharField()
-
-    class Meta:
-        queryset = Invitation.objects.all()
-        resource_name = 'invitation'
-        authorization = Authorization()
-
-    def obj_create(self, bundle, request=None, **kwargs):
-        #find user
-        if User.objects.filter(email=bundle.data["receiver"]).exists():
-            user_receiver = User.objects.get(email=bundle.data["receiver"])
-            user_profile_receiver = UserProfile.objects.get(user=user_receiver)
-            project_shared = Project.objects.get(id=ObjectId(bundle.data["project_id"]))
-            project_shared.members.append(user_profile_receiver.id)
-            project_shared.save()
-            user_profile_receiver.projects.append(project_shared.id)
-            user_profile_receiver.save()
-            return super(InvitationResource,self).obj_create(bundle, request, **kwargs)
-        else:
-            raise ImmediateHttpResponse(HttpNotFound('No email was found'))
