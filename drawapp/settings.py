@@ -74,13 +74,6 @@ TASTYPIE_CANNED_ERROR = "Oops, we broke it!"
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_ROOT = '/home/marcos/statictests/'
 
-# URL prefix for static files.
-# Example: "http://media.lawrence.com/static/"
-if not DEBUG:
-    STATIC_URL = 'http://s3-eu-west-1.amazonaws.com/boards2013/'
-else:
-    STATIC_URL = '/static/'
-
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
@@ -94,6 +87,13 @@ try:
 except ImportError:
     pass
 
+# URL prefix for static files.
+# Example: "http://media.lawrence.com/static/"
+if not DEBUG:
+    STATIC_URL = 'http://s3-eu-west-1.amazonaws.com/boards2013/'
+else:
+    STATIC_URL = '/static/'
+    
 PIPELINE = not DEBUG
 
 PIPELINE_JS = {

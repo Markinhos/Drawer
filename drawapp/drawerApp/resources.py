@@ -39,13 +39,13 @@ class InvitationResource(MongoListResource):
     def obj_create(self, bundle, request=None, **kwargs):
         #find user
         if User.objects.filter(email=bundle.data["receiver"]).exists():
-            """user_receiver = User.objects.get(email=bundle.data["receiver"])
+            user_receiver = User.objects.get(email=bundle.data["receiver"])
             user_profile_receiver = UserProfile.objects.get(user=user_receiver)
             project_shared = Project.objects.get(id=ObjectId(bundle.data["project_id"]))
             project_shared.members.append(user_profile_receiver.id)
             project_shared.save()
             user_profile_receiver.projects.append(project_shared.id)
-            user_profile_receiver.save()"""
+            user_profile_receiver.save()
             return super(InvitationResource,self).obj_create(bundle, request, **kwargs)
         else:
             raise ImmediateHttpResponse(HttpNotFound('No email was found'))
