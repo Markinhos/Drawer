@@ -72,7 +72,7 @@
         </div><!-- /.carousel -->
         <div class="span2 well">
             <h3>Sign up!</h3>
-            <form method="post" id="signupForm" action="/signup">
+            <form method="post" id="signupForm" action="/signup/">
                 {% csrf_token %}
                 <div class="control-group                                                 
                     {% if error == 'username' %} 
