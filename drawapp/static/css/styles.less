@@ -1,25 +1,81 @@
-@import "../bootstrap3/less/variables.less";
+#sidebar-column{
+	position: relative;
+	float: left;
+	width: 220px;
+	position: fixed;
+}
+#content-container {
+	margin-left: 240px;
+}
 
-.task-item {
-	height: 20px;
-	margin-bottom: 1px;
-	padding: 10px 10px 10px 10px;
-	.task-content {
-		width: 80%;
-		margin-right: 30px;	
-	}
-	.task-check {
-		width: 5%;
+a.project-detail{
+	overflow: hidden;
+	text-overflow: ellipsis;
+	.project-title{
+		position: relative;
 		float: left;
-	}
-	.task-meta {
-		width: 15%;
-		padding-top: 2px;
-		float: right;
+		width: 135px;
 		&:hover{
-			cursor: pointer;
+			text-decoration: underline;
 		}
 	}
+	.project-tool{
+		float: right;
+	}
+}
+
+.task-group{
+	.task-item {
+		height: 20px;
+		margin-bottom: 1px;
+		padding: 10px 10px 10px 10px;
+		.task-content {
+			width: 80%;
+			margin-right: 30px;	
+		}
+		.task-check {
+			width: 5%;
+			float: left;
+		}
+		.task-meta {
+			width: 15%;
+			padding-top: 2px;
+			float: right;
+			&:hover{
+				cursor: pointer;
+			}
+		}
+	}
+	.bootstrap-datepicker{
+		float: left;
+		margin-right: 10px;
+	}
+}
+
+i[class^="icon-"] {
+	vertical-align: 1px;
+}
+.task-status {
+	margin-top: 0px;
+}
+.status-container{
+	margin-bottom: 0px;
+	.comment-container {
+		margin-bottom: 0px;
+		padding-top: 4px;
+		padding-bottom: 4px;
+	}	
+}
+
+
+#flash {
+	display: none;
+	position: fixed;
+	margin-left: auto;
+	width: 500px;
+	z-index: 2000;
+	top: 50px;
+	margin-right: auto;
 }
 
 #tumblelog{
@@ -38,8 +94,9 @@
 	margin: 10px;
 	border-top: 4px solid #DCB;
 	padding-top: 10px;
-	background: #45515f;
+	background: #FFF;
 	float: left;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
 }
 
 .paragraph{
@@ -88,6 +145,7 @@
 }
 
 .status-box{
+	padding: 10px;
 	&:hover{
 		
 	}

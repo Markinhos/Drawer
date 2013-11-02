@@ -135,7 +135,12 @@
                 this.model.set({ duedate: d.toISOString()});
             }
 
-            this.model.save();
+            this.model.save(null, {
+                success: function(model) {
+                    self.errorView = new Flash({ el: "#flash"});
+                    self.errorView.render('Saved!', 'success');
+                }
+            });
             this.render(true);           
         }
     });

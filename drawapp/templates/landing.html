@@ -42,9 +42,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Carousel
-    ================================================== -->
     <div class="row-fluid">
         <div id="myCarousel" class="carousel slide span7 offset2">
           <div class="carousel-inner">
@@ -83,7 +80,7 @@
                     Username
                   </label>
                   <div class="controls">
-                    <input type="text" id="input-username" name="username">
+                    <input type="text" id="input-username" class="span12" name="username">
                     {% if error == 'username' %}
                       <br />
                       <span class="help-inline">That username is taken!</span>
@@ -99,7 +96,7 @@
                     Email
                   </label>
                   <div class="controls">
-                    <input type="text" id="input-usermail" name="usermail">
+                    <input type="text" id="input-usermail" class="span12" name="usermail">
                     {% if error == 'usermail' %}
                       <br />
                       <span class="help-inline">That email is taken!</span>
@@ -107,7 +104,7 @@
                   </div>
                 </div>
                 <label>Password:</label>
-                <input type="password" name="userpassword">
+                <input type="password" class="span12" name="userpassword">
                 <br />
                 <button type="submit" class="btn btn-large btn-primary" value="Login">Create</button>
             </form>            

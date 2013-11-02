@@ -8,11 +8,17 @@
             }
             else if (type == "success"){
             	data.type = "alert-success";
-            	$(this.el).html(ich.flash(data));
+            	$(this.el).html(ich.flash(data));                
             }
             else {
                 $(this.el).html(ich.flash(data));   
             }
+            $("#flash").fadeIn("fast");
+            $(function() {
+                setTimeout(function() {
+                    $("#flash").fadeOut("slow");
+                }, 5000);
+            });
             return this;
         }
     });

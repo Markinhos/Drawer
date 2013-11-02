@@ -20,12 +20,6 @@
                     <span class="icon-bar"></span>
                 </a>
                 <a class="brand" href="/">Drawer</a>
-                <div class="nav-collapse collapse">
-                    <ul class="nav">
-                        <li class="active"><a href="/">Home</a></li>
-                        <li><a href="/contact">Contact</a></li>
-                    </ul>
-                </div>
                 <ul class="nav pull-right">               
                     <script type="text/javascript">
                         APP_GLOBAL.USER_PROFILE_API = "{% url api_dispatch_detail pk=user_profile.pk api_name="v1" resource_name="userProfile" %}";
@@ -44,8 +38,8 @@
         </div>
     </div>
     <div class="container-fluid">    
-        <div id="columns" class="row-fluid">
-                <div class="span2">
+        <div id="columns">
+                <div id="sidebar-column">
                     <div class="well sidebar-nav">
                         <div id="sidebar">
                         </div>
@@ -54,9 +48,8 @@
                 <script type="text/javascript">                
                     APP_GLOBAL.USER = '{{ user.id }}'
                 </script>
-                <div id="column2" class="span10 column-joined">
-                    <div class="well">
-                        
+                <div id="content-container">
+                    <div class="well">                        
                         <div id="app" class="row-fluid">
 
                         </div>

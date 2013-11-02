@@ -40,13 +40,13 @@
                 }                   
             });
 
-            _.each(this.model.get('tasks').models, function(element, index, list){
+            /*_.each(this.model.get('tasks').models, function(element, index, list){
                 var view = new TaskDetailOverviewView({
                     parentView: self,
                     model: element
                 });
                 views.push(view);
-            });
+            });*/
             
             var sorted = _.sortBy(views, function(e) { return -e.model.get('modified'); });
             _.each(sorted, function(element, index, list){

@@ -27,8 +27,15 @@
 			<h3>Services connected</h3>
 		</div>
 		<div class="span10">
-			<p><i class="icon-large icon-dropbox"></i> Drobpox</p>			
-			<p><i class="icon-large icon-evernote"></i> Evernote</p>
+			{{# noServiceConnected}}
+				<p>No services connected</p>
+			{{/ noServiceConnected}}
+			{{# is_dropbox_synced }}
+				<p><i class="icon-large icon-dropbox"></i> Drobpox  <button class="btn btn-warning">Disconnect</button></p>
+			{{/ is_dropbox_synced }}
+			{{# is_evernote_synced }}
+				<p><i class="icon-large icon-evernote"></i> Evernote <button class="btn btn-warning">Disconnect</button></p>
+			{{/ is_evernote_synced }}
 		</div>
 	</div>
 	<div class="row-fluid paragraph">

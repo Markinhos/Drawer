@@ -8,7 +8,7 @@
         },
         render: function(){
             if(this.hasLink(this.model.get('text'))) {
-                if(!this.model.get('dataResponse') || this.isEmpty(this.model.get('dataResponse'))){                
+                /*if(!this.model.get('dataResponse') || this.isEmpty(this.model.get('dataResponse'))){                
                     var that = this;
                     var widthVideo = $(window).width()/2.5;
                     $(this.el).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div>');
@@ -33,9 +33,11 @@
                         }
                     });
                 }
-                else{
-                    this.renderLink(this.model.get('dataResponse'), {});
-                }                
+                else{*/
+                    var data = this.model.toJSON();
+                    data.text = this.replaceURLWithHTMLLinks(this.model.get('text'))
+                    $(this.el).html(ich.commentDetailTemplate(data)).fadeIn('slow');
+                //}                
             }
             else
             {

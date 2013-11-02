@@ -53,6 +53,7 @@
         },
         render: function(){
             var dataModel = this.model.toJSON();
+            dataModel.noServiceConnected = !(dataModel.is_dropbox_synced && dataModel.is_evernote_synced);
             dataModel.csrftoken = APP_GLOBAL.CSFR_TOKEN;
             $(this.el).html(ich.userSettingsTemplate(dataModel));
             return this;
