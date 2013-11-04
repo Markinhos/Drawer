@@ -253,7 +253,7 @@ LOGGING = {
         }
 }
 
-EVERNOTE_NOTEBOOK = '@Drawer'
+EVERNOTE_NOTEBOOK = '@SimpleDesk'
 
 EVERNOTE_AUTH_KEY = 'markinhosx'
 
