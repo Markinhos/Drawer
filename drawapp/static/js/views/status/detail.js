@@ -153,8 +153,8 @@
         },
         render: function(){
             
-            if(this.hasLink(this.model.get('text'))) {
-                if(!this.model.get('dataResponse') || this.isEmpty(this.model.get('dataResponse'))){
+            if(this.hasLink(this.model.get('text')))  {
+                if(!this.model.get('dataResponse') || $.isEmptyObject(this.model.get("dataResponse"))){
                     var that = this;
                     $(this.el).html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div>');
                     $.embedly(this.getLink(this.model.get('text')), { key : "a3fa84e00cb84b0386bde0b7055c8bb4" , 
