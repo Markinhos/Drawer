@@ -85,7 +85,7 @@ class FileMetadata(models.Model):
 
                     if f['thumb_exists']:
                         fileMetadata.thumb_exists = True
-                        fileMetadata.thumb_url, params, headers = api_client.request('/thumbnails/sandbox%s' % f['path'], {'size' : 'large', 'format' : 'JPEG'}, method='GET', content_server=True)
+                        fileMetadata.thumb_url, params, headers = api_client.request('/thumbnails/dropbox%s' % f['path'], {'size' : 'large', 'format' : 'JPEG'}, method='GET', content_server=True)
                     else:
                         fileMetadata.thumb_exists = False
                     parent_project.files.append(fileMetadata)
@@ -100,7 +100,7 @@ class FileMetadata(models.Model):
                     fileMetadata.size = f['size']
                     if f['thumb_exists']:
                         fileMetadata.thumb_exists = True
-                        fileMetadata.thumb_url, params, headers = api_client.request('/thumbnails/sandbox%s' % f['path'], {'size' : 'large', 'format' : 'JPEG'}, method='GET', content_server=True)
+                        fileMetadata.thumb_url, params, headers = api_client.request('/thumbnails/dropbox%s' % f['path'], {'size' : 'large', 'format' : 'JPEG'}, method='GET', content_server=True)
                     else:
                         fileMetadata.thumb_exists = False
                     parent_project.files.append(fileMetadata)
