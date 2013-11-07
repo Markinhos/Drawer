@@ -55,7 +55,7 @@ class FileMetadata(models.Model):
         sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
         sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
         api_client = client.DropboxClient(sess)
-        current_path = parent_project.title + '/'
+        current_path = settings.APP_NAME + '/' + parent_project.title + '/'
         resp = api_client.metadata(current_path)
 
         if 'contents' in resp:

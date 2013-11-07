@@ -1,6 +1,6 @@
 git+https://github.com/django-nonrel/django-nonrel@master
 git+https://github.com/django-nonrel/django-permission-backend-nonrel@master
-https://www.dropbox.com/static/developers/dropbox-python-sdk-1.5.1.zip
+https://www.dropbox.com/static/developers/dropbox-python-sdk-1.6.zip
 Pygments==1.5
 argparse==1.2.1
 certifi==0.0.8

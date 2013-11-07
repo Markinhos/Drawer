@@ -129,9 +129,11 @@ def get_dropbox_access_token(request):
         sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
         api_client = client.DropboxClient(sess)
 
+        #Create root folder
+        api_client.file_create_folder(settings.APP_NAME)
         projects = Project.objects.filter(pk__in=user_profile.projects)
         for p in projects:
-            api_client.file_create_folder(p.title)
+            api_client.file_create_folder(settings.APP_NAME + p.title)
         return redirect("/project/{0}/files/".format(request.GET.get('project_id')))
 
 def upload_dropbox_file(request):
@@ -141,19 +143,15 @@ def upload_dropbox_file(request):
         sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
         drop_client = client.DropboxClient(sess)
 
-        file = request.FILES['file']
+        file = request.FILES.getlist(u'files[]')
         folder = Project.objects.get(id=request.POST['project_id']).title
-        result = drop_client.put_file('/' + folder + '/' + file.name, file.file)
+        result = drop_client.put_file(settings.APP_NAME + '/' + folder + '/' + file.name, file.file)
 
         dest_path = result['path']
 
         return redirect("/project/{0}/files/".format(request.POST.get('project_id')))
 
 def multiuploader(request):
-    """
-    Main Multiuploader module.
-    Parses data from jQuery plugin and makes database changes.
-    """
     if request.method == 'POST':
 
         user_profile = UserProfile.objects.get(user = request.user)
@@ -161,11 +159,10 @@ def multiuploader(request):
         sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
         drop_client = client.DropboxClient(sess)
 
-        file = request.FILES[u'files[]']
-        #folder = Project.objects.get(id=request.POST['project_id']).title
-        folder = Project.objects.get(id=request.POST['project_id']).title
-        result_db = drop_client.put_file('/' + folder + '/' + file.name, file.file)
-
+        files = request.FILES.getlist(u'files[]')
+        for file in files:
+            folder = Project.objects.get(id=request.POST['project_id']).title
+            result_db = drop_client.put_file(settings.APP_NAME + '/' + folder + '/' + file.name, file.file)
         #generating json response array
         result = []
         result.append({"files": [

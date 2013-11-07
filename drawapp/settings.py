@@ -266,6 +266,8 @@ DROPBOX_AUTH_SECRET = 'ud3yedrc1dc1ghv'
 
 DROPBOX_ACCESS_TYPE = 'dropbox'
 
+APP_NAME = 'SimpleDesk'
+
 def get_cache():
   import os
   try:
