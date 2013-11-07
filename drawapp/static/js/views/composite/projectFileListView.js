@@ -42,7 +42,8 @@
             elem.addClass('icon-spin');
             this.model.get('files').fetch({
                 success : function(){
-                    elem.removeClass('icon-spin')
+                    elem.removeClass('icon-spin');
+                    $('.fancybox').fancybox();
                 }
             });
         }
