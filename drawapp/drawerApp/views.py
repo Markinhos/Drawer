@@ -130,7 +130,6 @@ def get_dropbox_access_token(request):
         api_client = client.DropboxClient(sess)
 
         #Create root folder
-        api_client.file_create_folder(settings.APP_NAME)
         projects = Project.objects.filter(pk__in=user_profile.projects)
         for p in projects:
             api_client.file_create_folder(settings.APP_NAME + p.title)
