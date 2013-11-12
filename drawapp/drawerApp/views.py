@@ -112,7 +112,7 @@ def get_dropbox_access_token(request):
         except DropboxOAuth2Flow.ProviderException, e:
             return HttpResponse(e.message, status=403)
         except Exception, e:
-            return HttpResponse(e.message, status=500)
+            return HttpResponse('Error' + e.message, status=500)
         #request_token = user_profile.dropbox_profile.request_token
         #sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
         #request_token = session.OAuthToken(request_token['key'], request_token['secret'])
