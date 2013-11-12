@@ -101,18 +101,18 @@ def get_dropbox_access_token(request):
         try:
             access_token, user_id, url_state = flow.finish(request.GET)
         except DropboxOAuth2Flow.BadRequestException, e:
-            HttpResponse(status=400)
+            HttpResponse(e.message, status=400)
         except DropboxOAuth2Flow.BadStateException, e:
             # Start the auth flow again.
             redirect("/dropbox-auth-start")
         except DropboxOAuth2Flow.CsrfException, e:
-            HttpResponse(status=403)
+            return HttpResponse(e.message, status=403)
         except DropboxOAuth2Flow.NotApprovedException, e:
             return redirect("/home")
         except DropboxOAuth2Flow.ProviderException, e:
-            HttpResponse(status=403)
+            return HttpResponse(e.message, status=403)
         except Exception, e:
-            HttpResponse(status=500)
+            return HttpResponse(e.message, status=500)
         #request_token = user_profile.dropbox_profile.request_token
         #sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
         #request_token = session.OAuthToken(request_token['key'], request_token['secret'])
