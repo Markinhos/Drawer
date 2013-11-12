@@ -94,7 +94,8 @@ def get_dropbox_access_token(request):
         user_profile = UserProfile.objects.get(user = request.user)
         host = request.get_host()
         protocol = 'https://' if request.is_secure() else 'http://'
-        flow = get_dropbox_auth_flow(request.session, protocol + host + '/dropbox-access-token/')
+        url = protocol + host + '/dropbox-access-token/'
+        flow = get_dropbox_auth_flow(request.session, url)
         try:
             access_token, user_id, url_state = flow.finish(request.GET)
         except DropboxOAuth2Flow.BadRequestException, e:
@@ -109,7 +110,7 @@ def get_dropbox_access_token(request):
         except DropboxOAuth2Flow.ProviderException, e:
             return HttpResponse(e.message, status=403)
         except Exception, e:
-            return HttpResponse('Error' + e.body[u'error_description'], status=500)
+            return HttpResponse('Error ' + e.body[u'error_description'] + ' url: ' + url, status=500)
 
         user_profile.dropbox_profile.access_token = { "key" : access_token, "user_id": user_id}
         user_profile.is_dropbox_synced = True
