@@ -93,7 +93,7 @@ def get_dropbox_access_token(request):
     if request.method == "GET":
         user_profile = UserProfile.objects.get(user = request.user)
         host = request.get_host()
-        protocol = 'https://' if request.is_secure() else 'http://'
+        protocol = settings.HOST_PROTOCOL
         url = protocol + host + '/dropbox-access-token/'
         flow = get_dropbox_auth_flow(request.session, url)
         try:

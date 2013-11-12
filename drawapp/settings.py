@@ -81,8 +81,8 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 
-
-HOSTNAME = 'https://simpledesk.herokuapp.com'
+HOST_PROTOCOL = 'https://'
+HOSTNAME = 'simpledesk.herokuapp.com'
 
 try:
     from local_settings import *
