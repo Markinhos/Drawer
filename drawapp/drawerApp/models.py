@@ -8,6 +8,7 @@ import sys
 import hashlib
 import binascii
 import time
+import urllib
 from drawerApp.utils import EvernoteHelper
 import evernote.edam.error.ttypes as Errors
 from dropbox import client, rest, session
@@ -15,6 +16,8 @@ from django.conf import settings
 from datetime import datetime
 from django_mongodb_engine.contrib import MongoDBManager
 from bson.objectid import ObjectId
+
+from dropbox.client import DropboxOAuth2Flow, DropboxClient
 
 
 class EmbeddedModelListField(ListField):
@@ -52,9 +55,7 @@ class FileMetadata(models.Model):
 
     @classmethod
     def get_synced_files(cls, user_profile, parent_project):
-        sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
-        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
-        api_client = client.DropboxClient(sess)
+        api_client = DropboxClient(user_profile.dropbox_profile.access_token['key'])
         current_path = settings.APP_NAME + '/' + parent_project.title + '/'
         resp = api_client.metadata(current_path)
 
@@ -85,7 +86,7 @@ class FileMetadata(models.Model):
 
                     if f['thumb_exists']:
                         fileMetadata.thumb_exists = True
-                        fileMetadata.thumb_url, params, headers = api_client.request('/thumbnails/dropbox%s' % f['path'], {'size' : 'large', 'format' : 'JPEG'}, method='GET', content_server=True)
+                        fileMetadata.thumb_url = '/get-dropbox-thumbnail/?path=%s' % urllib.quote_plus(f['path'])
                     else:
                         fileMetadata.thumb_exists = False
                     parent_project.files.append(fileMetadata)
@@ -100,7 +101,7 @@ class FileMetadata(models.Model):
                     fileMetadata.size = f['size']
                     if f['thumb_exists']:
                         fileMetadata.thumb_exists = True
-                        fileMetadata.thumb_url, params, headers = api_client.request('/thumbnails/dropbox%s' % f['path'], {'size' : 'large', 'format' : 'JPEG'}, method='GET', content_server=True)
+                        fileMetadata.thumb_url= '/get-dropbox-thumbnail/?path=%s' % urllib.quote_plus(f['path'])
                     else:
                         fileMetadata.thumb_exists = False
                     parent_project.files.append(fileMetadata)
@@ -108,11 +109,9 @@ class FileMetadata(models.Model):
             parent_project.save()
 
     def delete_file_dropbox(self, user_profile):
-        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
-        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
-        drop_client = client.DropboxClient(sess)
+        api_client = DropboxClient(user_profile.dropbox_profile.access_token['key'])
 
-        result = drop_client.file_delete(self.path)
+        result = api_client.file_delete(self.path)
         return True
 
 class Task(models.Model):

@@ -4,17 +4,18 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import authenticate, login
-from dropbox import session, client
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from drawerApp.models import UserProfile, EvernoteProfile, DropboxProfile, Project
 from django.shortcuts import redirect, render
 from permission_backend_nonrel import utils
-from dropbox.session import DropboxSession
 import urllib2, cgi, datetime
 from drawerApp.utils import EvernoteHelper
 from urllib import urlencode
 from django.utils import simplejson
+
+
+from dropbox.client import DropboxOAuth2Flow, DropboxClient
 
 def index(request):    
     context = {}
@@ -73,18 +74,64 @@ def get_evernote_auth_url(request):
         temporary_credentials = urllib2.urlopen(url_evernote).read()
         return redirect("https://sandbox.evernote.com/OAuth.action?" + temporary_credentials)
 
+def get_dropbox_auth_flow(web_app_session, callback_url):
+    return DropboxOAuth2Flow(settings.DROPBOX_AUTH_KEY,settings.DROPBOX_AUTH_SECRET, callback_url,
+                             web_app_session, "dropbox-auth-csrf-token-simpledesk")
 def get_dropbox_auth_url(request):
     if request.method == 'GET':
         user_profile = UserProfile.objects.get(user = request.user)
         if user_profile.dropbox_profile is None:
             user_profile.dropbox_profile = DropboxProfile()       
         callback_url = request.GET.get('callback_url')
-        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
-        request_token = sess.obtain_request_token()
-        url = sess.build_authorize_url(request_token, callback_url)
-        user_profile.dropbox_profile.request_token =  { "key" : request_token.key, "secret": request_token.secret}
-        user_profile.save()
+        request.session['project_id'] = request.GET.get('project_id')
+        flow = get_dropbox_auth_flow(request.session, callback_url)
+        url = flow.start()
+
+        #sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
+        #request_token = sess.obtain_request_token()
+        #url = sess.build_authorize_url(request_token, callback_url)
+        #user_profile.dropbox_profile.request_token =  { "key" : request_token.key, "secret": request_token.secret}
+        #user_profile.save()
         return redirect(url)
+
+def get_dropbox_access_token(request):
+    if request.method == "GET":
+        user_profile = UserProfile.objects.get(user = request.user)
+        flow = get_dropbox_auth_flow(request.session, 'http://localhost:5000/dropbox-access-token/')
+        try:
+            access_token, user_id, url_state = flow.finish(request.GET)
+        except DropboxOAuth2Flow.BadRequestException, e:
+            HttpResponse(status=400)
+        except DropboxOAuth2Flow.BadStateException, e:
+            # Start the auth flow again.
+            redirect("/dropbox-auth-start")
+        except DropboxOAuth2Flow.CsrfException, e:
+            HttpResponse(status=403)
+        except DropboxOAuth2Flow.NotApprovedException, e:
+            return redirect("/home")
+        except DropboxOAuth2Flow.ProviderException, e:
+            HttpResponse(status=403)
+        except Exception, e:
+            HttpResponse(status=500)
+        #request_token = user_profile.dropbox_profile.request_token
+        #sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
+        #request_token = session.OAuthToken(request_token['key'], request_token['secret'])
+        #access_token = sess.obtain_access_token(request_token)
+
+        user_profile.dropbox_profile.access_token = { "key" : access_token, "user_id": user_id}
+        user_profile.is_dropbox_synced = True
+        user_profile.save()
+
+        #Create project folder
+        #sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+        #sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+        api_client = DropboxClient(access_token)
+
+        #Create root folder
+        projects = Project.objects.filter(pk__in=user_profile.projects)
+        for p in projects:
+            api_client.file_create_folder(settings.APP_NAME + '/' + p.title)
+        return redirect("/project/{0}/files/".format(request.session['project_id']))
 
 def get_evernote_access_token(request):
     if request.method == "GET":
@@ -112,35 +159,12 @@ def get_evernote_access_token(request):
         user_profile.save()
         return redirect("/project/{0}/notes/".format(project_id))
 
-def get_dropbox_access_token(request):
-    if request.method == "GET":
-        user_profile = UserProfile.objects.get(user = request.user)
-        request_token = user_profile.dropbox_profile.request_token
-        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
-        request_token = session.OAuthToken(request_token['key'], request_token['secret'])
-        access_token = sess.obtain_access_token(request_token)
-
-        user_profile.dropbox_profile.access_token = { "key" : access_token.key, "secret": access_token.secret}
-        user_profile.is_dropbox_synced = True
-        user_profile.save()
-
-        #Create project folder
-        sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
-        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
-        api_client = client.DropboxClient(sess)
-
-        #Create root folder
-        projects = Project.objects.filter(pk__in=user_profile.projects)
-        for p in projects:
-            api_client.file_create_folder(settings.APP_NAME + p.title)
-        return redirect("/project/{0}/files/".format(request.GET.get('project_id')))
-
 def upload_dropbox_file(request):
     if request.method == 'POST':
         user_profile = UserProfile.objects.get(user = request.user)
-        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
-        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
-        drop_client = client.DropboxClient(sess)
+        #sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
+        #sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
+        drop_client = DropboxClient(user_profile.dropbox_profile.access_token['key'])
 
         file = request.FILES.getlist(u'files[]')
         folder = Project.objects.get(id=request.POST['project_id']).title
@@ -154,14 +178,13 @@ def multiuploader(request):
     if request.method == 'POST':
 
         user_profile = UserProfile.objects.get(user = request.user)
-        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
-        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
-        drop_client = client.DropboxClient(sess)
+        drop_client = DropboxClient(user_profile.dropbox_profile.access_token['key'])
 
         files = request.FILES.getlist(u'files[]')
         for file in files:
             folder = Project.objects.get(id=request.POST['project_id']).title
             result_db = drop_client.put_file(settings.APP_NAME + '/' + folder + '/' + file.name, file.file)
+
         #generating json response array
         result = []
         result.append({"files": [
@@ -208,14 +231,22 @@ def get_evernote_thumbnail(request):
 
             res = _setCacheHeaders(thum,req.headers.type)
             return res
+def get_dropbox_thumbnail(request):
+    if request.method == 'GET':
+        user_profile = UserProfile.objects.get(user = request.user)
+        drop_client = DropboxClient(user_profile.dropbox_profile.access_token['key'])
+
+        thumb = drop_client.thumbnail(request.GET.get('path'))
+        blob = thumb.read()
+        thumb.close()
+        res = _setCacheHeaders(blob, 'image/jpeg')
+        return res
 
 def get_dropbox_file(request):
     if request.method == 'GET':
 
         user_profile = UserProfile.objects.get(user = request.user)
-        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
-        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
-        drop_client = client.DropboxClient(sess)
+        drop_client = DropboxClient(user_profile.dropbox_profile.access_token['key'])
 
         res = drop_client.media(request.GET.get('path'))
         req = urllib2.urlopen(res[u'url'])
@@ -227,9 +258,7 @@ def get_dropbox_share(request):
     if request.method == 'GET':
 
         user_profile = UserProfile.objects.get(user = request.user)
-        sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
-        sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
-        drop_client = client.DropboxClient(sess)
+        drop_client = DropboxClient(user_profile.dropbox_profile.access_token['key'])
 
         res = drop_client.share(request.GET.get('path'))
         return redirect(res[u'url'])

@@ -11,7 +11,7 @@
             data.localetime = d.toDateString() + ' ' + d.toLocaleTimeString();
             if(this.model.get('thumb_exists')) {
                 var exp = /(size=(.)*\b)/;
-                data.thumb_url = data.thumb_url.replace(exp, 'size=xs');
+                //data.thumb_url = data.thumb_url.replace(exp, 'size=xs');
                 $(this.el).html(ich.fileDetailThumbnailTemplate(data));
             }
             else if (this.model.get('is_dir')){
