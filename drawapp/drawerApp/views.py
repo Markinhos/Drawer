@@ -87,17 +87,14 @@ def get_dropbox_auth_url(request):
         flow = get_dropbox_auth_flow(request.session, callback_url)
         url = flow.start()
 
-        #sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
-        #request_token = sess.obtain_request_token()
-        #url = sess.build_authorize_url(request_token, callback_url)
-        #user_profile.dropbox_profile.request_token =  { "key" : request_token.key, "secret": request_token.secret}
-        #user_profile.save()
         return redirect(url)
 
 def get_dropbox_access_token(request):
     if request.method == "GET":
         user_profile = UserProfile.objects.get(user = request.user)
-        flow = get_dropbox_auth_flow(request.session, 'http://localhost:5000/dropbox-access-token/')
+        host = request.get_host()
+        protocol = 'https://' if request.is_secure() else 'http://'
+        flow = get_dropbox_auth_flow(request.session, protocol + host + '/dropbox-access-token/')
         try:
             access_token, user_id, url_state = flow.finish(request.GET)
         except DropboxOAuth2Flow.BadRequestException, e:
@@ -112,22 +109,15 @@ def get_dropbox_access_token(request):
         except DropboxOAuth2Flow.ProviderException, e:
             return HttpResponse(e.message, status=403)
         except Exception, e:
-            return HttpResponse('Error' + e.message, status=500)
-        #request_token = user_profile.dropbox_profile.request_token
-        #sess = session.DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type= settings.DROPBOX_ACCESS_TYPE)
-        #request_token = session.OAuthToken(request_token['key'], request_token['secret'])
-        #access_token = sess.obtain_access_token(request_token)
+            return HttpResponse('Error' + e.body[u'error_description'], status=500)
 
         user_profile.dropbox_profile.access_token = { "key" : access_token, "user_id": user_id}
         user_profile.is_dropbox_synced = True
         user_profile.save()
 
         #Create project folder
-        #sess = DropboxSession(settings.DROPBOX_AUTH_KEY, settings.DROPBOX_AUTH_SECRET, access_type=settings.DROPBOX_ACCESS_TYPE)
-        #sess.set_token(user_profile.dropbox_profile.access_token['key'], user_profile.dropbox_profile.access_token['secret'])
         api_client = DropboxClient(access_token)
 
-        #Create root folder
         projects = Project.objects.filter(pk__in=user_profile.projects)
         for p in projects:
             api_client.file_create_folder(settings.APP_NAME + '/' + p.title)
