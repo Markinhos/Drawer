@@ -1,7 +1,50 @@
 (function () {
     window.UserSettingsView = Backbone.View.extend({
         events : {
-            'click .change-settings': 'changeSettings'
+            'click .change-settings': 'changeSettings',
+            'click  .disconnect-evernote': 'disconnectEvernote',
+            'click  .disconnect-dropbox': 'disconnectDropbox'
+        },
+        disconnectDropbox: function(e){
+
+            var csrf = this.$el.find('input[name=csrfmiddlewaretoken]').val();
+            var jqXHR = $.ajax({
+                type: 'POST',
+                url: '/disconnect-dropbox/',
+                data : {
+                    'csrfmiddlewaretoken'    : csrf
+                },
+                dataType: 'json',
+                success: function(data, text, jqXHR){
+                    self.errorView = new Flash({ el: "#flash"});
+                    self.errorView.render('Dropbox disconnected', 'success');
+                    $('.disconnect-dropbox').parent().hide();
+                },
+                error: function(xhr, ajaxOptions, thrownError){
+                    self.errorView = new Flash({ el: "#flash"});
+                    self.errorView.render('There was an error', 'error');
+                }
+            });
+        },
+        disconnectEvernote: function(e){
+
+            var csrf = this.$el.find('input[name=csrfmiddlewaretoken]').val();
+            var jqXHR = $.ajax({
+                type: 'POST',
+                url: '/disconnect-evernote/',
+                data : {
+                    'csrfmiddlewaretoken'    : csrf
+                },
+                dataType: 'json',
+                success: function(data, text, jqXHR){
+                    self.errorView = new Flash({ el: "#flash"});
+                    self.errorView.render('Evernote disconnected', 'success');
+                },
+                error: function(xhr, ajaxOptions, thrownError){
+                    self.errorView = new Flash({ el: "#flash"});
+                    self.errorView.render('There was an error', 'error');
+                }
+            });
         },
         changeSettings: function(e){
             var username = this.$el.find('#username-input').val();

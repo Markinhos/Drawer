@@ -254,6 +254,20 @@ def get_dropbox_share(request):
         res = drop_client.share(request.GET.get('path'))
         return redirect(res[u'url'])
 
+def disconnect_dropbox(request):
+    if request.method == "POST":
+        user_profile = UserProfile.objects.get(user = request.user)
+        user_profile.is_dropbox_synced = False
+        user_profile.save()
+        return HttpResponse(status=201)
+
+def disconnect_evernote(request):
+    if request.method == "POST":
+        user_profile = UserProfile.objects.get(user = request.user)
+        user_profile.is_evernote_synced = False
+        user_profile.save()
+        return HttpResponse(status=201)
+
 def change_user_settings(request):
     if request.method == 'POST':
         user_profile = UserProfile.objects.get(user = request.user)
