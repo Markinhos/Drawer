@@ -10,9 +10,6 @@
             this.collection.on('destroy', function(file){
                 self.deleteOne(file);
             });
-            this.collection.on('add', function(file, collection, options){
-                self.addOne(file);
-            });
         },
 
         changeEvent: function(){
