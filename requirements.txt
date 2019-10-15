@@ -27,7 +27,7 @@ pylibmc==1.2.3
 pymongo==2.1.1
 pystache==0.5.2
 python-dateutil==1.5
-requests==0.12.1
+requests==2.20.0
 rsa==3.0.1
 slumber==0.4.2
 wsgiref==0.1.2
