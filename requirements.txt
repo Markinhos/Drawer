@@ -28,7 +28,7 @@ pymongo==2.1.1
 pystache==0.5.2
 python-dateutil==1.5
 requests==0.12.1
-rsa==3.0.1
+rsa==4.1
 slumber==0.4.2
 wsgiref==0.1.2
 xtraceback==0.3.3
