@@ -3,7 +3,7 @@ git+https://github.com/django-nonrel/django-permission-backend-nonrel@master
 https://www.dropbox.com/static/developers/dropbox-python-sdk-1.6.zip
 Pygments==1.5
 argparse==1.2.1
-certifi==0.0.8
+certifi==2022.12.7
 chardet==1.0.1
 dj-database-url==0.2.1
 django-appconf==0.5
